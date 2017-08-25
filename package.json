@@ -15,7 +15,8 @@
     "screenshot": "rimraf __screenshots__ && chmod +x ./lib/cli.js && $_ -p 9001 -c .storybook",
     "clean": "rimraf lib",
     "prebuild": "npm run clean",
-    "prescreenshot": "npm run build"
+    "prescreenshot": "npm run build",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -72,6 +73,7 @@
     "sanitize-filename": "^1.6.1"
   },
   "peerDependencies": {
+    "@storybook/addons": ">=3.1.0",
     "react": ">=15.0.0 || ^16.0.0-alpha",
     "react-dom": ">=15.0.0 || ^16.0.0-alpha"
   }

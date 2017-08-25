@@ -1,6 +1,6 @@
 import React from 'react';
 import assign from 'assign-deep';
-import addons from '@storybook/addons'; // eslint-disable-line
+import addons from '@storybook/addons';
 import { EventTypes } from './constants';
 import ScreenshotWrapper from './components/ScreenshotWrapper';
 

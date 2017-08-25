@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 import { getStorybook } from '@storybook/react'; // eslint-disable-line
-import addons from '@storybook/addons'; // eslint-disable-line
+import addons from '@storybook/addons';
 import { EventTypes, SEARCH_COMPONENT_TIMEOUT } from './constants';
 import pkg from '../package.json';
 
