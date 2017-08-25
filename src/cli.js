@@ -70,6 +70,7 @@ if (!fs.existsSync(config)) {
       'green',
       'LAUNCH',
       'Launching storybook server...',
+      true,
     );
 
     const [server, browser] = await Promise.all([
@@ -83,6 +84,7 @@ if (!fs.existsSync(config)) {
       'cyan',
       'PREPARE',
       'Fetching the target components...',
+      true,
     );
 
     const filenames = [];
@@ -97,6 +99,8 @@ if (!fs.existsSync(config)) {
         'CAPTURE',
         'Capturing component screenshots...',
       );
+
+      logger.blank();
 
       if (!logger.silent) {
         progressbar = new ProgressBar(emoji.emojify(':camera:  [:bar] :current/:total'), {

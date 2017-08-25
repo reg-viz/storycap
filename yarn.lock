@@ -125,6 +125,12 @@
     react-treebeard "^2.0.3"
     redux "^3.6.0"
 
+"@tsuyoshiwada/cli-spinner@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@tsuyoshiwada/cli-spinner/-/cli-spinner-0.0.1.tgz#b6900c83833071c0decd08ba6016808a46676a95"
+  dependencies:
+    chalk "^2.1.0"
+
 abbrev@1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.0.tgz#d0554c2256636e2f56e7c2e5ad183f859428d81f"

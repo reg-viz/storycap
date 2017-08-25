@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import clear from 'clear';
+import { Spinner } from '@tsuyoshiwada/cli-spinner';
 import { pascalize } from './utils';
 
 const log = console.log; // eslint-disable-line no-console
@@ -17,6 +18,10 @@ export default class Logger {
     if (!this.silent || force) {
       clear();
     }
+
+    if (this.spinner) {
+      this.spinner.stop(true);
+    }
   }
 
   log(...args) {
@@ -31,9 +36,21 @@ export default class Logger {
     }
   }
 
-  section(color, title, message) {
+  section(color, title, message, useSpinner = false) {
+    const output = `${createTitle(color, title)} ${message}`;
+
     this.clear();
-    this.log(`${createTitle(color, title)} ${message}`);
+
+    if (useSpinner && !this.silent) {
+      this.spinner = new Spinner({
+        text: `${output} %s  `,
+        color: 'cyan',
+      });
+      this.spinner.setSpinnerString(18);
+      this.spinner.start();
+    } else {
+      this.log(output);
+    }
   }
 
   /* eslint-disable no-console, class-methods-use-this */
