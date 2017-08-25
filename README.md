@@ -3,8 +3,6 @@
 [storybook]: https://github.com/storybooks/storybook
 [puppeteer]: https://github.com/GoogleChrome/puppeteer
 
-![todo: artwork](/todo)
-
 > A [Storybook][storybook] addon, Save the screenshot image of your stories! via [Puppeteer][puppeteer].
 
 `storybook-chrome-screenshot` takes a screenshot and saves it.  
@@ -172,6 +170,7 @@ $ $(npm bin)/storybook-chrome-screenshot --help
 
 The following tasks remain. Contributes are welcome :smiley:
 
+* [ ] Global Options.
 * [ ] Shooting at an arbitrary timing.
 * [ ] Support for [Vue.js](https://github.com/vuejs/vue).
 
