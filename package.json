@@ -5,13 +5,14 @@
   "description": "A Storybook addon, Save the screenshot image of your stories! via puppeteer.",
   "main": "lib/index.js",
   "bin": {
-    "storybook-chrome-screenshot": "lib/bin/index.js"
+    "storybook-chrome-screenshot": "lib/cli.js"
   },
   "scripts": {
     "build": "babel src/ -d lib/",
     "dev": "npm run build -- --watch",
+    "lint": "eslint \"src/**/*.js\" \"example/**/*.js\" \"register.js\" \".eslintrc.js\" --no-ignore",
     "storybook": "start-storybook -p 9001 -c .storybook",
-    "screenshot": "rimraf __screenshots__ && chmod +x ./lib/bin/index.js && $_ -p 9001 -c .storybook",
+    "screenshot": "rimraf __screenshots__ && chmod +x ./lib/cli.js && $_ -p 9001 -c .storybook",
     "clean": "rimraf lib",
     "prebuild": "npm run clean",
     "prescreenshot": "npm run build"
@@ -26,16 +27,29 @@
     "url": "https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues"
   },
   "homepage": "https://github.com/tsuyoshiwada/storybook-chrome-screenshot#readme",
+  "files": [
+    "lib",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE",
+    "package.json",
+    "register.js"
+  ],
   "devDependencies": {
     "@storybook/react": "^3.2.5",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
+    "babel-eslint": "^7.2.3",
     "babel-loader": "^7.1.2",
-    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-1": "^6.24.1",
     "enzyme": "^2.9.1",
+    "eslint": "^4.5.0",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.3.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-test-renderer": "^15.6.1",
@@ -44,6 +58,7 @@
   },
   "dependencies": {
     "assign-deep": "^0.4.6",
+    "babel-polyfill": "^6.26.0",
     "chalk": "^2.1.0",
     "clear": "^0.0.1",
     "commander": "^2.11.0",
