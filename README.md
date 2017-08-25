@@ -3,6 +3,8 @@
 [storybook]: https://github.com/storybooks/storybook
 [puppeteer]: https://github.com/GoogleChrome/puppeteer
 
+![DEMO](https://raw.githubusercontent.com/tsuyoshiwada/storybook-chrome-screenshot/artwork/demo.gif)
+
 > A [Storybook][storybook] addon, Save the screenshot image of your stories! via [Puppeteer][puppeteer].
 
 `storybook-chrome-screenshot` takes a screenshot and saves it.  
@@ -13,7 +15,6 @@ It is primarily responsible for image generation necessary for Visual Testing su
 
 ## Table of Contents
 
-<!-- vim-markdown-toc Redcarpet -->
 * [How it works](#how-it-works)
 * [Getting Started](#getting-started)
   * [Installation](#installation)
@@ -31,8 +32,6 @@ It is primarily responsible for image generation necessary for Visual Testing su
     * [`npm run build`](#npm-run-build)
     * [`npm run dev`](#npm-run-dev)
 * [License](#license)
-
-<!-- vim-markdown-toc -->
 
 
 
