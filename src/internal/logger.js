@@ -2,6 +2,8 @@ import chalk from 'chalk';
 import clear from 'clear';
 import { pascalize } from './utils';
 
+const log = console.log; // eslint-disable-line no-console
+
 export const createTitle = (color, title) => (
   chalk.black[`bg${pascalize(color)}`](` ${title} `)
 );
@@ -11,15 +13,15 @@ export default class Logger {
     this.silent = silent;
   }
 
-  clear() {
-    if (!this.silent) {
+  clear(force = false) {
+    if (!this.silent || force) {
       clear();
     }
   }
 
   log(...args) {
     if (!this.silent) {
-      console.log(...args);
+      log(...args);
     }
   }
 
@@ -34,9 +36,11 @@ export default class Logger {
     this.log(`${createTitle(color, title)} ${message}`);
   }
 
+  /* eslint-disable no-console, class-methods-use-this */
   error(message) {
     console.log();
     console.log(`${createTitle('red', 'ERROR')} ${message}`);
     console.log();
   }
+  /* eslint-enable */
 }

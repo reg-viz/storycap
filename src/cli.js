@@ -10,17 +10,15 @@ import logSymbols from 'log-symbols';
 import ProgressBar from 'progress';
 import puppeteer from 'puppeteer';
 import mkdirp from 'mkdirp';
-import pkg from '../../package.json';
-import startStorybookServer from '../server';
+import pkg from '../package.json';
+import startStorybookServer from './internal/server';
 import {
-  sleep,
   identity,
   parseInteger,
   parseList,
   filenamify,
-  pascalize,
-} from '../utils';
-import Logger from '../logger';
+} from './internal/utils';
+import Logger from './internal/logger';
 
 
 program
@@ -71,7 +69,7 @@ if (!fs.existsSync(config)) {
     logger.section(
       'green',
       'LAUNCH',
-      'Launching storybook server...'
+      'Launching storybook server...',
     );
 
     const [server, browser] = await Promise.all([
@@ -84,7 +82,7 @@ if (!fs.existsSync(config)) {
     logger.section(
       'cyan',
       'PREPARE',
-      'Fetching the target components...'
+      'Fetching the target components...',
     );
 
     const filenames = [];
@@ -97,11 +95,11 @@ if (!fs.existsSync(config)) {
       logger.section(
         'yellow',
         'CAPTURE',
-        'Capturing component screenshots...'
+        'Capturing component screenshots...',
       );
 
       if (!logger.silent) {
-        progressbar = new ProgressBar(emoji.emojify(`:camera:  [:bar] :current/:total`), {
+        progressbar = new ProgressBar(emoji.emojify(':camera:  [:bar] :current/:total'), {
           complete: '=',
           incomplete: ' ',
           width: 40,
@@ -143,8 +141,14 @@ if (!fs.existsSync(config)) {
       process.exit(0);
     });
 
-    await page.goto(`${server.getURL()}?full=1&chrome-screenshot=1`);
+    await page.exposeFunction('failureScreenshot', (error) => {
+      browser.close();
+      server.kill();
+      logger.clear();
+      exit(error);
+    });
 
+    await page.goto(`${server.getURL()}?full=1&chrome-screenshot=1`);
   } catch (e) {
     exit(e);
   }

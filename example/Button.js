@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable no-confusing-arrow */
 import styled from 'styled-components';
 
 const Button = styled.button`

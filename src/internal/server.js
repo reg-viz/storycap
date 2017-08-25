@@ -1,20 +1,18 @@
 import { spawn } from 'child_process';
-import mkdirp from 'mkdirp';
-import puppeteer from 'puppeteer';
 
 
 class StorybookServer {
   constructor(server, url) {
-    this._server = server;
-    this._url = url;
+    this.server = server;
+    this.url = url;
   }
 
   getURL() {
-    return this._url;
+    return this.url;
   }
 
   kill() {
-    this._server.kill();
+    this.server.kill();
   }
 }
 
@@ -36,7 +34,7 @@ const optionsToCommandArgs = (options) => {
   return args;
 };
 
-const startStorybookServer = (options) => new Promise((resolve, reject) => {
+const startStorybookServer = options => new Promise((resolve, reject) => {
   const { cmd, cwd } = options;
   const args = optionsToCommandArgs(options);
   const storybook = spawn(cmd, args, { cwd });
@@ -51,9 +49,11 @@ const startStorybookServer = (options) => new Promise((resolve, reject) => {
     }
   });
 
+  /* eslint-disable */
   storybook.stderr.on('data', (out) => {
     // console.log('STDERR: ', out.toString());
   });
+  /* eslint-enable */
 
   storybook.on('error', (err) => {
     reject(err.toString());

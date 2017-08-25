@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/no-find-dom-node */
 import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
 import imagesLoaded from 'imagesloaded';
