@@ -12,7 +12,12 @@ storiesOf('Button', module)
     ))
   )
   .add('with primary',
-    withScreenshot()(() => (
+    withScreenshot({
+      viewport: {
+        width: 400,
+        height: 250,
+      },
+    })(() => (
       <Button primary>Primary</Button>
     ))
   )

@@ -2,19 +2,8 @@ import React from 'react';
 import assign from 'assign-deep';
 import addons from '@storybook/addons';
 import { EventTypes } from './constants';
+import { getScreenshotOptions } from './screenshot-options';
 import ScreenshotWrapper from './components/ScreenshotWrapper';
-
-const defaultOptions = {
-  delay: 0,
-  viewport: {
-    width: 1024,
-    height: 768,
-    deviceScaleFactor: 1,
-    isMobile: false,
-    hasTouch: false,
-    isLandscape: false,
-  },
-};
 
 const withScreenshot = (options = {}) => {
   const channel = addons.getChannel();
@@ -23,7 +12,7 @@ const withScreenshot = (options = {}) => {
 
   return storyFn => (context) => {
     const props = {
-      ...assign(defaultOptions, options),
+      ...assign({}, getScreenshotOptions(), options),
       channel,
       context,
     };

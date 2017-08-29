@@ -12,7 +12,13 @@ storiesOf('Tag', module)
     ))
   )
   .add('with large size',
-    withScreenshot()(() => (
+    withScreenshot({
+      viewport: {
+        width: 300,
+        height: 120,
+        deviceScaleFactor: 2,
+      },
+    })(() => (
       <Tag large>Large</Tag>
     ))
   );

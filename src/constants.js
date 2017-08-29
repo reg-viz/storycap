@@ -8,3 +8,15 @@ export const EventTypes = {
 };
 
 export const SEARCH_COMPONENT_TIMEOUT = 36000;
+
+export const defaultScreenshotOptions = {
+  delay: 0,
+  viewport: {
+    width: 1024,
+    height: 768,
+    deviceScaleFactor: 1,
+    isMobile: false,
+    hasTouch: false,
+    isLandscape: false,
+  },
+};

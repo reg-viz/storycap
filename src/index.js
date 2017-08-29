@@ -1,2 +1,2 @@
-/* eslint-disable import/prefer-default-export */
+export { getScreenshotOptions, setScreenshotOptions } from './screenshot-options';
 export { default as withScreenshot } from './with-screenshot';
