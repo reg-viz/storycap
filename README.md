@@ -22,7 +22,9 @@ It is primarily responsible for image generation necessary for Visual Testing su
   * [Setup your stories](#setup-your-stories)
   * [Run `storybook-chrome-screenshot` Command](#run-storybook-chrome-screenshot-command)
 * [API](#api)
-  * [withScreenshot(options = {})](#withscreenshot-options)
+  * [withScreenshot(options = {})](#withscreenshotoptions--)
+  * [setScreenshotOptions(options = {})](#setscreenshotoptionsoptions--)
+  * [getScreenshotOptions()](#getscreenshotoptions)
 * [Command Line Options](#command-line-options)
 * [TODO](#todo)
 * [Contibute](#contibute)
@@ -141,6 +143,39 @@ The following objects of `options` can be specified.
 ```
 
 
+### setScreenshotOptions(options = {})
+
+Sets the default value of the option used with `withScreenshot()`.  
+It is useful for changing Viewport of all stories.
+
+**Example: .storybook/config.js**
+
+```javascript
+import { setScreenshotOptions } from 'storybook-chrome-screenshot';
+
+setScreenshotOptions({
+  viewport: {
+    width: 768,
+    height: 400,
+    deviceScaleFactor: 2,
+  },
+});
+```
+
+
+### getScreenshotOptions()
+
+Get the current option used with `withScreenshot()`.
+
+```javascript
+import { getScreenshotOptions } from 'storybook-chrome-screenshot';
+
+console.log(getScreenshotOptions);
+// => Current options...
+```
+
+
+
 
 ## Command Line Options
 
@@ -169,7 +204,7 @@ $ $(npm bin)/storybook-chrome-screenshot --help
 
 The following tasks remain. Contributes are welcome :smiley:
 
-* [ ] Global Options.
+* [x] Global Options.
 * [ ] Shooting at an arbitrary timing.
 * [ ] Support for [Vue.js](https://github.com/vuejs/vue).
 
