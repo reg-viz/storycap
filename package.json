@@ -9,6 +9,7 @@
   "scripts": {
     "build": "babel src/ -d lib/",
     "dev": "npm run build -- --watch",
+    "test": "npm run lint",
     "lint": "eslint \"src/**/*.js\" \"example/**/*.js\" \"register.js\" \".eslintrc.js\" --no-ignore",
     "storybook": "start-storybook -p 9001 -c .storybook",
     "screenshot": "rimraf __screenshots__ && chmod +x ./lib/cli.js && $_ -p 9001 -c .storybook",
