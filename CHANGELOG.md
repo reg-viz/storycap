@@ -1,4 +1,19 @@
 [api]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/tree/develop#api
+[issue1]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/1
+
+
+## 0.2.0
+
+> 2017-08-31
+
+### New features
+
+* Add `--browser-timeout` CLI Options. ([#1][issue1])
+  Thanks for [@gcazaciuc](https://github.com/gcazaciuc).
+
+### Bugfix
+
+* Fix bug that processes will remain when an error occurs. ([#1][issue1])
 
 
 ## 0.1.0
