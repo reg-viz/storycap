@@ -193,6 +193,7 @@ $ $(npm bin)/storybook-chrome-screenshot --help
     -s, --static-dir <dir-names>  Directory where to load static files from
     -c, --config-dir [dir-name]   Directory where to load Storybook configurations from (Default ".storybook")
     -o, --output-dir [dir-name]   Directory where screenshot images are saved (Default "__screenshots__")
+    --browser-timeout [number]    Timeout milliseconds when Puppeteer opens Storybook. (Default 30000)
     --silent                      Suppress standard output
     -h, --help                    output usage information
 ```

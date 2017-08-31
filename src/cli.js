@@ -29,6 +29,7 @@ program
   .option('-s, --static-dir <dir-names>', 'Directory where to load static files from', parseList)
   .option('-c, --config-dir [dir-name]', 'Directory where to load Storybook configurations from (Default ".storybook")', identity, '.storybook')
   .option('-o, --output-dir [dir-name]', 'Directory where screenshot images are saved (Default "__screenshots__")', identity, '__screenshots__')
+  .option('--browser-timeout [number]', 'Timeout milliseconds when Puppeteer opens Storybook. (Default 30000)', parseInteger, 30000)
   .option('--silent', 'Suppress standard output', identity, false)
   .parse(process.argv);
 
@@ -48,6 +49,7 @@ const options = {
   staticDir: program.staticDir,
   configDir: program.configDir,
   outputDir: program.outputDir,
+  browserTimeout: program.browserTimeout,
   cwd: path.resolve(bin, '..', '..'),
   cmd: path.resolve(bin, 'start-storybook'),
 };
@@ -65,6 +67,9 @@ if (!fs.existsSync(config)) {
 
 
 (async () => {
+  let server;
+  let browser;
+
   try {
     logger.section(
       'green',
@@ -73,7 +78,7 @@ if (!fs.existsSync(config)) {
       true,
     );
 
-    const [server, browser] = await Promise.all([
+    [server, browser] = await Promise.all([
       startStorybookServer(options),
       puppeteer.launch(),
     ]);
@@ -152,8 +157,12 @@ if (!fs.existsSync(config)) {
       exit(error);
     });
 
-    await page.goto(`${server.getURL()}?full=1&chrome-screenshot=1`);
+    await page.goto(`${server.getURL()}?full=1&chrome-screenshot=1`, {
+      timeout: options.browserTimeout,
+    });
   } catch (e) {
+    if (server) server.kill();
+    if (browser) browser.close();
     exit(e);
   }
 })();
