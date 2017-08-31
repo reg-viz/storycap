@@ -65,6 +65,9 @@ if (!fs.existsSync(config)) {
 
 
 (async () => {
+  let server;
+  let browser;
+
   try {
     logger.section(
       'green',
@@ -73,7 +76,7 @@ if (!fs.existsSync(config)) {
       true,
     );
 
-    const [server, browser] = await Promise.all([
+    [server, browser] = await Promise.all([
       startStorybookServer(options),
       puppeteer.launch(),
     ]);
@@ -154,6 +157,8 @@ if (!fs.existsSync(config)) {
 
     await page.goto(`${server.getURL()}?full=1&chrome-screenshot=1`);
   } catch (e) {
+    if (server) server.kill();
+    if (browser) browser.close();
     exit(e);
   }
 })();
