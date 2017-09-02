@@ -195,6 +195,7 @@ $ $(npm bin)/storybook-chrome-screenshot --help
     -o, --output-dir [dir-name]   Directory where screenshot images are saved (Default "__screenshots__")
     --browser-timeout [number]    Timeout milliseconds when Puppeteer opens Storybook. (Default 30000)
     --silent                      Suppress standard output
+    --debug                       Enable debug mode.
     -h, --help                    output usage information
 ```
 

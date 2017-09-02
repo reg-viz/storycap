@@ -2,6 +2,16 @@
 [issue1]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/1
 
 
+## 0.3.0
+
+> 2017-09-03
+
+### New features
+
+* Add `--debug` CLI options.
+    - In debug mode, browser console, stdsrr, contents being processed are output.
+
+
 ## 0.2.0
 
 > 2017-08-31
