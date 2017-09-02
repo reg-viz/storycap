@@ -34,7 +34,7 @@ const optionsToCommandArgs = (options) => {
   return args;
 };
 
-const startStorybookServer = options => new Promise((resolve, reject) => {
+const startStorybookServer = (options, logger) => new Promise((resolve, reject) => {
   const { cmd, cwd } = options;
   const args = optionsToCommandArgs(options);
   const storybook = spawn(cmd, args, { cwd });
@@ -49,11 +49,9 @@ const startStorybookServer = options => new Promise((resolve, reject) => {
     }
   });
 
-  /* eslint-disable */
   storybook.stderr.on('data', (out) => {
-    // console.log('STDERR: ', out.toString());
+    logger.log('STDERR', out.toString());
   });
-  /* eslint-enable */
 
   storybook.on('error', (err) => {
     reject(err.toString());

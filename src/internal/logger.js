@@ -10,13 +10,16 @@ export const createTitle = (color, title) => (
 );
 
 export default class Logger {
-  constructor(silent) {
+  constructor(silent, debug) {
     this.silent = silent;
+    this.debug = debug;
   }
 
-  clear(force = false) {
-    if (!this.silent || force) {
+  clear() {
+    if (!this.debug && !this.silent) {
       clear();
+    } else if (this.debug) {
+      this.blank(2);
     }
 
     if (this.spinner) {
@@ -24,15 +27,25 @@ export default class Logger {
     }
   }
 
-  log(...args) {
+  echo(...args) {
     if (!this.silent) {
       log(...args);
     }
   }
 
+  log(title, ...args) {
+    if (this.debug) {
+      this.echo(
+        `${createTitle('blue', 'DEBUG')}`,
+        chalk.blue(`[${title}]`),
+        ...args,
+      );
+    }
+  }
+
   blank(repeat = 1) {
     for (let i = 0; i < repeat; i += 1) {
-      this.log();
+      this.echo();
     }
   }
 
@@ -41,7 +54,7 @@ export default class Logger {
 
     this.clear();
 
-    if (useSpinner && !this.silent) {
+    if (useSpinner && !this.silent && !this.debug) {
       this.spinner = new Spinner({
         text: `${output} %s  `,
         color: 'cyan',
@@ -49,7 +62,7 @@ export default class Logger {
       this.spinner.setSpinnerString(18);
       this.spinner.start();
     } else {
-      this.log(output);
+      this.echo(output);
     }
   }
 

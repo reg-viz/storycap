@@ -31,10 +31,11 @@ program
   .option('-o, --output-dir [dir-name]', 'Directory where screenshot images are saved (Default "__screenshots__")', identity, '__screenshots__')
   .option('--browser-timeout [number]', 'Timeout milliseconds when Puppeteer opens Storybook. (Default 30000)', parseInteger, 30000)
   .option('--silent', 'Suppress standard output', identity, false)
+  .option('--debug', 'Enable debug mode.', identity, false)
   .parse(process.argv);
 
 
-const logger = new Logger(program.silent);
+const logger = new Logger(program.silent, program.debug);
 
 const exit = (message, code = 1) => {
   logger.error(message);
@@ -50,6 +51,7 @@ const options = {
   configDir: program.configDir,
   outputDir: program.outputDir,
   browserTimeout: program.browserTimeout,
+  debug: program.debug,
   cwd: path.resolve(bin, '..', '..'),
   cmd: path.resolve(bin, 'start-storybook'),
 };
@@ -79,7 +81,7 @@ if (!fs.existsSync(config)) {
     );
 
     [server, browser] = await Promise.all([
-      startStorybookServer(options),
+      startStorybookServer(options, logger),
       puppeteer.launch(),
     ]);
 
@@ -91,6 +93,10 @@ if (!fs.existsSync(config)) {
       'Fetching the target components...',
       true,
     );
+
+    page.on('console', (...args) => {
+      logger.log('BROWSER', ...args);
+    });
 
     const filenames = [];
     let stories = [];
@@ -107,7 +113,13 @@ if (!fs.existsSync(config)) {
 
       logger.blank();
 
-      if (!logger.silent) {
+      logger.log(
+        'NODE',
+        `Fetched stories
+${JSON.stringify(results, null, '  ')}`,
+      );
+
+      if (!logger.silent && !logger.debug) {
         progressbar = new ProgressBar(emoji.emojify(':camera:  [:bar] :current/:total'), {
           complete: '=',
           incomplete: ' ',
@@ -122,13 +134,23 @@ if (!fs.existsSync(config)) {
     await page.exposeFunction('takeScreenshot', async (params) => {
       const { kind, story, viewport } = params;
       const filename = `${filenamify(`${kind}-${story}`)}.png`;
+      const file = path.join(options.outputDir, filename);
+      const filePath = path.resolve(options.cwd, file);
 
       await page.setViewport(viewport);
       await page.screenshot({
-        path: path.resolve(options.cwd, options.outputDir, filename),
+        path: filePath,
       });
 
-      filenames.push(`${options.outputDir}/${filename}`);
+      filenames.push(file);
+
+      logger.log(
+        'NODE',
+        `Saved to "${file}".
+    kind: "${kind}"
+    story: "${story}"
+    viewport: "${JSON.stringify(viewport)}"`,
+      );
 
       if (progressbar) {
         progressbar.tick();
@@ -140,7 +162,7 @@ if (!fs.existsSync(config)) {
       logger.blank();
 
       filenames.forEach((filename) => {
-        logger.log(`  ${logSymbols.success}  ${filename}`);
+        logger.echo(`  ${logSymbols.success}  ${filename}`);
       });
 
       logger.blank(2);
