@@ -76,8 +76,8 @@ addons.register(pkg.name, async (api) => {
 
   try {
     const channel = addons.getChannel();
-    const stories = await searchTargetStories(channel, api);
-    window.setScreenshotStories(stories);
+    const allStories = await searchTargetStories(channel, api);
+    const stories = await window.setScreenshotStories(allStories);
 
     /* eslint-disable no-restricted-syntax, no-await-in-loop */
     for (const context of stories) {

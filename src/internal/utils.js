@@ -10,8 +10,16 @@ export const parseList = v => (
   v ? v.split(',').map(o => o.trim()) : null
 );
 
+export const parseRegExp = v => (
+  v ? new RegExp(v) : null
+);
+
 export const filenamify = filename => (
   sanitize(filename).replace(/\s/g, '-')
+);
+
+export const story2filename = (kind, story) => (
+  `${filenamify(`${kind}-${story}`)}.png`
 );
 
 export const pascalize = v => (

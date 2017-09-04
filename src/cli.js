@@ -7,6 +7,7 @@ import 'babel-polyfill';
 import program from 'commander';
 import emoji from 'node-emoji';
 import logSymbols from 'log-symbols';
+import chalk from 'chalk';
 import ProgressBar from 'progress';
 import puppeteer from 'puppeteer';
 import mkdirp from 'mkdirp';
@@ -16,7 +17,8 @@ import {
   identity,
   parseInteger,
   parseList,
-  filenamify,
+  parseRegExp,
+  story2filename,
 } from './internal/utils';
 import Logger from './internal/logger';
 
@@ -29,6 +31,8 @@ program
   .option('-s, --static-dir <dir-names>', 'Directory where to load static files from', parseList)
   .option('-c, --config-dir [dir-name]', 'Directory where to load Storybook configurations from (Default ".storybook")', identity, '.storybook')
   .option('-o, --output-dir [dir-name]', 'Directory where screenshot images are saved (Default "__screenshots__")', identity, '__screenshots__')
+  .option('--filter-kind [regexp]', 'Filter of kind with RegExp. (Example "Button$")', parseRegExp)
+  .option('--filter-story [regexp]', 'Filter of story with RegExp. (Example "^with\\s.+$")', parseRegExp)
   .option('--browser-timeout [number]', 'Timeout milliseconds when Puppeteer opens Storybook. (Default 30000)', parseInteger, 30000)
   .option('--silent', 'Suppress standard output', identity, false)
   .option('--debug', 'Enable debug mode.', identity, false)
@@ -50,6 +54,8 @@ const options = {
   staticDir: program.staticDir,
   configDir: program.configDir,
   outputDir: program.outputDir,
+  filterKind: program.filterKind,
+  filterStory: program.filterStory,
   browserTimeout: program.browserTimeout,
   debug: program.debug,
   cwd: path.resolve(bin, '..', '..'),
@@ -87,6 +93,19 @@ if (!fs.existsSync(config)) {
 
     const page = await browser.newPage();
 
+    const store = {
+      shotting: {
+        stories: [],
+        filenames: [],
+      },
+      skipped: {
+        stories: [],
+        filenames: [],
+      },
+    };
+
+    let progressbar;
+
     logger.section(
       'cyan',
       'PREPARE',
@@ -94,16 +113,25 @@ if (!fs.existsSync(config)) {
       true,
     );
 
+    if (options.filterKind || options.filterStory) {
+      logger.log('NODE', `Filter of kind and story, (kind = ${options.filterKind}, story = ${options.filterStory})`);
+    }
+
     page.on('console', (...args) => {
       logger.log('BROWSER', ...args);
     });
 
-    const filenames = [];
-    let stories = [];
-    let progressbar;
-
     await page.exposeFunction('setScreenshotStories', (results) => {
-      stories = results;
+      results.forEach((obj) => {
+        if (
+          (options.filterKind && !options.filterKind.test(obj.kind)) ||
+          (options.filterStory && !options.filterStory.test(obj.story))
+        ) {
+          store.skipped.stories.push(obj);
+        } else {
+          store.shotting.stories.push(obj);
+        }
+      });
 
       logger.section(
         'yellow',
@@ -116,7 +144,13 @@ if (!fs.existsSync(config)) {
       logger.log(
         'NODE',
         `Fetched stories
-${JSON.stringify(results, null, '  ')}`,
+${JSON.stringify(store.shotting.stories, null, '  ')}`,
+      );
+
+      logger.log(
+        'NODE',
+        `Skipped stories
+${JSON.stringify(store.skipped.stories, null, '  ')}`,
       );
 
       if (!logger.silent && !logger.debug) {
@@ -124,16 +158,22 @@ ${JSON.stringify(results, null, '  ')}`,
           complete: '=',
           incomplete: ' ',
           width: 40,
-          total: stories.length,
+          total: store.shotting.stories.length,
         });
       }
 
       mkdirp(options.outputDir);
+
+      store.skipped.stories.forEach(({ kind, story }) => {
+        store.skipped.filenames.push(path.join(options.outputDir, story2filename(kind, story)));
+      });
+
+      return store.shotting.stories;
     });
 
     await page.exposeFunction('takeScreenshot', async (params) => {
       const { kind, story, viewport } = params;
-      const filename = `${filenamify(`${kind}-${story}`)}.png`;
+      const filename = story2filename(kind, story);
       const file = path.join(options.outputDir, filename);
       const filePath = path.resolve(options.cwd, file);
 
@@ -142,7 +182,7 @@ ${JSON.stringify(results, null, '  ')}`,
         path: filePath,
       });
 
-      filenames.push(file);
+      store.shotting.filenames.push(file);
 
       logger.log(
         'NODE',
@@ -161,8 +201,12 @@ ${JSON.stringify(results, null, '  ')}`,
       logger.section('cyan', 'DONE', 'Screenshot image saving is completed!');
       logger.blank();
 
-      filenames.forEach((filename) => {
+      store.shotting.filenames.forEach((filename) => {
         logger.echo(`  ${logSymbols.success}  ${filename}`);
+      });
+
+      store.skipped.filenames.forEach((filename) => {
+        logger.echo(`  ${logSymbols.warning}  ${filename} ${chalk.yellow('(skipped)')}`);
       });
 
       logger.blank(2);
