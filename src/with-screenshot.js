@@ -5,12 +5,10 @@ import { EventTypes } from './constants';
 import { getScreenshotOptions } from './screenshot-options';
 import ScreenshotWrapper from './components/ScreenshotWrapper';
 
-const withScreenshot = (options = {}) => {
+const withScreenshot = (options = {}) => (storyFn, ctx) => {
   const channel = addons.getChannel();
 
-  channel.emit(EventTypes.COMPONENT_COUNT);
-
-  return storyFn => (context) => {
+  const wrapperWithContext = (context) => {
     const props = {
       ...assign({}, getScreenshotOptions(), options),
       channel,
@@ -23,6 +21,16 @@ const withScreenshot = (options = {}) => {
       </ScreenshotWrapper>
     );
   };
+
+  channel.emit(EventTypes.COMPONENT_COUNT);
+
+  if (ctx) {
+    return wrapperWithContext(ctx);
+  }
+
+  return context => (
+    wrapperWithContext(context)
+  );
 };
 
 export default withScreenshot;
