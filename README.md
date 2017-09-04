@@ -119,6 +119,27 @@ $ npm run screenshot
 
 
 
+### Support for addDecorator
+
+Or by using `addDecorator ()`, it is possible to shotting all the decorated stories.
+
+```javascript
+import { withScreenshot } from 'storybook-chrome-screenshot';
+
+storiesOf('Button', module)
+  .addDecorator(withScreenshot({
+    /* ...options */
+  }))
+  .add('with primary', () => (
+    <Button primary>Primary Button</Button>
+  ))
+  .add('with secondary', () => (
+    <Button secondary>Secondary Button</Button>
+  ));
+```
+
+
+
 
 ## API
 

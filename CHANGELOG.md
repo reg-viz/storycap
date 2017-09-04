@@ -1,5 +1,16 @@
 [api]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/tree/develop#api
 [issue1]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/1
+[issue3]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/3
+
+
+## 0.4.0
+
+> 2017-09-04
+
+### New features
+
+* Add support for `addDecorator()`. ([#3][issue3])  
+  Thanks for [@gcazaciuc](https://github.com/gcazaciuc).
 
 
 ## 0.3.0
@@ -9,7 +20,7 @@
 ### New features
 
 * Add `--debug` CLI options.
-    - In debug mode, browser console, stdsrr, contents being processed are output.
+  - In debug mode, browser console, stdsrr, contents being processed are output.
 
 
 ## 0.2.0
@@ -18,7 +29,7 @@
 
 ### New features
 
-* Add `--browser-timeout` CLI Options. ([#1][issue1])
+* Add `--browser-timeout` CLI Options. ([#1][issue1])  
   Thanks for [@gcazaciuc](https://github.com/gcazaciuc).
 
 ### Bugfix
