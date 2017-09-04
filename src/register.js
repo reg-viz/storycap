@@ -25,13 +25,19 @@ const searchTargetStories = (channel, api) => new Promise((resolve, reject) => {
     }
   };
 
+  const handleError = (error) => {
+    reject(error);
+  };
+
   const removeListeners = () => {
     channel.removeListener(EventTypes.COMPONENT_COUNT, handleCount);
     channel.removeListener(EventTypes.COMPONENT_INIT, handleInit);
+    channel.removeListener(EventTypes.COMPONENT_ERROR, handleError);
   };
 
   channel.on(EventTypes.COMPONENT_COUNT, handleCount);
   channel.on(EventTypes.COMPONENT_INIT, handleInit);
+  channel.on(EventTypes.COMPONENT_ERROR, handleError);
 
   channel.once('setStories', ({ stories }) => {
     /* eslint-disable no-restricted-syntax */

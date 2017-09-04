@@ -1,6 +1,7 @@
 import React from 'react';
 import assign from 'assign-deep';
 import addons from '@storybook/addons';
+import insect from 'util-inspect';
 import { EventTypes } from './constants';
 import { getScreenshotOptions } from './screenshot-options';
 import ScreenshotWrapper from './components/ScreenshotWrapper';
@@ -21,6 +22,12 @@ const withScreenshot = (options = {}) => (storyFn, ctx) => {
       </ScreenshotWrapper>
     );
   };
+
+  if (typeof storyFn !== 'function') {
+    const err = `The story may not be correct, (storyFn = "${insect(storyFn)}")`;
+    channel.emit(EventTypes.COMPONENT_ERROR, err); // For Puppeteer
+    throw new Error(err); // For browser
+  }
 
   channel.emit(EventTypes.COMPONENT_COUNT);
 

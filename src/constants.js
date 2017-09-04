@@ -4,6 +4,7 @@ export const EventTypes = {
   COMPONENT_INIT: `${addonPrefix}/component-init`,
   COMPONENT_READY: `${addonPrefix}/component-ready`,
   COMPONENT_COUNT: `${addonPrefix}/component-count`,
+  COMPONENT_ERROR: `${addonPrefix}/component-error`,
   READY: `${addonPrefix}/ready`,
 };
 
