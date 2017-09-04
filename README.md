@@ -21,6 +21,7 @@ It is primarily responsible for image generation necessary for Visual Testing su
   * [Register Addon](#register-addon)
   * [Setup your stories](#setup-your-stories)
   * [Run `storybook-chrome-screenshot` Command](#run-storybook-chrome-screenshot-command)
+  * [Support for addDecorator](#support-for-adddecorator)
 * [API](#api)
   * [withScreenshot(options = {})](#withscreenshotoptions--)
   * [setScreenshotOptions(options = {})](#setscreenshotoptionsoptions--)
@@ -121,7 +122,7 @@ $ npm run screenshot
 
 ### Support for addDecorator
 
-Or by using `addDecorator ()`, it is possible to shotting all the decorated stories.
+Or by using `addDecorator()`, it is possible to shotting all the decorated stories.
 
 ```javascript
 import { withScreenshot } from 'storybook-chrome-screenshot';
