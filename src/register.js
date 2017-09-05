@@ -1,11 +1,19 @@
 import 'babel-polyfill';
 import { getStorybook } from '@storybook/react'; // eslint-disable-line
 import addons from '@storybook/addons';
-import { EventTypes, SEARCH_COMPONENT_TIMEOUT } from './constants';
+import qs from 'query-string';
+import {
+  PhaseTypes,
+  EventTypes,
+  SEARCH_COMPONENT_TIMEOUT,
+} from './constants';
 import pkg from '../package.json';
 
 
-const isPuppeteer = /chrome-screenshot/.test(window.location.search);
+const query = qs.parse(window.location.search);
+const phase = query['chrome-screenshot'];
+const selectKind = query.selectKind;
+const selectStory = query.selectStory;
 
 
 const searchTargetStories = (channel, api) => new Promise((resolve, reject) => {
@@ -57,36 +65,30 @@ const searchTargetStories = (channel, api) => new Promise((resolve, reject) => {
 });
 
 
-const takeComponentScreenshot = (channel, api, { kind, story, viewport }) => (
-  new Promise((resolve) => {
-    channel.once(EventTypes.COMPONENT_READY, async () => {
-      await window.takeScreenshot({ kind, story, viewport });
-      resolve();
-    });
-
-    api.selectStory(kind, story);
-  })
-);
-
-
 addons.register(pkg.name, async (api) => {
-  if (!isPuppeteer) {
+  if (!phase) {
     return;
   }
 
   try {
     const channel = addons.getChannel();
-    const allStories = await searchTargetStories(channel, api);
-    const stories = await window.setScreenshotStories(allStories);
 
-    /* eslint-disable no-restricted-syntax, no-await-in-loop */
-    for (const context of stories) {
-      await takeComponentScreenshot(channel, api, context);
+    switch (phase) {
+      case PhaseTypes.PREPARE:
+        await window.setScreenshotStories(await searchTargetStories(channel, api));
+        return;
+
+      case PhaseTypes.CAPTURE:
+        channel.on(EventTypes.COMPONENT_READY, ({ kind, story }) => {
+          if (selectKind === kind && selectStory === story) {
+            window.readyComponentScreenshot();
+          }
+        });
+        api.selectStory(selectKind, selectStory);
+        break;
+
+      default: throw new Error(`An unknown phase called "${phase}" is being executed.`);
     }
-    /* eslint-disable padded-blocks */
-
-    window.doneScreenshotAll();
-
   } catch (e) {
     window.failureScreenshot(e);
   }

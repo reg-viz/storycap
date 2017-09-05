@@ -1,9 +1,8 @@
 import React from 'react';
-import assign from 'assign-deep';
 import addons from '@storybook/addons';
 import insect from 'util-inspect';
 import { EventTypes } from './constants';
-import { getScreenshotOptions } from './screenshot-options';
+import { mergeScreenshotOptions } from './screenshot-options';
 import ScreenshotWrapper from './components/ScreenshotWrapper';
 
 const withScreenshot = (options = {}) => (storyFn, ctx) => {
@@ -11,7 +10,7 @@ const withScreenshot = (options = {}) => (storyFn, ctx) => {
 
   const wrapperWithContext = (context) => {
     const props = {
-      ...assign({}, getScreenshotOptions(), options),
+      ...mergeScreenshotOptions(options),
       channel,
       context,
     };

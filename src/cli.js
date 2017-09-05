@@ -12,13 +12,17 @@ import ProgressBar from 'progress';
 import puppeteer from 'puppeteer';
 import mkdirp from 'mkdirp';
 import pkg from '../package.json';
+import Store from './internal/store';
 import startStorybookServer from './internal/server';
+import {
+  PhaseTypes,
+  EventTypes,
+} from './constants';
 import {
   identity,
   parseInteger,
   parseList,
   parseRegExp,
-  story2filename,
 } from './internal/utils';
 import Logger from './internal/logger';
 
@@ -75,16 +79,18 @@ if (!fs.existsSync(config)) {
 
 
 (async () => {
+  const store = new Store(options.filterKind, options.filterStory);
   let server;
   let browser;
+  let progressbar;
+
+  const close = () => {
+    if (server) server.kill();
+    if (browser) browser.close();
+  };
 
   try {
-    logger.section(
-      'green',
-      'LAUNCH',
-      'Launching storybook server...',
-      true,
-    );
+    logger.section('green', PhaseTypes.LAUNCH, 'Launching storybook server...', true);
 
     [server, browser] = await Promise.all([
       startStorybookServer(options, logger),
@@ -93,142 +99,131 @@ if (!fs.existsSync(config)) {
 
     const page = await browser.newPage();
 
-    const store = {
-      shotting: {
-        stories: [],
-        filenames: [],
-      },
-      skipped: {
-        stories: [],
-        filenames: [],
-      },
-    };
+    page.on('console', (...args) => {
+      logger.log('BROWSER', ...args);
+    });
 
-    let progressbar;
-
-    logger.section(
-      'cyan',
-      'PREPARE',
-      'Fetching the target components...',
-      true,
-    );
+    logger.section('cyan', PhaseTypes.PREPARE, 'Fetching the target components...', true);
 
     if (options.filterKind || options.filterStory) {
       logger.log('NODE', `Filter of kind and story, (kind = ${options.filterKind}, story = ${options.filterStory})`);
     }
 
-    page.on('console', (...args) => {
-      logger.log('BROWSER', ...args);
-    });
+    const gotoPage = async (phase, query = {}) => (
+      page.goto(server.createURL({
+        ...query,
+        full: 1,
+        'chrome-screenshot': phase,
+      }), {
+        timeout: options.browserTimeout,
+      })
+    );
 
-    await page.exposeFunction('setScreenshotStories', (results) => {
-      results.forEach((obj) => {
-        if (
-          (options.filterKind && !options.filterKind.test(obj.kind)) ||
-          (options.filterStory && !options.filterStory.test(obj.story))
-        ) {
-          store.skipped.stories.push(obj);
-        } else {
-          store.shotting.stories.push(obj);
-        }
+    const takeScreenshotComponent = story => new Promise(async (resolve) => {
+      await page.setViewport(story.viewport);
+      await gotoPage(PhaseTypes.CAPTURE, {
+        'chrome-screenshot-id': 0,
+        selectKind: story.kind,
+        selectStory: story.story,
       });
 
-      logger.section(
-        'yellow',
-        'CAPTURE',
-        'Capturing component screenshots...',
-      );
+      store.once(EventTypes.COMPONENT_READY, async () => {
+        const file = path.join(options.outputDir, story.filename);
 
+        await page.screenshot({
+          path: path.resolve(options.cwd, file),
+        });
+
+        resolve(file);
+      });
+    });
+
+    const takeScreenshotOfStories = async () => {
+      const stories = store.getStories();
+
+      /* eslint-disable no-restricted-syntax, no-await-in-loop */
+      for (const story of stories) {
+        const file = await takeScreenshotComponent(story);
+
+        logger.log(
+          'NODE',
+          `Saved to "${file}".
+    kind: "${story.kind}"
+    story: "${story.story}"
+    viewport: "${JSON.stringify(story.viewport)}"`,
+        );
+
+        if (progressbar) {
+          progressbar.tick();
+        }
+      }
+      /* eslint-enable */
+
+      doneAllComponentScreenshot(); // eslint-disable-line no-use-before-define
+    };
+
+    const doneAllComponentScreenshot = async () => {
+      logger.section('cyan', PhaseTypes.DONE, 'Screenshot image saving is completed!');
       logger.blank();
 
-      logger.log(
-        'NODE',
-        `Fetched stories
-${JSON.stringify(store.shotting.stories, null, '  ')}`,
-      );
+      const stories = store.getStories();
+      const skippedStories = store.getSkippedStories();
 
-      logger.log(
-        'NODE',
-        `Skipped stories
-${JSON.stringify(store.skipped.stories, null, '  ')}`,
-      );
+      stories.forEach(({ filename }) => {
+        logger.echo(`  ${logSymbols.success}  ${filename}`);
+      });
+
+      skippedStories.forEach(({ filename }) => {
+        logger.echo(`  ${logSymbols.warning}  ${filename} ${chalk.yellow('(skipped)')}`);
+      });
+
+      logger.blank(2);
+
+      close();
+      process.exit(0);
+    };
+
+    await page.exposeFunction('readyComponentScreenshot', (index) => {
+      store.emit(EventTypes.COMPONENT_READY, index);
+    });
+
+    await page.exposeFunction('getScreenshotStories', () => (
+      store.getStories()
+    ));
+
+    await page.exposeFunction('setScreenshotStories', (results) => {
+      store.setStories(results);
+      mkdirp(options.outputDir);
+
+      const stories = store.getStories();
+      const skippedStories = store.getSkippedStories();
+
+      logger.section('yellow', PhaseTypes.CAPTURE, 'Capturing component screenshots...');
+      logger.blank();
+      logger.log('NODE', `Fetched stories ${JSON.stringify(stories, null, '  ')}`);
+      logger.log('NODE', `Skipped stories ${JSON.stringify(skippedStories, null, '  ')}`);
 
       if (!logger.silent && !logger.debug) {
         progressbar = new ProgressBar(emoji.emojify(':camera:  [:bar] :current/:total'), {
           complete: '=',
           incomplete: ' ',
           width: 40,
-          total: store.shotting.stories.length,
+          total: stories.length,
         });
       }
 
-      mkdirp(options.outputDir);
-
-      store.skipped.stories.forEach(({ kind, story }) => {
-        store.skipped.filenames.push(path.join(options.outputDir, story2filename(kind, story)));
-      });
-
-      return store.shotting.stories;
-    });
-
-    await page.exposeFunction('takeScreenshot', async (params) => {
-      const { kind, story, viewport } = params;
-      const filename = story2filename(kind, story);
-      const file = path.join(options.outputDir, filename);
-      const filePath = path.resolve(options.cwd, file);
-
-      await page.setViewport(viewport);
-      await page.screenshot({
-        path: filePath,
-      });
-
-      store.shotting.filenames.push(file);
-
-      logger.log(
-        'NODE',
-        `Saved to "${file}".
-    kind: "${kind}"
-    story: "${story}"
-    viewport: "${JSON.stringify(viewport)}"`,
-      );
-
-      if (progressbar) {
-        progressbar.tick();
-      }
-    });
-
-    await page.exposeFunction('doneScreenshotAll', () => {
-      logger.section('cyan', 'DONE', 'Screenshot image saving is completed!');
-      logger.blank();
-
-      store.shotting.filenames.forEach((filename) => {
-        logger.echo(`  ${logSymbols.success}  ${filename}`);
-      });
-
-      store.skipped.filenames.forEach((filename) => {
-        logger.echo(`  ${logSymbols.warning}  ${filename} ${chalk.yellow('(skipped)')}`);
-      });
-
-      logger.blank(2);
-
-      browser.close();
-      server.kill();
-      process.exit(0);
+      takeScreenshotOfStories();
     });
 
     await page.exposeFunction('failureScreenshot', (error) => {
-      browser.close();
-      server.kill();
       logger.clear();
+      close();
       exit(error);
     });
 
-    await page.goto(`${server.getURL()}?full=1&chrome-screenshot=1`, {
-      timeout: options.browserTimeout,
-    });
+    await gotoPage(PhaseTypes.PREPARE);
   } catch (e) {
-    if (server) server.kill();
-    if (browser) browser.close();
+    close();
     exit(e);
   }
 })();

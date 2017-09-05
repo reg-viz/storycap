@@ -18,8 +18,16 @@ export const filenamify = filename => (
   sanitize(filename).replace(/\s/g, '-')
 );
 
-export const story2filename = (kind, story) => (
-  `${filenamify(`${kind}-${story}`)}.png`
+export const viewport2string = viewport => ([
+  `${viewport.width}x${viewport.height}`,
+  `${viewport.isMobile ? '-mobile' : ''}`,
+  `${viewport.hasTouch ? '-touch' : ''}`,
+  `${viewport.isLandscape ? '-landscape' : ''}`,
+  `${viewport.deviceScaleFactor > 1 ? `@${viewport.deviceScaleFactor}x` : ''}`,
+].join(''));
+
+export const story2filename = (kind, story, viewport = null) => (
+  `${filenamify(`${kind}-${story}${viewport ? `-${viewport2string(viewport)}` : ''}`)}.png`
 );
 
 export const pascalize = v => (

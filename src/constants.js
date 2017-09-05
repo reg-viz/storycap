@@ -1,3 +1,10 @@
+export const PhaseTypes = {
+  LAUNCH: 'LAUNCH',
+  PREPARE: 'PREPARE',
+  CAPTURE: 'CAPTURE',
+  DONE: 'DONE',
+};
+
 const addonPrefix = 'chrome-screenshot';
 
 export const EventTypes = {

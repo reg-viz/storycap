@@ -1,4 +1,5 @@
 import { spawn } from 'child_process';
+import qs from 'query-string';
 
 
 class StorybookServer {
@@ -9,6 +10,10 @@ class StorybookServer {
 
   getURL() {
     return this.url;
+  }
+
+  createURL(query) {
+    return `${this.getURL()}${query ? `?${qs.stringify(query)}` : ''}`;
   }
 
   kill() {
