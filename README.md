@@ -1,11 +1,14 @@
-# Storybook Chrome Screenshot addon
+# Storybook Chrome Screenshot Addon
 
 [storybook]: https://github.com/storybooks/storybook
 [puppeteer]: https://github.com/GoogleChrome/puppeteer
 
 ![DEMO](https://raw.githubusercontent.com/tsuyoshiwada/storybook-chrome-screenshot/artwork/demo.gif)
 
-> A [Storybook][storybook] addon, Save the screenshot image of your stories! via [Puppeteer][puppeteer].
+[![npm](https://img.shields.io/npm/v/storybook-chrome-screenshot.svg?style=flat-square)](https://www.npmjs.com/package/storybook-chrome-screenshot)
+[![David](https://img.shields.io/david/tsuyoshiwada/storybook-chrome-screenshot.svg?style=flat-square)](https://david-dm.org/tsuyoshiwada/storybook-chrome-screenshot)
+
+> A [Storybook][storybook] Addon, Save the screenshot image of your stories :camera: via [Puppeteer][puppeteer].
 
 `storybook-chrome-screenshot` takes a screenshot and saves it.  
 It is primarily responsible for image generation necessary for Visual Testing such as `reg-viz`.
