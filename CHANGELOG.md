@@ -1,6 +1,35 @@
 [api]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/tree/develop#api
-[issue1]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/1
-[issue3]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/3
+[#1]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/1
+[#3]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/3
+[#4]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/4
+[#5]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/5
+[#6]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/6
+
+
+## 0.5.0
+
+> 0000-00-00
+
+### New features
+
+* Add filter CLI options. ([#4][#4])
+    - `--filter-kind`
+    - `--filter-story`
+    - Use RegExp to narrow down the stories to shoot.
+* Add support for multiple viewport. ([#5][#5])
+    - Allowed `array` as the value of `viewport`.
+
+### Minor changes
+
+* Add error report when using addDecorator illegally. ([#6][#6])
+
+### Bugfix
+
+* Shooting stops when `isMobile` or` hasTouch` is specified.
+
+### Big thanks
+
+* [@gcazaciuc](https://github.com/gcazaciuc)
 
 
 ## 0.4.0
@@ -9,7 +38,7 @@
 
 ### New features
 
-* Add support for `addDecorator()`. ([#3][issue3])  
+* Add support for `addDecorator()`. ([#3][#3])  
   Thanks for [@gcazaciuc](https://github.com/gcazaciuc).
 
 
@@ -29,12 +58,12 @@
 
 ### New features
 
-* Add `--browser-timeout` CLI Options. ([#1][issue1])  
+* Add `--browser-timeout` CLI Options. ([#1][#1])  
   Thanks for [@gcazaciuc](https://github.com/gcazaciuc).
 
 ### Bugfix
 
-* Fix bug that processes will remain when an error occurs. ([#1][issue1])
+* Fix bug that processes will remain when an error occurs. ([#1][#1])
 
 
 ## 0.1.0

@@ -164,6 +164,34 @@ The following objects of `options` can be specified.
 }
 ```
 
+Also, By passing the `array` to `viewport`, you can easily shoot multiple Viewports.
+
+```javascript
+{
+  viewport: [
+    // Mobile
+    {
+      width: 300,
+      height: 420,
+      isMobile: true,
+      hasTouch: true,
+    },
+    // Tablet
+    {
+      width: 768,
+      height: 800,
+      isMobile: true,
+      hasTouch: true,
+    },
+    // Desktop
+    {
+      width: 1024,
+      height: 768,
+    },
+  ],
+}
+```
+
 
 ### setScreenshotOptions(options = {})
 
@@ -215,6 +243,8 @@ $ $(npm bin)/storybook-chrome-screenshot --help
     -s, --static-dir <dir-names>  Directory where to load static files from
     -c, --config-dir [dir-name]   Directory where to load Storybook configurations from (Default ".storybook")
     -o, --output-dir [dir-name]   Directory where screenshot images are saved (Default "__screenshots__")
+    --filter-kind [regexp]        Filter of kind with RegExp. (Example "Button$")
+    --filter-story [regexp]       Filter of story with RegExp. (Example "^with\s.+$")
     --browser-timeout [number]    Timeout milliseconds when Puppeteer opens Storybook. (Default 30000)
     --silent                      Suppress standard output
     --debug                       Enable debug mode.
@@ -229,7 +259,7 @@ $ $(npm bin)/storybook-chrome-screenshot --help
 The following tasks remain. Contributes are welcome :smiley:
 
 * [x] Global Options.
-* [ ] Shooting at an arbitrary timing.
+* [x] ~~Shooting at an arbitrary timing.~~ (No plan for support)
 * [ ] Support for [Vue.js](https://github.com/vuejs/vue).
 
 
