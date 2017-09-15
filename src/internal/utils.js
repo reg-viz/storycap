@@ -35,3 +35,10 @@ export const pascalize = v => (
     g.toUpperCase()
   ))
 );
+
+export const createArray = length => (new Array(length)).fill(null);
+
+export const arrayChunk = (arr, n) => (
+  arr.slice(0, (((arr.length + n) - 1) / n) | 0) // eslint-disable-line no-bitwise
+    .map((c, i) => arr.slice(n * i, (n * i) + n))
+);

@@ -2,6 +2,7 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
+import { EventEmitter } from 'events';
 import { execSync } from 'child_process';
 import 'babel-polyfill';
 import program from 'commander';
@@ -23,6 +24,8 @@ import {
   parseInteger,
   parseList,
   parseRegExp,
+  createArray,
+  arrayChunk,
 } from './internal/utils';
 import Logger from './internal/logger';
 
@@ -35,6 +38,7 @@ program
   .option('-s, --static-dir <dir-names>', 'Directory where to load static files from', parseList)
   .option('-c, --config-dir [dir-name]', 'Directory where to load Storybook configurations from (Default ".storybook")', identity, '.storybook')
   .option('-o, --output-dir [dir-name]', 'Directory where screenshot images are saved (Default "__screenshots__")', identity, '__screenshots__')
+  .option('--parallel [number]', 'Number of Page Instances of Puppeteer to be activated when shooting screenshots (Default 4)', parseInteger, 4)
   .option('--filter-kind [regexp]', 'Filter of kind with RegExp. (Example "Button$")', parseRegExp)
   .option('--filter-story [regexp]', 'Filter of story with RegExp. (Example "^with\\s.+$")', parseRegExp)
   .option('--browser-timeout [number]', 'Timeout milliseconds when Puppeteer opens Storybook. (Default 30000)', parseInteger, 30000)
@@ -61,6 +65,7 @@ const options = {
   filterKind: program.filterKind,
   filterStory: program.filterStory,
   browserTimeout: program.browserTimeout,
+  parallel: program.parallel,
   debug: program.debug,
   cwd: path.resolve(bin, '..', '..'),
   cmd: path.resolve(bin, 'start-storybook'),
@@ -97,11 +102,65 @@ if (!fs.existsSync(config)) {
       puppeteer.launch(),
     ]);
 
-    const page = await browser.newPage();
+    const pages = await Promise.all(createArray(options.parallel).map(async () => {
+      const page = await browser.newPage();
+      const emitter = new EventEmitter();
 
-    page.on('console', (...args) => {
-      logger.log('BROWSER', ...args);
-    });
+      page.on('console', (...args) => {
+        logger.log('BROWSER', ...args);
+      });
+
+      await page.exposeFunction('readyComponentScreenshot', (index) => {
+        emitter.emit(EventTypes.COMPONENT_READY, index);
+      });
+
+      await page.exposeFunction('getScreenshotStories', () => (
+        store.getStories()
+      ));
+
+      await page.exposeFunction('failureScreenshot', (error) => {
+        logger.clear();
+        close();
+        exit(error);
+      });
+
+      const goto = (phase, query = {}) => (
+        page.goto(server.createURL({
+          ...query,
+          full: 1,
+          'chrome-screenshot': phase,
+        }, {
+          timeout: options.browserTimeout,
+        }))
+      );
+
+      const takeScreenshot = story => new Promise(async (resolve) => {
+        await page.setViewport(story.viewport);
+        await goto(PhaseTypes.CAPTURE, {
+          selectKind: story.kind,
+          selectStory: story.story,
+        });
+
+        emitter.once(EventTypes.COMPONENT_READY, async () => {
+          const file = path.join(options.outputDir, story.filename);
+
+          await page.screenshot({
+            path: path.resolve(options.cwd, file),
+          });
+
+          resolve(file);
+        });
+      });
+
+      return {
+        page,
+        goto,
+        takeScreenshot,
+        exposeFunction: (expose, fn) => page.exposeFunction(expose, fn),
+      };
+    }));
+
+    const firstPage = pages[0];
 
     logger.section('cyan', PhaseTypes.PREPARE, 'Fetching the target components...', true);
 
@@ -109,60 +168,42 @@ if (!fs.existsSync(config)) {
       logger.log('NODE', `Filter of kind and story, (kind = ${options.filterKind}, story = ${options.filterStory})`);
     }
 
-    const gotoPage = async (phase, query = {}) => (
-      page.goto(server.createURL({
-        ...query,
-        full: 1,
-        'chrome-screenshot': phase,
-      }), {
-        timeout: options.browserTimeout,
-      })
-    );
-
-    const takeScreenshotComponent = story => new Promise(async (resolve) => {
-      await page.setViewport(story.viewport);
-      await gotoPage(PhaseTypes.CAPTURE, {
-        'chrome-screenshot-id': 0,
-        selectKind: story.kind,
-        selectStory: story.story,
-      });
-
-      store.once(EventTypes.COMPONENT_READY, async () => {
-        const file = path.join(options.outputDir, story.filename);
-
-        await page.screenshot({
-          path: path.resolve(options.cwd, file),
-        });
-
-        resolve(file);
-      });
-    });
-
     const takeScreenshotOfStories = async () => {
       const stories = store.getStories();
+      const parallel = Math.min(stories.length, options.parallel);
+      const chunkSize = Math.max(1, Math.ceil(stories.length / parallel));
+      const chunkedStories = arrayChunk(stories, chunkSize);
 
-      /* eslint-disable no-restricted-syntax, no-await-in-loop */
-      for (const story of stories) {
-        const file = await takeScreenshotComponent(story);
+      await Promise.all(chunkedStories.map(async (arr, i) => {
+        const page = pages[i];
 
-        logger.log(
-          'NODE',
-          `Saved to "${file}".
+        /* eslint-disable no-restricted-syntax, no-await-in-loop */
+        for (const story of arr) {
+          const file = await page.takeScreenshot(story);
+
+          logger.log(
+            'NODE',
+            `Saved to "${file}".
     kind: "${story.kind}"
     story: "${story.story}"
     viewport: "${JSON.stringify(story.viewport)}"`,
-        );
+          );
 
-        if (progressbar) {
-          progressbar.tick();
+          if (progressbar) {
+            progressbar.tick();
+          }
         }
-      }
-      /* eslint-enable */
+        /* eslint-enable */
+      }));
 
       doneAllComponentScreenshot(); // eslint-disable-line no-use-before-define
     };
 
     const doneAllComponentScreenshot = async () => {
+      if (progressbar) {
+        progressbar.terminate();
+      }
+
       logger.section('cyan', PhaseTypes.DONE, 'Screenshot image saving is completed!');
       logger.blank();
 
@@ -183,15 +224,7 @@ if (!fs.existsSync(config)) {
       process.exit(0);
     };
 
-    await page.exposeFunction('readyComponentScreenshot', (index) => {
-      store.emit(EventTypes.COMPONENT_READY, index);
-    });
-
-    await page.exposeFunction('getScreenshotStories', () => (
-      store.getStories()
-    ));
-
-    await page.exposeFunction('setScreenshotStories', (results) => {
+    await firstPage.exposeFunction('setScreenshotStories', (results) => {
       store.setStories(results);
       mkdirp(options.outputDir);
 
@@ -215,13 +248,7 @@ if (!fs.existsSync(config)) {
       takeScreenshotOfStories();
     });
 
-    await page.exposeFunction('failureScreenshot', (error) => {
-      logger.clear();
-      close();
-      exit(error);
-    });
-
-    await gotoPage(PhaseTypes.PREPARE);
+    await firstPage.goto(PhaseTypes.PREPARE);
   } catch (e) {
     close();
     exit(e);
