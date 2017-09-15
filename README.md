@@ -246,6 +246,7 @@ $ $(npm bin)/storybook-chrome-screenshot --help
     -s, --static-dir <dir-names>  Directory where to load static files from
     -c, --config-dir [dir-name]   Directory where to load Storybook configurations from (Default ".storybook")
     -o, --output-dir [dir-name]   Directory where screenshot images are saved (Default "__screenshots__")
+    --parallel [number]           Number of Page Instances of Puppeteer to be activated when shooting screenshots (Default 4)
     --filter-kind [regexp]        Filter of kind with RegExp. (Example "Button$")
     --filter-story [regexp]       Filter of story with RegExp. (Example "^with\s.+$")
     --browser-timeout [number]    Timeout milliseconds when Puppeteer opens Storybook. (Default 30000)

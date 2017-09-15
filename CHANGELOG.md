@@ -6,6 +6,13 @@
 [#6]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/6
 
 
+## 0.6.0
+
+> 2017-00-00
+
+* TODO
+
+
 ## 0.5.0
 
 > 2017-09-10
