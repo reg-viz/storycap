@@ -41,6 +41,7 @@ program
   .option('--parallel [number]', 'Number of Page Instances of Puppeteer to be activated when shooting screenshots (Default 4)', parseInteger, 4)
   .option('--filter-kind [regexp]', 'Filter of kind with RegExp. (Example "Button$")', parseRegExp)
   .option('--filter-story [regexp]', 'Filter of story with RegExp. (Example "^with\\s.+$")', parseRegExp)
+  .option('--inject-files <file-names>', 'Path to the JavaScript file to be injected into frame. (Default "")', parseList, [])
   .option('--browser-timeout [number]', 'Timeout milliseconds when Puppeteer opens Storybook. (Default 30000)', parseInteger, 30000)
   .option('--silent', 'Suppress standard output', identity, false)
   .option('--debug', 'Enable debug mode.', identity, false)
@@ -66,6 +67,7 @@ const options = {
   filterStory: program.filterStory,
   browserTimeout: program.browserTimeout,
   parallel: program.parallel,
+  injectFiles: program.injectFiles,
   debug: program.debug,
   cwd: path.resolve(bin, '..', '..'),
   cmd: path.resolve(bin, 'start-storybook'),
@@ -96,6 +98,9 @@ if (!fs.existsSync(config)) {
 
   try {
     logger.section('green', PhaseTypes.LAUNCH, 'Launching storybook server...', true);
+
+    logger.log('NODE', 'Inject files, ', options.injectFiles);
+    logger.log('NODE', `Filter of kind and story, (kind = ${options.filterKind}, story = ${options.filterStory})`);
 
     [server, browser] = await Promise.all([
       startStorybookServer(options, logger),
@@ -144,6 +149,10 @@ if (!fs.existsSync(config)) {
         emitter.once(EventTypes.COMPONENT_READY, async () => {
           const file = path.join(options.outputDir, story.filename);
 
+          await Promise.all(options.injectFiles.map(filePath => (
+            page.injectFile(filePath)
+          )));
+
           await page.screenshot({
             path: path.resolve(options.cwd, file),
           });
@@ -163,10 +172,6 @@ if (!fs.existsSync(config)) {
     const firstPage = pages[0];
 
     logger.section('cyan', PhaseTypes.PREPARE, 'Fetching the target components...', true);
-
-    if (options.filterKind || options.filterStory) {
-      logger.log('NODE', `Filter of kind and story, (kind = ${options.filterKind}, story = ${options.filterStory})`);
-    }
 
     const takeScreenshotOfStories = async () => {
       const stories = store.getStories();
