@@ -30,6 +30,8 @@ It is primarily responsible for image generation necessary for Visual Testing su
   * [setScreenshotOptions(options = {})](#setscreenshotoptionsoptions--)
   * [getScreenshotOptions()](#getscreenshotoptions)
 * [Command Line Options](#command-line-options)
+* [Tips](#tips)
+  * [Disable component animation](#disable-component-animation)
 * [TODO](#todo)
 * [Contibute](#contibute)
   * [Development](#development)
@@ -249,12 +251,44 @@ $ $(npm bin)/storybook-chrome-screenshot --help
     --parallel [number]           Number of Page Instances of Puppeteer to be activated when shooting screenshots (Default 4)
     --filter-kind [regexp]        Filter of kind with RegExp. (Example "Button$")
     --filter-story [regexp]       Filter of story with RegExp. (Example "^with\s.+$")
+    --inject-files <file-names>   Path to the JavaScript file to be injected into frame. (Default "")
     --browser-timeout [number]    Timeout milliseconds when Puppeteer opens Storybook. (Default 30000)
     --silent                      Suppress standard output
     --debug                       Enable debug mode.
     -h, --help                    output usage information
 ```
 
+
+
+
+## Tips
+
+### Disable component animation
+
+When shooting screenshots, you may want to disable component animation. In this case it is easiest to inject Script using the `--inject-files` option.
+
+You can create `./disable-animation.js` and disable CSS Animation with the next snippet.
+
+```javascript
+(() => {
+  const $iframe = document.getElementById('storybook-preview-iframe');
+  const $doc = $iframe.contentDocument;
+  const $style = $doc.createElement('style');
+
+  $style.innerHTML = `* {
+    transition: none !important;
+    animation: none !important;
+  }`;
+
+  $doc.body.appendChild($style);
+})();
+```
+
+Pass the created file to the `--inject-files` option.
+
+```bash
+$ $(npm bin)/storybook-chrome-screenshot --inject-files ./disable-animation.js [...more options]
+```
 
 
 
