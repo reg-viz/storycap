@@ -4,13 +4,27 @@
 [#4]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/4
 [#5]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/5
 [#6]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/6
+[#7]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/7
+[#8]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/8
+[#9]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/9
 
 
 ## 0.6.0
 
-> 2017-00-00
+> 2017-09-28
 
-* TODO
+### New features
+
+* Add parallel CLI options. ([#7][#7])
+    - `--parallel`
+    - By launching multiple Page instances of Puppeteer, you can expect a slight improvement in performance.
+* Add injection scripts CLI options. ([#8][#8])
+    - `--inject-files`
+    - You can now inject any script you like when shooting screenshots.
+
+### Minor changes
+
+* Add source maps to production build. ([#9][#9])
 
 
 ## 0.5.0
