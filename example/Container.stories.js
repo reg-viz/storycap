@@ -6,16 +6,11 @@ import { withScreenshot } from '../src/';
 import Container from './Container';
 
 storiesOf('Container', module)
-  .add('with single viewport',
-    withScreenshot({
-      viewport: {
-      },
-    })(() => (
-      <Container>
-        Single Viewport
-      </Container>
-    ))
-  )
+  .add('with single viewport', () => (
+    <Container>
+      Single Viewport
+    </Container>
+  ))
   .add('with multiple viewport',
     withScreenshot({
       viewport: [
