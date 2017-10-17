@@ -5,7 +5,14 @@ import { EventTypes } from './constants';
 import { mergeScreenshotOptions } from './screenshot-options';
 import ScreenshotWrapper from './components/ScreenshotWrapper';
 
+// There is a case where the count is doubly increment
+// when using `addDecorator` to the first component.
+// As a workaround, use `countupIgnore` to control the story
+// counted once so that it will not count again.
+const countupIgnore = [];
+
 const withScreenshot = (options = {}) => (storyFn, ctx) => {
+  const useDecorator = !!ctx;
   const channel = addons.getChannel();
 
   const wrapperWithContext = (context) => {
@@ -28,9 +35,12 @@ const withScreenshot = (options = {}) => (storyFn, ctx) => {
     throw new Error(err); // For browser
   }
 
-  channel.emit(EventTypes.COMPONENT_COUNT);
+  if (!useDecorator || countupIgnore.indexOf(ctx.kind + ctx.story) < 0) {
+    channel.emit(EventTypes.COMPONENT_COUNT);
+  }
 
-  if (ctx) {
+  if (useDecorator) {
+    countupIgnore.push(ctx.kind + ctx.story);
     return wrapperWithContext(ctx);
   }
 
