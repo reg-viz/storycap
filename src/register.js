@@ -19,6 +19,7 @@ const selectStory = query.selectStory;
 const searchTargetStories = (channel, api) => new Promise((resolve, reject) => {
   const results = [];
   let count = 0;
+  let resolved = false;
 
   const handleCount = () => {
     count += 1;
@@ -26,10 +27,14 @@ const searchTargetStories = (channel, api) => new Promise((resolve, reject) => {
 
   const handleInit = (context) => {
     results.push(context);
+    if (resolved) {
+      console.log('handleInit after the resolving', context);
+    }
 
     if (results.length >= count) {
-      removeListeners(); // eslint-disable-line no-use-before-define
+      // removeListeners(); // eslint-disable-line no-use-before-define
       resolve(results);
+      resolved = true;
     }
   };
 
