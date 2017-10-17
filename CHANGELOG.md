@@ -7,6 +7,16 @@
 [#7]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/7
 [#8]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/8
 [#9]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/9
+[#10]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/10
+
+
+## 0.6.1
+
+> 2017-10-18
+
+### Bugfix
+
+* Fixed a bug that screenshot was not taken when using `addDecorator`. ([#10][#10])
 
 
 ## 0.6.0
