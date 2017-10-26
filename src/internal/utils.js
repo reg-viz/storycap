@@ -26,8 +26,8 @@ export const viewport2string = viewport => ([
   `${viewport.deviceScaleFactor > 1 ? `@${viewport.deviceScaleFactor}x` : ''}`,
 ].join(''));
 
-export const story2filename = (kind, story, viewport = null) => (
-  `${filenamify(`${kind}-${story}${viewport ? `-${viewport2string(viewport)}` : ''}`)}.png`
+export const story2filename = (kind, story, viewport = null, namespace = null) => (
+  `${filenamify(`${kind}-${story}${namespace ? `_${namespace}` : ''}${viewport ? `-${viewport2string(viewport)}` : ''}`)}.png`
 );
 
 export const pascalize = v => (
@@ -42,3 +42,14 @@ export const arrayChunk = (arr, n) => (
   arr.slice(0, (((arr.length + n) - 1) / n) | 0) // eslint-disable-line no-bitwise
     .map((c, i) => arr.slice(n * i, (n * i) + n))
 );
+
+export const promiseChain = (arr, cb) => {
+  const results = [];
+  return arr.reduce(
+    (acc, cur) => acc.then((result) => {
+      results.push(result);
+      return cb(cur);
+    }),
+    Promise.resolve() // eslint-disable-line
+  ).then(lastResult => [...results, lastResult].slice(1));
+};

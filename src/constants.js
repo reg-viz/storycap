@@ -9,13 +9,13 @@ const addonPrefix = 'chrome-screenshot';
 
 export const EventTypes = {
   COMPONENT_INIT: `${addonPrefix}/component-init`,
+  COMPONENT_MOUNT: `${addonPrefix}/component-mount`,
   COMPONENT_READY: `${addonPrefix}/component-ready`,
-  COMPONENT_COUNT: `${addonPrefix}/component-count`,
   COMPONENT_ERROR: `${addonPrefix}/component-error`,
   READY: `${addonPrefix}/ready`,
 };
 
-export const SEARCH_COMPONENT_TIMEOUT = 36000;
+export const SEARCH_COMPONENT_TIMEOUT = 200;
 
 export const defaultScreenshotOptions = {
   delay: 0,

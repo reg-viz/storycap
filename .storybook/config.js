@@ -7,6 +7,8 @@ function loadStories() {
   req.keys().forEach(filename => req(filename));
 }
 
-addDecorator(withScreenshot());
+addDecorator(withScreenshot({
+  namespace: 'global'
+}));
 
 configure(loadStories, module);

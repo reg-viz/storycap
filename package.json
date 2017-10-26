@@ -75,6 +75,7 @@
     "clear": "^0.0.1",
     "commander": "^2.11.0",
     "imagesloaded": "^4.1.3",
+    "lodash": "^4.17.4",
     "log-symbols": "^2.0.0",
     "mkdirp": "^0.5.1",
     "node-emoji": "^1.8.1",

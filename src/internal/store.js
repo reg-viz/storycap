@@ -31,6 +31,7 @@ export default class Store extends EventEmitter {
             story.kind,
             story.story,
             isMultipleViewport ? vp : null,
+            story.namespace,
           ),
         });
       });
