@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/index.js"],"names":["getScreenshotOptions","setScreenshotOptions","default"],"mappings":";;;;;;;;;;;8BAASA,oB;;;;;;8BAAsBC,oB;;;;;;;;;mDACtBC,O","file":"index.js","sourcesContent":["export { getScreenshotOptions, setScreenshotOptions } from './screenshot-options';\nexport { default as withScreenshot } from './with-screenshot';\n"]}
