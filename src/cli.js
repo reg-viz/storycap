@@ -163,6 +163,7 @@ if (!fs.existsSync(config)) {
 
         await page.screenshot({
           path: path.resolve(options.cwd, file),
+          fullPage: true,
         });
 
         resolve(file);
