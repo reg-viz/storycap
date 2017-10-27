@@ -140,26 +140,30 @@ if (!fs.existsSync(config)) {
         }))
       );
 
-      const takeScreenshot = story => new Promise(async (resolve, reject) => {
+      const takeScreenshot = story => new Promise(async (resolve) => {
         await page.setViewport(story.viewport);
-        goto(PhaseTypes.CAPTURE, {
-          selectKind: story.kind,
-          selectStory: story.story,
-        }).catch(reject);
 
-        emitter.once(EventTypes.COMPONENT_READY, async () => {
-          const file = path.join(options.outputDir, story.filename);
+        await Promise.all([
+          goto(PhaseTypes.CAPTURE, {
+            selectKind: story.kind,
+            selectStory: story.story,
+          }),
+          new Promise((resolveEmitter) => {
+            emitter.once(EventTypes.COMPONENT_READY, resolveEmitter);
+          }),
+        ]);
 
-          await Promise.all(options.injectFiles.map(filePath => (
-            page.injectFile(filePath)
-          )));
+        const file = path.join(options.outputDir, story.filename);
 
-          await page.screenshot({
-            path: path.resolve(options.cwd, file),
-          });
+        await Promise.all(options.injectFiles.map(filePath => (
+          page.injectFile(filePath)
+        )));
 
-          resolve(file);
+        await page.screenshot({
+          path: path.resolve(options.cwd, file),
         });
+
+        resolve(file);
       });
 
       return {
