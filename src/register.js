@@ -1,5 +1,4 @@
 import 'babel-polyfill';
-import { getStorybook } from '@storybook/react'; // eslint-disable-line
 import { flattenDeep } from 'lodash';
 import { compose, flattenDepth, map } from 'lodash/fp';
 import addons from '@storybook/addons';
