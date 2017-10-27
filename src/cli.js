@@ -139,12 +139,12 @@ if (!fs.existsSync(config)) {
         }))
       );
 
-      const takeScreenshot = story => new Promise(async (resolve) => {
+      const takeScreenshot = story => new Promise(async (resolve, reject) => {
         await page.setViewport(story.viewport);
-        await goto(PhaseTypes.CAPTURE, {
+        goto(PhaseTypes.CAPTURE, {
           selectKind: story.kind,
           selectStory: story.story,
-        });
+        }).catch(reject);
 
         emitter.once(EventTypes.COMPONENT_READY, async () => {
           const file = path.join(options.outputDir, story.filename);
