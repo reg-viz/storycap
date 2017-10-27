@@ -136,7 +136,7 @@ if (!fs.existsSync(config)) {
           'chrome-screenshot': phase,
         }, {
           timeout: options.browserTimeout,
-          waitUntil: 'networkidle',
+          waitUntil: ['networkidle', 'load', 'domcontentloaded'],
         }))
       );
 
