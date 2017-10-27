@@ -7,7 +7,6 @@ import qs from 'query-string';
 import {
   PhaseTypes,
   EventTypes,
-  SEARCH_COMPONENT_TIMEOUT,
 } from './constants';
 import { promiseChain } from './internal/utils';
 import pkg from '../package.json';
@@ -25,10 +24,10 @@ const searchScreenshotWrappersByStory = (kind, story, api, channel) => {
   // One story can have several usage of withScreenshot.
   // Using the events from teh ScreenshotWrapper we try to know about the wrappers
   // events are firing in this sequence. init, mount
-  // If story doesn't have any withScreenshot wrappers, we handle it with delay.
-  // Unfortunately, we can directly check if the story has the wrapper,
-  // so we hope that init event will be fired in SEARCH_COMPONENT_TIMEOUT miliseconds.
-  // Overwise, we think, that story doesn't have the wrappers
+  // If story doesn't have any withScreenshot wrappers, we handle it with FINISH_MOUNT event.
+  // initScreenshot decorator must be added before the gloabl withScreenshot,
+  // so the mount event of the wrapper element in initScreenshot will be fired after
+  // the all mount events of the withScreenthot HOC
 
   // Why we use 2 kind of events: init and mount?
   // we use 2 events, init and mount, because in this way
@@ -48,18 +47,21 @@ const searchScreenshotWrappersByStory = (kind, story, api, channel) => {
         onResolve(mounted); // eslint-disable-line
       }
     }
+    function onFinishMount(context) {
+      if (context.kind !== kind || context.story !== story) return;
+      if (inited.length === 0) onResolve([]); // eslint-disable-line
+    }
     function onResolve(contexts) {
       resolve(contexts);
       channel.removeListener(EventTypes.COMPONENT_INIT, onInit);
       channel.removeListener(EventTypes.COMPONENT_MOUNT, onMount);
+      channel.removeListener(EventTypes.COMPONENT_FINISH_MOUNT, onFinishMount);
     }
     channel.on(EventTypes.COMPONENT_INIT, onInit);
     channel.on(EventTypes.COMPONENT_MOUNT, onMount);
+    channel.on(EventTypes.COMPONENT_FINISH_MOUNT, onFinishMount);
 
     api.selectStory(kind, story);
-    setTimeout(() => {
-      if (inited.length === 0) onResolve([]);
-    }, SEARCH_COMPONENT_TIMEOUT);
   });
 };
 

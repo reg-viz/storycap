@@ -12,10 +12,9 @@ export const EventTypes = {
   COMPONENT_MOUNT: `${addonPrefix}/component-mount`,
   COMPONENT_READY: `${addonPrefix}/component-ready`,
   COMPONENT_ERROR: `${addonPrefix}/component-error`,
+  COMPONENT_FINISH_MOUNT: `${addonPrefix}/component-finish-mount`,
   READY: `${addonPrefix}/ready`,
 };
-
-export const SEARCH_COMPONENT_TIMEOUT = 1000;
 
 export const defaultScreenshotOptions = {
   delay: 0,
