@@ -78,7 +78,7 @@ const searchTargetStories = (channel, api) => new Promise((resolve, reject) => {
       resolve(contexts);
     }, reject);
 
-    channel.on(EventTypes.EventTypes.COMPONENT_ERROR, reject);
+    channel.on(EventTypes.COMPONENT_ERROR, reject);
   });
 });
 

@@ -15,7 +15,7 @@ export const EventTypes = {
   READY: `${addonPrefix}/ready`,
 };
 
-export const SEARCH_COMPONENT_TIMEOUT = 200;
+export const SEARCH_COMPONENT_TIMEOUT = 1000;
 
 export const defaultScreenshotOptions = {
   delay: 0,
