@@ -80,7 +80,7 @@
     "mkdirp": "^0.5.1",
     "node-emoji": "^1.8.1",
     "progress": "^2.0.0",
-    "puppeteer": "^0.10.2",
+    "puppeteer": "^0.12.0",
     "query-string": "^5.0.0",
     "sanitize-filename": "^1.6.1",
     "util-inspect": "^0.1.8"

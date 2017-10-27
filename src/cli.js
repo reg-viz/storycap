@@ -156,7 +156,9 @@ if (!fs.existsSync(config)) {
         const file = path.join(options.outputDir, story.filename);
 
         await Promise.all(options.injectFiles.map(filePath => (
-          page.injectFile(filePath)
+          page.addScriptTag({
+            path: filePath,
+          })
         )));
 
         await page.screenshot({
