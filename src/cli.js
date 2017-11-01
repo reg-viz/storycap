@@ -111,8 +111,8 @@ if (!fs.existsSync(config)) {
       const page = await browser.newPage();
       const emitter = new EventEmitter();
 
-      page.on('console', (...args) => {
-        logger.log('BROWSER', ...args);
+      page.on('console', (data) => {
+        logger.log('BROWSER', data.text);
       });
 
       await page.exposeFunction('readyComponentScreenshot', (index) => {
