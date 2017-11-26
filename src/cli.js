@@ -55,8 +55,6 @@ const exit = (message, code = 1) => {
   process.exit(code);
 };
 
-const bin = execSync('echo $(npm bin)', { encoding: 'utf-8' }).trim();
-
 const options = {
   port: program.port,
   host: program.host,
@@ -69,21 +67,8 @@ const options = {
   parallel: program.parallel,
   injectFiles: program.injectFiles,
   debug: program.debug,
-  cwd: path.resolve(bin, '..', '..'),
-  cmd: path.resolve(bin, 'start-storybook'),
+  cmd: 'npm run start-storybook',
 };
-
-const config = path.resolve(options.cwd, options.configDir, 'config.js');
-
-if (!fs.existsSync(options.cmd)) {
-  exit(`Storybook does not exists. First, let's setup a Storybook!
-    See: https://storybook.js.org/basics/quick-start-guide/`);
-}
-
-if (!fs.existsSync(config)) {
-  exit(`"${options.configDir}/config.js" does not exists.`);
-}
-
 
 (async () => {
   const store = new Store(options.filterKind, options.filterStory);

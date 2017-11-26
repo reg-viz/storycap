@@ -40,9 +40,7 @@ const optionsToCommandArgs = (options) => {
 };
 
 const startStorybookServer = (options, logger) => new Promise((resolve, reject) => {
-  const { cmd, cwd } = options;
-  const args = optionsToCommandArgs(options);
-  const storybook = spawn(cmd, args, { cwd });
+  const storybook = spawn(options.cmd);
 
   storybook.stdout.on('data', (out) => {
     const str = out.toString().trim();
