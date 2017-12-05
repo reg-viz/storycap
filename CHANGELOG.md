@@ -8,6 +8,17 @@
 [#8]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/8
 [#9]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/9
 [#10]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/10
+[#12]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/12
+
+
+## 0.7.0
+
+> 2017-12-06
+
+### New features
+
+* Add module entry to `package.json`. ([#12][#12]) 
+    - Thank you [@marcobiedermann](https://github.com/marcobiedermann) !
 
 
 ## 0.6.1
