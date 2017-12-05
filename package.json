@@ -1,6 +1,6 @@
 {
   "name": "storybook-chrome-screenshot",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "A Storybook addon, Save the screenshot image of your stories! via puppeteer.",
   "main": "lib/index.js",
   "module": "src/index.js",
