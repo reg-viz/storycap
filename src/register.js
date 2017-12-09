@@ -35,27 +35,31 @@ const searchScreenshotWrappersByStory = (kind, story, api, channel) => {
   // so when we handle first mount event we know the total count of the wrappers.
 
   return new Promise((resolve) => {
-    function onInit(context) {
+    const onInit = (context) => {
       if (context.kind !== kind || context.story !== story) return;
       inited.push(context);
-    }
-    function onMount(context) {
+    };
+
+    const onMount = (context) => {
       if (context.kind !== kind || context.story !== story) return;
       mounted.push(context);
       if (mounted.length === inited.length) {
-        onResolve(mounted); // eslint-disable-line
+        onResolve(mounted); // eslint-disable-line no-use-before-define
       }
-    }
-    function onFinishMount(context) {
+    };
+
+    const onFinishMount = (context) => {
       if (context.kind !== kind || context.story !== story) return;
-      if (inited.length === 0) onResolve([]); // eslint-disable-line
-    }
-    function onResolve(contexts) {
+      if (inited.length === 0) onResolve([]); // eslint-disable-line no-use-before-define
+    };
+
+    const onResolve = (contexts) => {
       resolve(contexts);
       channel.removeListener(EventTypes.COMPONENT_INIT, onInit);
       channel.removeListener(EventTypes.COMPONENT_MOUNT, onMount);
       channel.removeListener(EventTypes.COMPONENT_FINISH_MOUNT, onFinishMount);
-    }
+    };
+
     channel.on(EventTypes.COMPONENT_INIT, onInit);
     channel.on(EventTypes.COMPONENT_MOUNT, onMount);
     channel.on(EventTypes.COMPONENT_FINISH_MOUNT, onFinishMount);
