@@ -93,7 +93,7 @@ Add [initScreenshot](#initscreenshot) decorator. It has to be **before** the fir
 ```javascript
 import { initScreenshot } from 'storybook-chrome-screenshot';
 
-initScreenshot()
+initScreenshot();
 ```
 
 Create a story with [withScreenshot](#withscreenshotoptions--).

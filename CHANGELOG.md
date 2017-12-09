@@ -9,6 +9,24 @@
 [#9]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/9
 [#10]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/10
 [#12]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/12
+[#14]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/14
+
+
+## 0.8.0
+
+> 2017-12-10
+
+### New features
+
+* Add `initScreenshot` API. [#14][#14]
+
+### Bugfix
+
+* Fix capturing process in the big projects [#14][#14], [#10][#10]
+
+### Big thanks
+
+* [@alexeybondarenko](https://github.com/alexeybondarenko)
 
 
 ## 0.7.0
