@@ -26,7 +26,7 @@ It is primarily responsible for image generation necessary for Visual Testing su
   * [Run `storybook-chrome-screenshot` Command](#run-storybook-chrome-screenshot-command)
   * [Support for addDecorator](#support-for-adddecorator)
 * [API](#api)
-  * [initScreenshot](#initscreenshot-)
+  * [initScreenshot()](#initscreenshot)
   * [withScreenshot(options = {})](#withscreenshotoptions--)
   * [setScreenshotOptions(options = {})](#setscreenshotoptionsoptions--)
   * [getScreenshotOptions()](#getscreenshotoptions)
@@ -86,7 +86,7 @@ import 'storybook-chrome-screenshot/register';
 
 ### Setup your stories
 
-Add [initScreenshot](#initscreenshot-) decorator. It has to be **before** the first `withScreenshot` decorator. Addon uses it to catch the finish of the components' rendering.
+Add [initScreenshot](#initscreenshot) decorator. It has to be **before** the first `withScreenshot` decorator. Addon uses it to catch the finish of the components' rendering.
 
 **Example: .storybook/config.js**
 
