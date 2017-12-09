@@ -26,6 +26,7 @@ It is primarily responsible for image generation necessary for Visual Testing su
   * [Run `storybook-chrome-screenshot` Command](#run-storybook-chrome-screenshot-command)
   * [Support for addDecorator](#support-for-adddecorator)
 * [API](#api)
+  * [initScreenshot()](#initscreenshot)
   * [withScreenshot(options = {})](#withscreenshotoptions--)
   * [setScreenshotOptions(options = {})](#setscreenshotoptionsoptions--)
   * [getScreenshotOptions()](#getscreenshotoptions)
@@ -84,6 +85,16 @@ import 'storybook-chrome-screenshot/register';
 
 
 ### Setup your stories
+
+Add [initScreenshot](#initscreenshot) decorator. It has to be **before** the first `withScreenshot` decorator. Addon uses it to catch the finish of the components' rendering.
+
+**Example: .storybook/config.js**
+
+```javascript
+import { initScreenshot } from 'storybook-chrome-screenshot';
+
+initScreenshot()
+```
 
 Create a story with [withScreenshot](#withscreenshotoptions--).
 
@@ -149,6 +160,20 @@ storiesOf('Button', module)
 
 ## API
 
+### initScreenshot()
+
+This decorator has to be added to every story. Addon uses it to understand when story's rendering is finished.
+
+**Important!.** `initScreenshot` has to be added before the first `withScreenshot`.
+
+**Example: .storybook/config.js**
+
+```javascript
+import { initScreenshot } from 'storybook-chrome-screenshot';
+
+initScreenshot()
+```
+
 ### withScreenshot(options = {})
 
 Notify [Puppeteer][puppeteer] of the story wrapped in this function and let it recognize it as the target of the screenshot.
@@ -157,6 +182,7 @@ The following objects of `options` can be specified.
 
 ```javascript
 {
+  namespace: 'global',          // namespace for your screenshots. It is using in the filenames, e.g.  Button-with-primary_global.png
   delay: 0,               // Delay milliseconds when shooting screenshots
   viewport: {             // Browser's viewport when shooting screenshots. (See: https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagesetviewportviewport)
     width: 1024,
@@ -345,4 +371,3 @@ It monitors the source code in the `src` directory and transpiles it if there is
 ## License
 
 [MIT © tsuyoshiwada](./LICENSE)
-

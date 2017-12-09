@@ -6,11 +6,9 @@ import { withScreenshot } from '../src/';
 import Tag from './Tag';
 
 storiesOf('Tag', module)
-  .add('with text',
-    withScreenshot()(() => (
-      <Tag>Default</Tag>
-    ))
-  )
+  .add('with text', () => (
+    <Tag>Default</Tag>
+  ))
   .add('with large size',
     withScreenshot({
       viewport: {

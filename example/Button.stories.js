@@ -6,21 +6,14 @@ import { withScreenshot } from '../src/';
 import Button from './Button';
 
 storiesOf('Button', module)
-  .add('with text',
-    withScreenshot()(() => (
-      <Button>Default</Button>
-    ))
-  )
-  .add('with primary',
-    withScreenshot({
-      viewport: {
-        width: 400,
-        height: 250,
-      },
-    })(() => (
-      <Button primary>Primary</Button>
-    ))
-  )
-  .add('with not capture button', () => (
-    <Button>Not Capture</Button>
+  .addDecorator(withScreenshot({
+    namespace: 'button_decorator'
+  }))
+  .add('with text', withScreenshot({
+    namespace: 'button_element'
+  })(() => (
+    <Button>Default</Button>
+  )))
+  .add('with primary', () => (
+    <Button primary>Primary</Button>
   ));

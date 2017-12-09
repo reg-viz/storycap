@@ -1,12 +1,13 @@
 import 'babel-polyfill';
-import { getStorybook } from '@storybook/react'; // eslint-disable-line
+import { flattenDeep } from 'lodash';
+import { compose, flattenDepth, map } from 'lodash/fp';
 import addons from '@storybook/addons';
 import qs from 'query-string';
 import {
   PhaseTypes,
   EventTypes,
-  SEARCH_COMPONENT_TIMEOUT,
 } from './constants';
+import { promiseChain } from './internal/utils';
 import pkg from '../package.json';
 
 
@@ -15,53 +16,71 @@ const phase = query['chrome-screenshot'];
 const selectKind = query.selectKind;
 const selectStory = query.selectStory;
 
+const searchScreenshotWrappersByStory = (kind, story, api, channel) => {
+  const inited = [];
+  const mounted = [];
 
-const searchTargetStories = (channel, api) => new Promise((resolve, reject) => {
-  const results = [];
-  let count = 0;
+  // One story can have several usage of withScreenshot.
+  // Using the events from teh ScreenshotWrapper we try to know about the wrappers
+  // events are firing in this sequence. init, mount
+  // If story doesn't have any withScreenshot wrappers, we handle it with FINISH_MOUNT event.
+  // initScreenshot decorator must be added before the gloabl withScreenshot,
+  // so the mount event of the wrapper element in initScreenshot will be fired after
+  // the all mount events of the withScreenthot HOC
 
-  const handleCount = () => {
-    count += 1;
-  };
+  // Why we use 2 kind of events: init and mount?
+  // we use 2 events, init and mount, because in this way
+  // we can recognize when all wrappers are mounted.
+  // Init events always fire before a mount events.
+  // so when we handle first mount event we know the total count of the wrappers.
 
-  const handleInit = (context) => {
-    results.push(context);
-
-    if (results.length >= count) {
-      removeListeners(); // eslint-disable-line no-use-before-define
-      resolve(results);
+  return new Promise((resolve) => {
+    function onInit(context) {
+      if (context.kind !== kind || context.story !== story) return;
+      inited.push(context);
     }
-  };
-
-  const handleError = (error) => {
-    reject(error);
-  };
-
-  const removeListeners = () => {
-    channel.removeListener(EventTypes.COMPONENT_COUNT, handleCount);
-    channel.removeListener(EventTypes.COMPONENT_INIT, handleInit);
-    channel.removeListener(EventTypes.COMPONENT_ERROR, handleError);
-  };
-
-  channel.on(EventTypes.COMPONENT_COUNT, handleCount);
-  channel.on(EventTypes.COMPONENT_INIT, handleInit);
-  channel.on(EventTypes.COMPONENT_ERROR, handleError);
-
-  channel.once('setStories', ({ stories }) => {
-    /* eslint-disable no-restricted-syntax */
-    for (const group of stories) {
-      for (const story of group.stories) {
-        api.selectStory(group.kind, story);
+    function onMount(context) {
+      if (context.kind !== kind || context.story !== story) return;
+      mounted.push(context);
+      if (mounted.length === inited.length) {
+        onResolve(mounted); // eslint-disable-line
       }
     }
-    /* eslint-enable */
-  });
-
-  setTimeout(() => {
-    if (count === 0) {
-      reject('The target stories was not found.');
+    function onFinishMount(context) {
+      if (context.kind !== kind || context.story !== story) return;
+      if (inited.length === 0) onResolve([]); // eslint-disable-line
     }
-  }, SEARCH_COMPONENT_TIMEOUT);
+    function onResolve(contexts) {
+      resolve(contexts);
+      channel.removeListener(EventTypes.COMPONENT_INIT, onInit);
+      channel.removeListener(EventTypes.COMPONENT_MOUNT, onMount);
+      channel.removeListener(EventTypes.COMPONENT_FINISH_MOUNT, onFinishMount);
+    }
+    channel.on(EventTypes.COMPONENT_INIT, onInit);
+    channel.on(EventTypes.COMPONENT_MOUNT, onMount);
+    channel.on(EventTypes.COMPONENT_FINISH_MOUNT, onFinishMount);
+
+    api.selectStory(kind, story);
+  });
+};
+
+const searchTargetStories = (channel, api) => new Promise((resolve, reject) => {
+  channel.once('setStories', ({ stories }) => {
+    const storiesPlainList = compose(
+      flattenDepth(2),
+      map(group => group.stories.map(story => ({ kind: group.kind, story }))) // eslint-disable-line
+    )(stories);
+
+    promiseChain(
+      storiesPlainList,
+      cur => searchScreenshotWrappersByStory(cur.kind, cur.story, api, channel) // eslint-disable-line
+    ).then((results) => {
+      const contexts = flattenDeep(results);
+      resolve(contexts);
+    }, reject);
+
+    channel.on(EventTypes.COMPONENT_ERROR, reject);
+  });
 });
 
 

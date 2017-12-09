@@ -111,8 +111,8 @@ if (!fs.existsSync(config)) {
       const page = await browser.newPage();
       const emitter = new EventEmitter();
 
-      page.on('console', (...args) => {
-        logger.log('BROWSER', ...args);
+      page.on('console', (data) => {
+        logger.log('BROWSER', data.text);
       });
 
       await page.exposeFunction('readyComponentScreenshot', (index) => {
@@ -136,29 +136,37 @@ if (!fs.existsSync(config)) {
           'chrome-screenshot': phase,
         }, {
           timeout: options.browserTimeout,
+          waitUntil: ['networkidle', 'load', 'domcontentloaded'],
         }))
       );
 
       const takeScreenshot = story => new Promise(async (resolve) => {
         await page.setViewport(story.viewport);
-        await goto(PhaseTypes.CAPTURE, {
-          selectKind: story.kind,
-          selectStory: story.story,
+
+        await Promise.all([
+          goto(PhaseTypes.CAPTURE, {
+            selectKind: story.kind,
+            selectStory: story.story,
+          }),
+          new Promise((resolveEmitter) => {
+            emitter.once(EventTypes.COMPONENT_READY, resolveEmitter);
+          }),
+        ]);
+
+        const file = path.join(options.outputDir, story.filename);
+
+        await Promise.all(options.injectFiles.map(filePath => (
+          page.addScriptTag({
+            path: filePath,
+          })
+        )));
+
+        await page.screenshot({
+          path: path.resolve(options.cwd, file),
+          fullPage: true,
         });
 
-        emitter.once(EventTypes.COMPONENT_READY, async () => {
-          const file = path.join(options.outputDir, story.filename);
-
-          await Promise.all(options.injectFiles.map(filePath => (
-            page.injectFile(filePath)
-          )));
-
-          await page.screenshot({
-            path: path.resolve(options.cwd, file),
-          });
-
-          resolve(file);
-        });
+        resolve(file);
       });
 
       return {

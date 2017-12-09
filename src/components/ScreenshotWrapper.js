@@ -6,14 +6,15 @@ import imagesLoaded from 'imagesloaded';
 import { EventTypes } from '../constants';
 
 export default class ScreenshotWrapper extends Component {
-  constructor(...args) {
-    super(...args);
+  constructor(props, ...args) {
+    super(props, ...args);
     this.emit(EventTypes.COMPONENT_INIT);
   }
 
   componentDidMount() {
     const { delay } = this.props;
     const node = findDOMNode(this.component);
+    this.emit(EventTypes.COMPONENT_MOUNT);
 
     imagesLoaded(node, () => {
       setTimeout(() => {
@@ -26,6 +27,7 @@ export default class ScreenshotWrapper extends Component {
     this.props.channel.emit(type, {
       ...this.props.context,
       viewport: this.props.viewport,
+      namespace: this.props.namespace,
     });
   }
 
