@@ -12,6 +12,16 @@
 [#14]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/14
 
 
+## 0.8.1
+
+> 2017-12-22
+
+### Bugfix
+
+* Broken storybook ... [#12][#12]
+    - Revert feature `module` in package.json.
+
+
 ## 0.8.0
 
 > 2017-12-10
