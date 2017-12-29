@@ -46,8 +46,8 @@
     "visual-testing"
   ],
   "devDependencies": {
-    "@storybook/addon-backgrounds": "^3.0.0",
-    "@storybook/react": "^3.2.5",
+    "@storybook/addon-backgrounds": "^3.3.3",
+    "@storybook/react": "^3.3.3",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.0",
