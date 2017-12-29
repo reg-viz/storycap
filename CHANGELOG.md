@@ -12,6 +12,15 @@
 [#14]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/14
 
 
+## 0.8.2
+
+> 2017-12-29
+
+### Bugfix
+
+* Fix crash bug with storybook v3.3.x
+
+
 ## 0.8.1
 
 > 2017-12-22
