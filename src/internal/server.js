@@ -43,19 +43,23 @@ const startStorybookServer = (options, logger) => new Promise((resolve, reject) 
   const { cmd, cwd } = options;
   const args = optionsToCommandArgs(options);
   const storybook = spawn(cmd, args, { cwd });
-
-  storybook.stdout.on('data', (out) => {
+  const isStarted = (out) => {
     const str = out.toString().trim();
-    const m = str.match(/^Storybook started on => (https?:\/\/.+)$/);
+    const m = str.match(/Storybook started on => (https?:\/\/.+)/);
 
     if (m) {
       const s = new StorybookServer(storybook, m[1]);
       resolve(s);
     }
+  };
+
+  storybook.stdout.on('data', (out) => {
+    isStarted(out);
   });
 
   storybook.stderr.on('data', (out) => {
     logger.log('STDERR', out.toString());
+    isStarted(out);
   });
 
   storybook.on('error', (err) => {
