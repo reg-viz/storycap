@@ -4,8 +4,9 @@ import insect from 'util-inspect';
 import { EventTypes } from './constants';
 import { mergeScreenshotOptions } from './screenshot-options';
 import ScreenshotWrapper from './components/ScreenshotWrapper';
+import NgWithScreenshot from './angular/with-screenshot';
 
-const withScreenshot = (options = {}) => (storyFn, ctx) => {
+const ReactWithScreenshot = (options = {}) => (storyFn, ctx) => {
   const useDecorator = !!ctx;
   const channel = addons.getChannel();
 
@@ -37,5 +38,7 @@ const withScreenshot = (options = {}) => (storyFn, ctx) => {
     wrapperWithContext(context)
   );
 };
+
+const withScreenshot = window.STORYBOOK_ENV === 'angular' ? NgWithScreenshot : ReactWithScreenshot;
 
 export default withScreenshot;
