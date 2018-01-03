@@ -91,9 +91,10 @@ Add [initScreenshot](#initscreenshot) decorator. It has to be **before** the fir
 **Example: .storybook/config.js**
 
 ```javascript
+import { addDecorator } from '@storybook/react';
 import { initScreenshot } from 'storybook-chrome-screenshot';
 
-initScreenshot();
+addDecorator(initScreenshot);
 ```
 
 Create a story with [withScreenshot](#withscreenshotoptions--).
@@ -112,7 +113,23 @@ storiesOf('Button', module)
   );
 ```
 
+This function works well even if you use Angular:
 
+```typescript
+import { storiesOf } from '@storybook/angular';
+import { withScreenshot } from 'storybook-chrome-screenshot';
+import { MyButtonComponent } from '../src/app/my-button/my-button.component';
+
+storiesOf('Button', module)
+  .add('with custom label',
+    withScreenshot()(() => ({
+      component: MyButtonComponent,
+      props: {
+        text: 'Text',
+      },
+    }))
+  );
+```
 
 ### Run `storybook-chrome-screenshot` Command
 
@@ -325,6 +342,7 @@ The following tasks remain. Contributes are welcome :smiley:
 * [x] Global Options.
 * [x] ~~Shooting at an arbitrary timing.~~ (No plan for support)
 * [ ] Support for [Vue.js](https://github.com/vuejs/vue).
+* [x] Support for [Angular](https://angular.io).
 
 
 
