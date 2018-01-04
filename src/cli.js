@@ -104,7 +104,7 @@ if (!fs.existsSync(config)) {
 
     [server, browser] = await Promise.all([
       startStorybookServer(options, logger),
-      puppeteer.launch(),
+      puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] }),
     ]);
 
     const pages = await Promise.all(createArray(options.parallel).map(async () => {
