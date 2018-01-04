@@ -10,6 +10,16 @@
 [#10]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/10
 [#12]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/12
 [#14]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/14
+[#22]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/22
+
+
+## 0.9.0
+
+> 2018-01-03
+
+### Bugfix
+
+* Fix puppeteer launch on Linux based CI. Thank you [@Quramy](https://github.com/Quramy) !!
 
 
 ## 0.9.0
