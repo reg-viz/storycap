@@ -11,7 +11,7 @@
     "e2e": "ng e2e",
     "postinstall": "rm -rf node_modules/@storybook/addons",
     "storybook": "start-storybook -p 6006 -c .storybook",
-    "screenshot": "node ../../lib/cli.js --debug -p 6007 -c .storybook"
+    "screenshot": "node ../../lib/cli.js -p 6007 -c .storybook"
   },
   "private": true,
   "dependencies": {

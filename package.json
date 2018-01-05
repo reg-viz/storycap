@@ -12,11 +12,12 @@
     "test": "npm run lint",
     "lint": "eslint \"src/**/*.js\" \"example/**/*.js\" \"register.js\" \".eslintrc.js\" --no-ignore",
     "storybook": "start-storybook -p 9001 -c .storybook",
-    "screenshot": "rimraf __screenshots__ && chmod +x ./lib/cli.js && $_ -p 9001 -c .storybook --inject-files './example/disable-animations.js'",
+    "screenshot": "rimraf __screenshots__ && node ./lib/cli.js -p 9001 -c .storybook --inject-files './example/disable-animations.js'",
     "clean": "rimraf lib",
     "prebuild": "npm run clean",
     "prescreenshot": "npm run build",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "e2e": "bash scripts/e2e.sh"
   },
   "repository": {
     "type": "git",
