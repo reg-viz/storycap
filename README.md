@@ -347,7 +347,7 @@ The following tasks remain. Contributes are welcome :smiley:
 
 
 
-## Contibute
+## Contribute
 
 1. Fork it!
 1. Create your feature branch: `git checkout -b my-new-feature`
