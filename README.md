@@ -6,6 +6,7 @@
 ![DEMO](https://raw.githubusercontent.com/tsuyoshiwada/storybook-chrome-screenshot/artwork/demo.gif)
 
 [![npm](https://img.shields.io/npm/v/storybook-chrome-screenshot.svg?style=flat-square)](https://www.npmjs.com/package/storybook-chrome-screenshot)
+[![CircleCI](https://img.shields.io/circleci/project/github/tsuyoshiwada/storybook-chrome-screenshot/master.svg?style=flat-square)](https://circleci.com/gh/tsuyoshiwada/storybook-chrome-screenshot)
 [![David](https://img.shields.io/david/tsuyoshiwada/storybook-chrome-screenshot.svg?style=flat-square)](https://david-dm.org/tsuyoshiwada/storybook-chrome-screenshot)
 
 > A [Storybook][storybook] Addon, Save the screenshot image of your stories :camera: via [Puppeteer][puppeteer].
