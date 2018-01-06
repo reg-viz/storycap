@@ -208,6 +208,10 @@
   version "16.0.34"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.0.34.tgz#7a8f795afd8a404a9c4af9539b24c75d3996914e"
 
+"@types/storybook__addon-backgrounds@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@types/storybook__addon-backgrounds/-/storybook__addon-backgrounds-3.2.0.tgz#b01fd6e09558d891fce4a9e40f4a3801b3b0acbc"
+
 "@types/storybook__react@^3.0.6":
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/@types/storybook__react/-/storybook__react-3.0.6.tgz#f4c0e59dc2051772e31764237919d579dc4b596f"
