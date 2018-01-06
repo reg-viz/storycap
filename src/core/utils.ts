@@ -7,7 +7,6 @@ export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, 
 
 export const parser = {
   identity: (v: string | undefined) => v,
-  bool: (v: string | undefined) => v === undefined ? false : !!v,
   number: (v: string | undefined) => v ? parseInt(v, 10) : 0,
   list: (v: string | undefined) => v ? v.split(',').map(o => o.trim()) : null,
   regexp: (v: string | undefined) => v ? new RegExp(v) : null,
