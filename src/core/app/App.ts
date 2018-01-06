@@ -124,20 +124,22 @@ export default class App {
       .section('cyan', PhaseTypes.DONE, 'Screenshot image saving is completed!')
       .blank();
 
+    const { outputDir } = this.options;
     const takedStories = this.store.get(false);
     const skippedStories = this.store.get(true);
 
     takedStories.forEach(({ filename }) => {
-      this.terminal.echo(`  ${logSymbols.success}  ${filename}`);
+      this.terminal.echo(`  ${logSymbols.success}  ${outputDir}/${chalk.bold(filename)}`);
     });
 
     skippedStories.forEach(({ filename }) => {
-      this.terminal.echo(`  ${logSymbols.warning}  ${filename} ${chalk.yellow('(skipped)')}`);
+      this.terminal.echo(`  ${logSymbols.warning}  ${outputDir}/${chalk.bold(filename)} ${chalk.yellow('(skipped)')}`);
     });
 
     this.terminal
-      .blank(2)
-      .echo(humanizeDuration(Date.now() - this.startTime))
+      .blank(1)
+      .echo(`${chalk.bold('Time')}:        ${humanizeDuration(Date.now() - this.startTime)}`)
+      .echo(`${chalk.bold('Screenshots')}: ${takedStories.length} total (${skippedStories.length} skipped)`)
       .blank(2);
 
     await this.terminate();
