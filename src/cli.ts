@@ -6,25 +6,25 @@ import 'babel-polyfill';
 import { parser } from './core/utils';
 import { App, Terminal, Server, Browser, StoryStore } from './core/app/';
 import { CLIOptions } from './models/options';
+import program = require('commander');
 
-const program = require('commander');
 const pkg = require('../package.json');
 
 /* tslint:disable:max-line-length */
 program
   .version(pkg.version)
   .usage('[options]')
-  .option('-p, --port [number]', 'Storybook server port (Default 9001)', parser, 9001)
-  .option('-h, --host [string]', 'Storybook server host (Default "localhost")', parser.identity, 'localhost')
-  .option('-s, --static-dir <dir-names>', 'Directory where to load static files from', parser.list)
-  .option('-c, --config-dir [dir-name]', 'Directory where to load Storybook configurations from (Default ".storybook")', parser.identity, '.storybook')
-  .option('-o, --output-dir [dir-name]', 'Directory where screenshot images are saved (Default "__screenshots__")', parser.identity, '__screenshots__')
-  .option('--parallel [number]', 'Number of Page Instances of Puppeteer to be activated when shooting screenshots (Default 4)', parser.number, 4)
-  .option('--filter-kind [regexp]', 'Filter of kind with RegExp. (Example "Button$")', parser.regexp)
-  .option('--filter-story [regexp]', 'Filter of story with RegExp. (Example "^with\\s.+$")', parser.regexp)
-  .option('--inject-files <file-names>', 'Path to the JavaScript file to be injected into frame. (Default "")', parser.list, [])
-  .option('--browser-timeout [number]', 'Timeout milliseconds when Puppeteer opens Storybook. (Default 30000)', parser.number, 30000)
-  .option('--silent', 'Suppress standard output', parser.bool, false)
+  .option('-p, --port [number]', 'Storybook server port.', parser.identity, 9001)
+  .option('-h, --host [string]', 'Storybook server host.', parser.identity, 'localhost')
+  .option('-s, --static-dir <dir-names>', 'Directory where to load static files from.', parser.list)
+  .option('-c, --config-dir [dir-name]', 'Directory where to load Storybook configurations from.', parser.identity, '.storybook')
+  .option('-o, --output-dir [dir-name]', 'Directory where screenshot images are saved.', parser.identity, '__screenshots__')
+  .option('--parallel [number]', 'Number of Page Instances of Puppeteer to be activated when shooting screenshots.', parser.number, 4)
+  .option('--filter-kind [regexp]', 'Filter of kind with RegExp. (example: "Button$")', parser.regexp)
+  .option('--filter-story [regexp]', 'Filter of story with RegExp. (example: "^with\\s.+$")', parser.regexp)
+  .option('--inject-files <file-names>', 'Path to the JavaScript file to be injected into frame.', parser.list, [])
+  .option('--browser-timeout [number]', 'Timeout milliseconds when Puppeteer opens Storybook.', parser.number, 30000)
+  .option('--silent', 'Suppress standard output.', parser.bool, false)
   .option('--debug', 'Enable debug mode.', parser.bool, false)
   .parse(process.argv);
 /* tslint:enable */
