@@ -5,9 +5,9 @@ import { linkTo } from '@storybook/addon-links';
 
 import { Welcome, Button } from '@storybook/angular/demo';
 
-import withScreenshot from '../../../lib/with-screenshot';
+import { withScreenshot } from '../../../lib/';
 import { MyButtonComponent } from '../src/app/my-button/my-button.component';
-import { ButtonGroupComponent } from "../src/app/button-group/button-group.component";
+import { ButtonGroupComponent } from '../src/app/button-group/button-group.component';
 
 storiesOf('My Button', module)
   .add('naked', withScreenshot()(() => ({

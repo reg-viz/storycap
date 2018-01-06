@@ -2,6 +2,7 @@ import * as React from 'react';
 import { findDOMNode } from 'react-dom';
 import imagesLoaded = require('imagesloaded');
 import { EventTypes } from '../../../core/constants';
+import { sleep } from '../../../core/utils';
 import { Story } from '../../../models/story';
 import { Channel } from '../../../models/storybook';
 import { Viewport } from '../../../models/viewport';
@@ -28,13 +29,9 @@ export default class ScreenshotWrapper extends React.Component<Props> {
 
     this.emit(EventTypes.COMPONENT_MOUNT);
 
-    imagesLoaded(node, () => {
-      setTimeout(
-        () => {
-          this.emit(EventTypes.COMPONENT_READY);
-        },
-        delay,
-      );
+    imagesLoaded(node, async () => {
+      await sleep(delay);
+      this.emit(EventTypes.COMPONENT_READY);
     });
   }
 

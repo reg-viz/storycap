@@ -1,12 +1,10 @@
 import { configure } from '@storybook/angular';
 
 import { addDecorator } from '@storybook/angular';
-import initScreenshot from '../../../lib/init-screenshot';
+import { initScreenshot } from '../../../lib/';
 
 addDecorator(initScreenshot);
 
-function loadStories() {
+configure(() => {
   require('../stories/index.ts');
-}
-
-configure(loadStories, module);
+}, module);
