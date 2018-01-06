@@ -53,11 +53,9 @@ export default class ScreenshotWrapper extends React.Component<Props> {
   }
 
   render() {
-    const { children } = this.props;
-
     return (
       <span ref={this.handleRef}>
-        {children}
+        {this.props.children}
       </span>
     );
   }

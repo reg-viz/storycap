@@ -48,12 +48,15 @@
   "devDependencies": {
     "@storybook/addon-backgrounds": "^3.3.3",
     "@storybook/react": "^3.3.3",
+    "@types/enzyme": "^3.1.6",
+    "@types/enzyme-adapter-react-16": "^1.0.1",
     "@types/jest": "^22.0.1",
     "@types/node": "^8.5.2",
     "@types/react": "^16.0.31",
     "@types/react-dom": "^16.0.3",
     "babel-core": "^6.26.0",
-    "enzyme": "^3.2.0",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
     "jest": "^22.0.4",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
@@ -94,16 +97,19 @@
     "react-dom": ">=15.0.0 || ^16.0.0-alpha"
   },
   "jest": {
-    "rootDir": "./src",
+    "setupFiles": [
+      "<rootDir>/jest/setupTests.ts"
+    ],
     "moduleFileExtensions": [
       "ts",
+      "tsx",
       "js"
     ],
     "transform": {
-      "^.+\\.(ts|tsx)$": "<rootDir>/../preprocessor.js"
+      "^.+\\.(ts|tsx)$": "<rootDir>/jest/preprocessor.js"
     },
     "testMatch": [
-      "**/__tests__/*.test.(ts|tsx|js)"
+      "**/__tests__/*.test.(ts|tsx)"
     ]
   }
 }
