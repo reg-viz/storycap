@@ -1,5 +1,6 @@
 /lib
-/__screenshots__
+/tmp
+__screenshots__
 
 # Created by https://www.gitignore.io/api/osx,windows,node
 

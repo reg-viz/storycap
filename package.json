@@ -7,17 +7,16 @@
     "storybook-chrome-screenshot": "lib/cli.js"
   },
   "scripts": {
-    "build": "babel src/ -d lib/ -s",
-    "dev": "npm run build -- --watch",
-    "test": "npm run lint",
-    "lint": "eslint \"src/**/*.js\" \"example/**/*.js\" \"register.js\" \".eslintrc.js\" --no-ignore",
-    "storybook": "start-storybook -p 9001 -c .storybook",
-    "screenshot": "rimraf __screenshots__ && node ./lib/cli.js -p 9001 -c .storybook --inject-files './example/disable-animations.js'",
-    "clean": "rimraf lib",
+    "build": "tsc",
+    "test": "npm run test:lint && npm run test:unit && npm run test:e2e",
+    "test:lint": "tslint \"src/**/*.ts\" \"src/**/*.tsx\"",
+    "test:unit": "jest",
+    "test:e2e": "bash scripts/e2e.sh",
+    "test:watch": "npm run test:unit -- --watch",
+    "clean": "rm -rf lib",
     "prebuild": "npm run clean",
     "prescreenshot": "npm run build",
-    "prepublish": "npm run build",
-    "e2e": "bash scripts/e2e.sh"
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -49,40 +48,46 @@
   "devDependencies": {
     "@storybook/addon-backgrounds": "^3.3.3",
     "@storybook/react": "^3.3.3",
-    "babel-cli": "^6.26.0",
+    "@types/enzyme": "^3.1.6",
+    "@types/enzyme-adapter-react-16": "^1.0.1",
+    "@types/jest": "^22.0.1",
+    "@types/node": "^8.5.7",
+    "@types/react": "^16.0.34",
+    "@types/react-dom": "^16.0.3",
     "babel-core": "^6.26.0",
-    "babel-eslint": "^8.0.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-env": "^1.6.0",
-    "babel-preset-react": "^6.24.1",
-    "babel-preset-stage-1": "^6.24.1",
-    "enzyme": "^2.9.1",
-    "eslint": "^4.5.0",
-    "eslint-config-airbnb": "^15.1.0",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsx-a11y": "^6.0.2",
-    "eslint-plugin-react": "^7.3.0",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "react-test-renderer": "^15.6.1",
-    "rimraf": "^2.6.2",
-    "styled-components": "^2.1.2"
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "jest": "^22.0.4",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-test-renderer": "^16.2.0",
+    "tslint": "^5.8.0",
+    "tslint-react": "^3.3.3",
+    "typescript": "^2.6.2"
   },
   "dependencies": {
-    "@tsuyoshiwada/cli-spinner": "^0.0.1",
-    "assign-deep": "^0.4.6",
+    "@types/commander": "^2.12.2",
+    "@types/imagesloaded": "^4.1.1",
+    "@types/lodash": "^4.14.92",
+    "@types/log-symbols": "^2.0.0",
+    "@types/mkdirp": "^0.5.2",
+    "@types/node-emoji": "^1.8.0",
+    "@types/progress": "^2.0.1",
+    "@types/puppeteer": "^0.13.9",
+    "@types/query-string": "^5.0.1",
+    "@types/sanitize-filename": "^1.1.28",
+    "@types/storybook__react": "^3.0.6",
     "babel-polyfill": "^6.26.0",
-    "chalk": "^2.1.0",
-    "clear": "^0.0.1",
-    "commander": "^2.11.0",
-    "imagesloaded": "^4.1.3",
+    "chalk": "^2.3.0",
+    "commander": "^2.12.2",
+    "imagesloaded": "^4.1.4",
     "lodash": "^4.17.4",
-    "log-symbols": "^2.0.0",
+    "log-symbols": "^2.1.0",
     "mkdirp": "^0.5.1",
     "node-emoji": "^1.8.1",
     "progress": "^2.0.0",
-    "puppeteer": "^0.12.0",
-    "query-string": "^5.0.0",
+    "puppeteer": "^0.13.0",
+    "query-string": "^5.0.1",
     "sanitize-filename": "^1.6.1",
     "util-inspect": "^0.1.8"
   },
@@ -90,5 +95,21 @@
     "@storybook/addons": ">=3.1.0",
     "react": ">=15.0.0 || ^16.0.0-alpha",
     "react-dom": ">=15.0.0 || ^16.0.0-alpha"
+  },
+  "jest": {
+    "setupFiles": [
+      "<rootDir>/jest/setupTests.ts"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "<rootDir>/jest/preprocessor.js"
+    },
+    "testMatch": [
+      "**/__tests__/*.test.(ts|tsx)"
+    ]
   }
 }

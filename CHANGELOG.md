@@ -11,6 +11,25 @@
 [#12]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/12
 [#14]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/14
 [#22]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/22
+[#24]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/24
+
+
+## 0.10.0
+
+> 2018-00-00
+
+### Minor changes
+
+* Switch to TypeScript from Babel.
+* Update dependencies & devDependencies.
+* package structure.
+    - Refactoring.
+    - It is easy to deal with various frameworks.
+    - We plan support to Vue.js in the future.
+* Add unit testing.
+* Add E2E testing. [#24][#24] Thank you [@Quramy](https://github.com/Quramy) !!
+* Fix document.
+* Update output format.
 
 
 ## 0.9.0

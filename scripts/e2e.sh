@@ -14,4 +14,4 @@ run() {
   popd
 }
 
-run . && run examples/angular-cli
+run examples/react && run examples/angular
