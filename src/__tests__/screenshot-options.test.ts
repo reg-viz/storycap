@@ -1,0 +1,43 @@
+import * as _ from 'lodash';
+import { mergeScreenshotOptions } from '../screenshot-options';
+import { defaultScreenshotOptions } from '../core/constants';
+import { ScreenshotOptions } from '../models/options';
+
+const defaults = _.merge({}, defaultScreenshotOptions);
+
+describe('Screenshot Options', () => {
+  it('mergeScreenshotOptions()', () => {
+    const table: [Partial<ScreenshotOptions>, ScreenshotOptions][] = [
+      [
+        {},
+        _.merge({}, defaults),
+      ],
+      [
+        {
+          namespace: 'foo',
+        },
+        _.merge({}, defaults, {
+          namespace: 'foo',
+        }),
+      ],
+      [
+        {
+          viewport: _.merge({}, defaults.viewport, {
+            width: 100,
+            height: 1000,
+          }),
+        },
+        _.merge({}, defaults, {
+          viewport: _.merge({}, defaults.viewport, {
+            width: 100,
+            height: 1000,
+          }),
+        }),
+      ],
+    ];
+
+    for (const [opts, o] of table) {
+      expect(mergeScreenshotOptions(opts)).toEqual(o);
+    }
+  });
+});

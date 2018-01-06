@@ -1,8 +1,8 @@
-import assign = require('deep-assign');
+import * as _ from 'lodash';
 import { defaultScreenshotOptions } from './core/constants';
 import { ScreenshotOptions } from './models/options';
 
-let opts = defaultScreenshotOptions;
+let opts = _.merge({}, defaultScreenshotOptions);
 
 export const getScreenshotOptions = () => (
   opts
@@ -12,21 +12,13 @@ export const mergeScreenshotOptions = (options: Partial<ScreenshotOptions>) => {
   let viewport = {};
 
   if (Array.isArray(options.viewport)) {
-    const base = !Array.isArray(opts.viewport)
-      ? opts.viewport
-      : defaultScreenshotOptions.viewport;
-
-    viewport = options.viewport.map((vp) => ({
-      ...base,
-      ...vp,
-    }));
+    const base = !Array.isArray(opts.viewport) ? opts.viewport : defaultScreenshotOptions.viewport;
+    viewport = options.viewport.map((vp) => _.merge({}, base, vp));
   } else {
-    viewport = {
-      ...(options.viewport || {}),
-    };
+    viewport = _.merge({}, (options.viewport || {}));
   }
 
-  return assign({}, opts, {
+  return _.merge({}, opts, {
     ...options,
     viewport,
   });
