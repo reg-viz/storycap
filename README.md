@@ -58,7 +58,6 @@ For that reason, you can easily shoot screenshots by simply creating a story tha
 It is very easy to introduce `storybook-chrome-screenshot` in your project.
 
 
-
 ### Installation
 
 First install `storybook-chrome-screenshot`.
@@ -68,7 +67,6 @@ $ npm install --save-dev storybook-chrome-screenshot
 ```
 
 > **Note:** Please do not use globally but let it operate locally.
-
 
 
 ### Register Addon
@@ -83,7 +81,6 @@ import 'storybook-chrome-screenshot/register';
 ```
 
 
-
 ### Setup your stories
 
 Add [initScreenshot](#initscreenshot) decorator. It has to be **before** the first `withScreenshot` decorator. Addon uses it to catch the finish of the components' rendering.
@@ -94,7 +91,7 @@ Add [initScreenshot](#initscreenshot) decorator. It has to be **before** the fir
 import { addDecorator } from '@storybook/react';
 import { initScreenshot } from 'storybook-chrome-screenshot';
 
-addDecorator(initScreenshot);
+addDecorator(initScreenshot());
 ```
 
 Create a story with [withScreenshot](#withscreenshotoptions--).
@@ -131,6 +128,7 @@ storiesOf('Button', module)
   );
 ```
 
+
 ### Run `storybook-chrome-screenshot` Command
 
 Open `package.json` and add a `screenshot` script for run `storybook-chrome-screenshot` command.
@@ -150,7 +148,6 @@ After that, just run the `npm run screenshot` command, shotting a component wrap
 ```bash
 $ npm run screenshot
 ```
-
 
 
 ### Support for addDecorator
@@ -177,6 +174,7 @@ storiesOf('Button', module)
 
 ## API
 
+
 ### initScreenshot()
 
 This decorator has to be added to every story. Addon uses it to understand when story's rendering is finished.
@@ -186,10 +184,12 @@ This decorator has to be added to every story. Addon uses it to understand when 
 **Example: .storybook/config.js**
 
 ```javascript
+import { addDecorator } from '@storybook/react';
 import { initScreenshot } from 'storybook-chrome-screenshot';
 
-initScreenshot()
+addDecorator(initScreenshot());
 ```
+
 
 ### withScreenshot(options = {})
 
@@ -199,7 +199,7 @@ The following objects of `options` can be specified.
 
 ```javascript
 {
-  namespace: 'global',          // namespace for your screenshots. It is using in the filenames, e.g.  Button-with-primary_global.png
+  namespace: 'global',    // namespace for your screenshots. It is using in the filenames, e.g.  Button-with-primary_global.png
   delay: 0,               // Delay milliseconds when shooting screenshots
   viewport: {             // Browser's viewport when shooting screenshots. (See: https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagesetviewportviewport)
     width: 1024,
@@ -268,8 +268,8 @@ Get the current option used with `withScreenshot()`.
 ```javascript
 import { getScreenshotOptions } from 'storybook-chrome-screenshot';
 
-console.log(getScreenshotOptions);
-// => Current options...
+console.log(getScreenshotOptions());
+// => Current screenshot options...
 ```
 
 
@@ -286,17 +286,17 @@ $ $(npm bin)/storybook-chrome-screenshot --help
   Options:
 
     -V, --version                 output the version number
-    -p, --port [number]           Storybook server port (Default 9001)
-    -h, --host [string]           Storybook server host (Default "localhost")
-    -s, --static-dir <dir-names>  Directory where to load static files from
-    -c, --config-dir [dir-name]   Directory where to load Storybook configurations from (Default ".storybook")
-    -o, --output-dir [dir-name]   Directory where screenshot images are saved (Default "__screenshots__")
-    --parallel [number]           Number of Page Instances of Puppeteer to be activated when shooting screenshots (Default 4)
-    --filter-kind [regexp]        Filter of kind with RegExp. (Example "Button$")
-    --filter-story [regexp]       Filter of story with RegExp. (Example "^with\s.+$")
-    --inject-files <file-names>   Path to the JavaScript file to be injected into frame. (Default "")
-    --browser-timeout [number]    Timeout milliseconds when Puppeteer opens Storybook. (Default 30000)
-    --silent                      Suppress standard output
+    -p, --port [number]           Storybook server port. (default: 9001)
+    -h, --host [string]           Storybook server host. (default: localhost)
+    -s, --static-dir <dir-names>  Directory where to load static files from.
+    -c, --config-dir [dir-name]   Directory where to load Storybook configurations from. (default: .storybook)
+    -o, --output-dir [dir-name]   Directory where screenshot images are saved. (default: __screenshots__)
+    --parallel [number]           Number of Page Instances of Puppeteer to be activated when shooting screenshots. (default: 4)
+    --filter-kind [regexp]        Filter of kind with RegExp. (example: "Button$")
+    --filter-story [regexp]       Filter of story with RegExp. (example: "^with\s.+$")
+    --inject-files <file-names>   Path to the JavaScript file to be injected into frame. (default: )
+    --browser-timeout [number]    Timeout milliseconds when Puppeteer opens Storybook. (default: 30000)
+    --silent                      Suppress standard output.
     --debug                       Enable debug mode.
     -h, --help                    output usage information
 ```
@@ -305,6 +305,7 @@ $ $(npm bin)/storybook-chrome-screenshot --help
 
 
 ## Tips
+
 
 ### Disable component animation
 
@@ -335,14 +336,15 @@ $ $(npm bin)/storybook-chrome-screenshot --inject-files ./disable-animation.js [
 
 
 
+
 ## TODO
 
 The following tasks remain. Contributes are welcome :smiley:
 
 * [x] Global Options.
 * [x] ~~Shooting at an arbitrary timing.~~ (No plan for support)
-* [ ] Support for [Vue.js](https://github.com/vuejs/vue).
 * [x] Support for [Angular](https://angular.io).
+* [ ] Support for [Vue.js](https://github.com/vuejs/vue).
 
 
 
@@ -358,31 +360,34 @@ The following tasks remain. Contributes are welcome :smiley:
 Bugs, feature requests and comments are more than welcome in the [issues](https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues).
 
 
-
 ### Development
 
 We will develop using the following npm scripts.
 
 
-#### `npm run storybook`
+#### `npm run test`
 
-Launch the stories in the `example` directory.  
-You can access [Storybook][storybook] by opening http://localhost:9001 in your browser.
+We will run Lint, unit test, E2E test in order.
 
+```bash
+# Run TSLint
+$ npm run test:lint
 
-#### `npm run screenshot`
+# Run unit test using Jest
+$ npm run test:unit
 
-Shotting a story in the `example` directory and save it in the` __screenshots__` directory.
+# Run E2E test
+$ npm run test:e2e
+
+# Run unit tests in watch mode
+$ npm run test:watch
+```
 
 
 #### `npm run build`
 
-Transpile the source code of the `src` directory using [babel](https://github.com/babel/babel).
+Compile the source code written in TypeScript.
 
-
-#### `npm run dev`
-
-It monitors the source code in the `src` directory and transpiles it if there is a change.
 
 
 
