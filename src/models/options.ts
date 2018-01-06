@@ -24,3 +24,9 @@ export interface ScreenshotOptions {
   delay: number;
   viewport: Viewport | Viewport[];
 }
+
+export interface PartialScreenshotOptions {
+  namespace?: string;
+  delay?: number;
+  viewport?: Partial<Viewport> | Partial<Viewport>[];
+}

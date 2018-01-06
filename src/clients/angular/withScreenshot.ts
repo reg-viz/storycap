@@ -3,13 +3,13 @@ import imagesLoaded = require('imagesloaded');
 import { EventTypes } from '../../core/constants';
 import { sleep } from '../../core/utils';
 import { mergeScreenshotOptions } from '../../screenshot-options';
-import { ScreenshotOptions } from '../../models/options';
+import { PartialScreenshotOptions } from '../../models/options';
 import { Story } from '../../models/story';
 import { NgStory } from './models';
 
 const noopHook = () => {}; // tslint:disable-line:no-empty
 
-const withScreenshot = (options: Partial<ScreenshotOptions> = {}) => {
+const withScreenshot = (options: PartialScreenshotOptions = {}) => {
   const opts = mergeScreenshotOptions(options);
 
   return (getStory: () => NgStory) => {

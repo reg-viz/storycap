@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { defaultScreenshotOptions } from './core/constants';
-import { ScreenshotOptions } from './models/options';
+import { PartialScreenshotOptions, ScreenshotOptions } from './models/options';
 
 let opts = _.merge({}, defaultScreenshotOptions);
 
@@ -8,7 +8,7 @@ export const getScreenshotOptions = () => (
   opts
 );
 
-export const mergeScreenshotOptions = (options: Partial<ScreenshotOptions>) => {
+export const mergeScreenshotOptions = (options: PartialScreenshotOptions): ScreenshotOptions => {
   let viewport = {};
 
   if (Array.isArray(options.viewport)) {

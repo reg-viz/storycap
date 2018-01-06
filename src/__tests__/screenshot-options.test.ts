@@ -1,13 +1,13 @@
 import * as _ from 'lodash';
 import { mergeScreenshotOptions } from '../screenshot-options';
 import { defaultScreenshotOptions } from '../core/constants';
-import { ScreenshotOptions } from '../models/options';
+import { PartialScreenshotOptions, ScreenshotOptions } from '../models/options';
 
 const defaults = _.merge({}, defaultScreenshotOptions);
 
 describe('Screenshot Options', () => {
   it('mergeScreenshotOptions()', () => {
-    const table: [Partial<ScreenshotOptions>, ScreenshotOptions][] = [
+    const table: [PartialScreenshotOptions, ScreenshotOptions][] = [
       [
         {},
         _.merge({}, defaults),
@@ -22,10 +22,10 @@ describe('Screenshot Options', () => {
       ],
       [
         {
-          viewport: _.merge({}, defaults.viewport, {
+          viewport: {
             width: 100,
             height: 1000,
-          }),
+          },
         },
         _.merge({}, defaults, {
           viewport: _.merge({}, defaults.viewport, {

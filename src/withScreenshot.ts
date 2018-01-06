@@ -1,10 +1,10 @@
 import { getStorybookEnv } from './core/utils';
 import ReactWithScreenshot from './clients/react/withScreenshot';
 import NgWithScreenshot from './clients/angular/withScreenshot';
-import { ScreenshotOptions } from './models/options';
+import { PartialScreenshotOptions } from './models/options';
 
 const storybookEnv = getStorybookEnv();
-let withScreenshot: (options?: Partial<ScreenshotOptions>) => Function;
+let withScreenshot: (options?: PartialScreenshotOptions) => Function;
 
 switch (storybookEnv) {
   case 'react':

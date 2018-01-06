@@ -4,10 +4,10 @@ import inspect = require('util-inspect');
 import { mergeScreenshotOptions } from '../../screenshot-options';
 import ScreenshotWrapper from './components/ScreenshotWrapper';
 import { EventTypes } from '../../core/constants';
-import { ScreenshotOptions } from '../../models/options';
+import { PartialScreenshotOptions } from '../../models/options';
 import { Story } from '../../models/story';
 
-const withScreenshot = (options: Partial<ScreenshotOptions> = {}) => (storyFn: Function, ctx: Story | undefined) => {
+const withScreenshot = (options: PartialScreenshotOptions = {}) => (storyFn: Function, ctx: Story | undefined) => {
   const channel = addons.getChannel();
 
   const wrapperWithContext = (context: Story) => {
