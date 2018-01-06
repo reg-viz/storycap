@@ -41,8 +41,6 @@ export default class Page extends EventEmitter {
 
     const url = `${this.url}?${qs.stringify(q)}`;
 
-    // console.log(url);
-
     return this.page.goto(url, {
       timeout: this.options.browserTimeout,
       waitUntil: [
