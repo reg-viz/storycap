@@ -345,6 +345,7 @@ The following tasks remain. Contributes are welcome :smiley:
 * [x] ~~Shooting at an arbitrary timing.~~ (No plan for support)
 * [x] Support for [Angular](https://angular.io).
 * [ ] Support for [Vue.js](https://github.com/vuejs/vue).
+* [ ] More unit testing.
 
 
 
