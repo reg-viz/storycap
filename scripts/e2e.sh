@@ -2,6 +2,9 @@
 
 run() {
   pushd $1
+  if [[ ! -d 'node_modules' ]]; then
+    yarn --pure-lockfile
+  fi
   rm -rf __screenshots__
   npm run screenshot
   count=$(ls __screenshots__ | wc -w)
