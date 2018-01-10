@@ -8,7 +8,5 @@ jobs:
 
     steps:
       - checkout
-      - run: yarn install
-      - run: cd examples/react; yarn; cd ../..
-      - run: cd examples/angular; yarn; cd ../..
+      - run: yarn
       - run: yarn test
