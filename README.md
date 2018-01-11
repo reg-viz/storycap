@@ -164,20 +164,20 @@ import MyButton from './Button.vue';
 
 storiesOf('MyButton', module)
   .add('pre-registered component',
-    withScreenshot()() => ({
+    withScreenshot()(() => ({
       template: '<my-button :rounded="true">A Button with rounded edges</my-button>',
-    })
+    }))
   )
   .add('template + component',
-    withScreenshot()() => ({
+    withScreenshot()(() => ({
       components: { MyButton },
       template: '<my-button>Button rendered in a template</my-button>',
-    })
+    }))
   )
   .add('render + component',
-    withScreenshot()() => ({
+    withScreenshot()(() => ({
       render: h => h(MyButton, { props: { color: 'pink' } }, ['renders component: MyButton']),
-    })
+    }))
   );
 ```
 
