@@ -19,30 +19,48 @@ It is primarily responsible for image generation necessary for Visual Testing su
 
 ## Table of Contents
 
+<!-- vim-markdown-toc Redcarpet -->
+
+* [Features](#features)
 * [How it works](#how-it-works)
 * [Getting Started](#getting-started)
   * [Installation](#installation)
   * [Register Addon](#register-addon)
+  * [Register initialization process](#register-initialization-process)
   * [Setup your stories](#setup-your-stories)
+    * [React](#react)
+    * [Angular](#angular)
+    * [Vue.js](#vue-js)
   * [Run `storybook-chrome-screenshot` Command](#run-storybook-chrome-screenshot-command)
   * [Support for addDecorator](#support-for-adddecorator)
 * [API](#api)
   * [initScreenshot()](#initscreenshot)
-  * [withScreenshot(options = {})](#withscreenshotoptions--)
-  * [setScreenshotOptions(options = {})](#setscreenshotoptionsoptions--)
+  * [withScreenshot(options = {})](#withscreenshot-options)
+  * [setScreenshotOptions(options = {})](#setscreenshotoptions-options)
   * [getScreenshotOptions()](#getscreenshotoptions)
 * [Command Line Options](#command-line-options)
 * [Tips](#tips)
   * [Disable component animation](#disable-component-animation)
 * [TODO](#todo)
-* [Contibute](#contibute)
+* [Contribute](#contribute)
   * [Development](#development)
-    * [`npm run storybook`](#npm-run-storybook)
-    * [`npm run screenshot`](#npm-run-screenshot)
+    * [`npm run test`](#npm-run-test)
     * [`npm run build`](#npm-run-build)
-    * [`npm run dev`](#npm-run-dev)
 * [License](#license)
 
+<!-- vim-markdown-toc -->
+
+
+
+
+## Features
+
+* :camera: Take screenshots of each stories. via [Puppeteer][puppeteer].
+* :rocket: Provide flexible screenshot shooting options.
+* :tada: Supports the following framework / View framework.
+    - [React](https://github.com/facebook/react/)
+    - [Angular](https://github.com/angular/angular)
+    - [Vue.js](https://github.com/vuejs/vue)
 
 
 
@@ -82,9 +100,9 @@ import 'storybook-chrome-screenshot/register';
 ```
 
 
-### Setup your stories
+### Register initialization process
 
-Add [initScreenshot](#initscreenshot) decorator. It has to be **before** the first `withScreenshot` decorator. Addon uses it to catch the finish of the components' rendering.
+Add [initScreenshot](#initscreenshot) decorator. It has to be **before** the first [withScreenshot](#withscreenshotoptions--) decorator. Addon uses it to catch the finish of the components' rendering.
 
 **Example: .storybook/config.js**
 
@@ -95,7 +113,13 @@ import { initScreenshot } from 'storybook-chrome-screenshot';
 addDecorator(initScreenshot());
 ```
 
+
+### Setup your stories
+
 Create a story with [withScreenshot](#withscreenshotoptions--).
+
+
+#### React
 
 ```javascript
 import React from 'react';
@@ -111,9 +135,12 @@ storiesOf('Button', module)
   );
 ```
 
+
+#### Angular
+
 This function works well even if you use Angular:
 
-```typescript
+```javascript
 import { storiesOf } from '@storybook/angular';
 import { withScreenshot } from 'storybook-chrome-screenshot';
 import { MyButtonComponent } from '../src/app/my-button/my-button.component';
@@ -126,6 +153,35 @@ storiesOf('Button', module)
         text: 'Text',
       },
     }))
+  );
+```
+
+
+#### Vue.js
+
+Of course, Vue.js works the same way:
+
+```javascript
+import { storiesOf } from '@storybook/vue';
+import { withScreenshot } from 'storybook-chrome-screenshot';
+import MyButton from './Button.vue';
+
+storiesOf('MyButton', module)
+  .add('pre-registered component',
+    withScreenshot()() => ({
+      template: '<my-button :rounded="true">A Button with rounded edges</my-button>',
+    })
+  )
+  .add('template + component',
+    withScreenshot()() => ({
+      components: { MyButton },
+      template: '<my-button>Button rendered in a template</my-button>',
+    })
+  )
+  .add('render + component',
+    withScreenshot()() => ({
+      render: h => h(MyButton, { props: { color: 'pink' } }, ['renders component: MyButton']),
+    })
   );
 ```
 
@@ -156,6 +212,7 @@ $ npm run screenshot
 Or by using `addDecorator()`, it is possible to shotting all the decorated stories.
 
 ```javascript
+import { storiesOf } from '@storybook/react';
 import { withScreenshot } from 'storybook-chrome-screenshot';
 
 storiesOf('Button', module)
@@ -180,7 +237,7 @@ storiesOf('Button', module)
 
 This decorator has to be added to every story. Addon uses it to understand when story's rendering is finished.
 
-**Important!.** `initScreenshot` has to be added before the first `withScreenshot`.
+**Important!.** `initScreenshot` has to be added before the first [withScreenshot](#withscreenshotoptions--).
 
 **Example: .storybook/config.js**
 
@@ -244,7 +301,7 @@ Also, By passing the `array` to `viewport`, you can easily shoot multiple Viewpo
 
 ### setScreenshotOptions(options = {})
 
-Sets the default value of the option used with `withScreenshot()`.  
+Sets the default value of the option used with [withScreenshot()](#withscreenshotoptions--).  
 It is useful for changing Viewport of all stories.
 
 **Example: .storybook/config.js**
@@ -264,7 +321,7 @@ setScreenshotOptions({
 
 ### getScreenshotOptions()
 
-Get the current option used with `withScreenshot()`.
+Get the current option used with [withScreenshot()](#withscreenshotoptions--).
 
 ```javascript
 import { getScreenshotOptions } from 'storybook-chrome-screenshot';
@@ -345,7 +402,7 @@ The following tasks remain. Contributes are welcome :smiley:
 * [x] Global Options.
 * [x] ~~Shooting at an arbitrary timing.~~ (No plan for support)
 * [x] Support for [Angular](https://angular.io).
-* [ ] Support for [Vue.js](https://github.com/vuejs/vue).
+* [x] Support for [Vue.js](https://github.com/vuejs/vue).
 * [ ] More unit testing.
 
 
@@ -369,7 +426,8 @@ We will develop using the following npm scripts.
 
 #### `npm run test`
 
-We will run Lint, unit test, E2E test in order.
+We will run Lint, unit test, E2E test in order.  
+Each test can also be executed individually with the following command.
 
 ```bash
 # Run TSLint
