@@ -19,36 +19,32 @@ It is primarily responsible for image generation necessary for Visual Testing su
 
 ## Table of Contents
 
-<!-- vim-markdown-toc Redcarpet -->
-
 * [Features](#features)
 * [How it works](#how-it-works)
 * [Getting Started](#getting-started)
-  * [Installation](#installation)
-  * [Register Addon](#register-addon)
-  * [Register initialization process](#register-initialization-process)
-  * [Setup your stories](#setup-your-stories)
-    * [React](#react)
-    * [Angular](#angular)
-    * [Vue.js](#vue-js)
-  * [Run `storybook-chrome-screenshot` Command](#run-storybook-chrome-screenshot-command)
-  * [Support for addDecorator](#support-for-adddecorator)
+    - [Installation](#installation)
+    - [Register Addon](#register-addon)
+    - [Register initialization process](#register-initialization-process)
+    - [Setup your stories](#setup-your-stories)
+        - [React](#react)
+        - [Angular](#angular)
+        - [Vue.js](#vuejs)
+    - [Run `storybook-chrome-screenshot` Command](#run-storybook-chrome-screenshot-command)
+    - [Support for addDecorator](#support-for-adddecorator)
 * [API](#api)
-  * [initScreenshot()](#initscreenshot)
-  * [withScreenshot(options = {})](#withscreenshot-options)
-  * [setScreenshotOptions(options = {})](#setscreenshotoptions-options)
-  * [getScreenshotOptions()](#getscreenshotoptions)
+    - [initScreenshot()](#initscreenshot)
+    - [withScreenshot(options = {})](#withscreenshotoptions--)
+    - [setScreenshotOptions(options = {})](#setscreenshotoptionsoptions--)
+    - [getScreenshotOptions()](#getscreenshotoptions)
 * [Command Line Options](#command-line-options)
 * [Tips](#tips)
-  * [Disable component animation](#disable-component-animation)
+    - [Disable component animation](#disable-component-animation)
 * [TODO](#todo)
 * [Contribute](#contribute)
-  * [Development](#development)
-    * [`npm run test`](#npm-run-test)
-    * [`npm run build`](#npm-run-build)
+    - [Development](#development)
+        - [`npm run test`](#npm-run-test)
+        - [`npm run build`](#npm-run-build)
 * [License](#license)
-
-<!-- vim-markdown-toc -->
 
 
 
