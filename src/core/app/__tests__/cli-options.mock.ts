@@ -13,6 +13,7 @@ export const cliOptions: CLIOptions = {
   injectFiles: [],
   silent: false,
   debug: false,
+  ciMode: false,
   cwd: '/repo',
   cmd: 'start-storybook',
 };

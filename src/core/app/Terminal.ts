@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import chalk, { Chalk } from 'chalk';
 import ProgressBar = require('progress');
 import { pascalize } from '../utils';
@@ -8,13 +9,16 @@ export default class Terminal {
   private stderr: Writer;
   private silent: boolean;
   private debug: boolean;
+  private ciMode: boolean;
+  private progressCounter: { current: number; total: number; } | null = null;
   private progressbar: ProgressBar;
 
-  public constructor(stdout: Writer, stderr: Writer, silent: boolean, debug: boolean) {
+  public constructor(stdout: Writer, stderr: Writer, silent: boolean, debug: boolean, ciMode: boolean) {
     this.stdout = stdout;
     this.stderr = stderr;
     this.silent = silent;
     this.debug = debug;
+    this.ciMode = ciMode;
   }
 
   public echo(...args: {}[]) {
@@ -49,7 +53,7 @@ export default class Terminal {
   }
 
   public clear() {
-    if (!this.silent && !this.debug) {
+    if (!this.silent && !this.debug && !this.ciMode) {
       this.stdout.write('\x1b[2J');
       this.stdout.write('\x1b[0f');
     } else if (this.debug) {
@@ -64,28 +68,51 @@ export default class Terminal {
   }
 
   public progressStart(format: string, total: number) {
-    if (!this.silent && !this.debug) {
-      this.progressbar = new ProgressBar(format, {
-        complete: '=',
-        incomplete: ' ',
-        width: 40,
-        total,
-      });
-      this.progressbar.render();
+    if (!this.silent) {
+      if (this.ciMode) {
+        this.progressCounter = {
+          current: 0,
+          total,
+        };
+      } else if (!this.debug) {
+        this.progressbar = new ProgressBar(format, {
+          complete: '=',
+          incomplete: ' ',
+          width: 40,
+          total,
+        });
+      }
     }
-    return this;
+
+    return this.progressRender();
   }
 
   public progressStop() {
-    if (this.progressbar) {
+    if (this.progressCounter) {
+      this.progressCounter = null;
+    } else if (this.progressbar) {
       this.progressbar.terminate();
     }
     return this;
   }
 
   public progressTick() {
-    if (this.progressbar) {
+    if (this.progressCounter) {
+      this.progressCounter.current += 1;
+      this.progressRender();
+    } else if (this.progressbar) {
       this.progressbar.tick();
+    }
+    return this;
+  }
+
+  private progressRender() {
+    if (this.progressCounter) {
+      const { current, total } = this.progressCounter;
+      const paddedCurrent = _.padStart(`${current}`, `${total}`.length, ' ');
+      this.stdout.write(`  ${paddedCurrent}/${total} (${Math.round((current / total) * 100)} %)\n`);
+    } else if (this.progressbar) {
+      this.progressbar.render();
     }
     return this;
   }

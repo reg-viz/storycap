@@ -109,4 +109,27 @@ describe('Terminal', () => {
     expect(stderr.list).toHaveLength(1);
     clear();
   });
+
+  it('Should be handle progress counter', () => {
+    let { stdout, term, clear } = factory(false, false, true);
+
+    term.progressStart('', 10);
+    expect(stdout.list).toHaveLength(1);
+    expect(stdout.list[0]).toBe('   0/10 (0 %)\n');
+    clear();
+
+    for (let i = 0; i < 9; i += 1) {
+      term.progressTick();
+      expect(stdout.list).toHaveLength(i + 1);
+      expect(stdout.list[i]).toBe(`   ${i + 1}/10 (${Math.floor(((i + 1) / 10) * 100)} %)\n`);
+    }
+
+    term.progressTick();
+    expect(stdout.list).toHaveLength(10);
+    expect(stdout.list[9]).toBe('  10/10 (100 %)\n');
+    clear();
+
+    term.progressStop();
+    expect((term as any).progressCounter).toBeNull(); // tslint:disable-line:no-any
+  });
 });
