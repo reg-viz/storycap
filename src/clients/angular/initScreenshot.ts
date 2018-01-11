@@ -3,7 +3,7 @@ import { EventTypes } from '../../core/constants';
 import { Story } from '../../models/story';
 import { NgStory } from './models';
 
-const initScreenshot = (getStory: (context: Story) => NgStory, ctx: Story) => {
+const initScreenshot = () => (getStory: (context: Story) => NgStory, ctx: Story) => {
   const story = getStory(ctx);
 
   if (story.component) {

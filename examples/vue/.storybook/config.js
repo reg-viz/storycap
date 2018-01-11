@@ -9,7 +9,7 @@ import MyButton from '../src/stories/Button.vue'
 Vue.component('my-button', MyButton)
 Vue.use(Vuex)
 
-addDecorator(initScreenshot);
+addDecorator(initScreenshot());
 
 configure(() => {
   require('../src/stories');
