@@ -14,14 +14,14 @@ export class MockWriter implements Writer {
   }
 }
 
-export const factory = (silent: boolean, debug: boolean) => {
+export const factory = (silent: boolean, debug: boolean, ciMode: boolean = false) => {
   const stdout = new MockWriter();
   const stderr = new MockWriter();
 
   return {
     stdout,
     stderr,
-    term: new Terminal(stdout, stderr, silent, debug),
+    term: new Terminal(stdout, stderr, silent, debug, ciMode),
     clear: () => {
       stdout.clear();
       stderr.clear();

@@ -7,6 +7,7 @@ import { parser } from './core/utils';
 import { App, Terminal, Server, Browser, StoryStore } from './core/app/';
 import { CLIOptions } from './models/options';
 import program = require('commander');
+import isCI = require('is-ci');
 
 const pkg = require('../package.json');
 
@@ -46,6 +47,7 @@ const options: CLIOptions = {
   injectFiles: program.injectFiles,
   silent: !!program.silent,
   debug: !!program.debug,
+  ciMode: isCI,
   cwd: path.resolve(bin, '..', '..'),
   cmd: path.resolve(bin, 'start-storybook'),
 };
@@ -61,6 +63,7 @@ const options: CLIOptions = {
     process.stderr,
     options.silent,
     options.debug,
+    options.ciMode,
   );
 
   const app = new App(

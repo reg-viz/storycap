@@ -15,6 +15,7 @@ export interface CLIOptions {
   injectFiles: string[];
   silent: boolean;
   debug: boolean;
+  ciMode: boolean;
   cwd: string;
   cmd: string;
 }
