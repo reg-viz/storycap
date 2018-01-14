@@ -391,6 +391,14 @@ $ $(npm bin)/storybook-chrome-screenshot --inject-files ./disable-animation.js [
 
 
 
+## Examples
+
+* [tsuyoshiwada/scs-with-reg-viz](https://github.com/tsuyoshiwada/scs-with-reg-viz) : A example repository of visual regression test using storybook-chrome-screenshot and reg-suit.
+* [Quramy/angular-sss-demo](https://github.com/Quramy/angular-sss-demo) : Storybook, Screenshot, and Snapshot testing for Angular
+
+
+
+
 ## TODO
 
 The following tasks remain. Contributes are welcome :smiley:
