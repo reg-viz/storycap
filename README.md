@@ -39,6 +39,7 @@ It is primarily responsible for image generation necessary for Visual Testing su
 * [Command Line Options](#command-line-options)
 * [Tips](#tips)
     - [Disable component animation](#disable-component-animation)
+* [Examples](#examples)
 * [TODO](#todo)
 * [Contribute](#contribute)
     - [Development](#development)
