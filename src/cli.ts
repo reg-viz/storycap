@@ -83,7 +83,7 @@ const options: CLIOptions = {
     process.exit(0);
 
   } catch (e) {
-    app.terminate();
+    app.terminate(e);
     process.exit(1);
   }
 })();

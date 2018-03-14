@@ -146,7 +146,10 @@ export default class App {
     await this.terminate();
   }
 
-  public async terminate() {
+  public async terminate(e?: Error) {
+    if (e) {
+      this.terminal.error(`An unexpected error occurred, Please make sure message below\n${e}`);
+    }
     this.server.stop();
     await this.browser.close();
   }
