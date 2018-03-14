@@ -12,6 +12,17 @@
 [#14]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/14
 [#22]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/22
 [#24]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/24
+[#35]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/35
+
+
+## 1.0.1
+
+> 2018-03-14
+
+
+### Minor changes
+
+* Log when something is wrong. (Thanks [@kogai](https://github.com/kogai) !!)
 
 
 ## 1.0.0
