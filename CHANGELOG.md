@@ -12,13 +12,32 @@
 [#14]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/14
 [#22]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/22
 [#24]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/24
+[#34]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/34
 [#35]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/35
+
+
+## 1.1.0
+
+> 0000-00-00
+
+### New features
+
+* Support for Knobs integration :tada:  ([#35][#35])
+    - [@jessepinho](https://github.com/jessepinho), Thank you for feature proposal !!
+    - **NOTE:** Angular is unsupported until Issue [here](https://github.com/storybooks/storybook/issues/3042) is resolved.
+    - Knobs integration frameworks
+        + React
+        + Vue.js
+
+### Minor changes
+
+* Parallelize shooting of chunked Stories.
+* Update dependencies & devDependencies.
 
 
 ## 1.0.1
 
 > 2018-03-14
-
 
 ### Minor changes
 
@@ -221,8 +240,6 @@ First major release :tada:
 * Add `setScreenshotOptions()`.
 * Add `getScreenshotOptions()`.
 * Please refer to the [docs][api] for details.
-
-
 
 
 ## 0.0.1
