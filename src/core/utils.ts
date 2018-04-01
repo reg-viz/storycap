@@ -65,5 +65,5 @@ export const createArray = (length: number) => (
 );
 
 export const getStorybookEnv = () => (
-  ((window as any).STORYBOOK_ENV as StorybookEnv) // tslint:disable-line:no-any
+  ((window as any).STORYBOOK_ENV as StorybookEnv) // tslint:disable-line: no-any
 );

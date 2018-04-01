@@ -130,6 +130,6 @@ describe('Terminal', () => {
     clear();
 
     term.progressStop();
-    expect((term as any).progressCounter).toBeNull(); // tslint:disable-line:no-any
+    expect((term as any).progressCounter).toBeNull(); // tslint:disable-line: no-any
   });
 });

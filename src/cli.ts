@@ -11,7 +11,7 @@ import isCI = require('is-ci');
 
 const pkg = require('../package.json');
 
-/* tslint:disable:max-line-length */
+/* tslint:disable: max-line-length */
 program
   .version(pkg.version)
   .usage('[options]')

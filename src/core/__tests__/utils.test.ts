@@ -1,4 +1,4 @@
-/* tslint:disable:no-any */
+/* tslint:disable: no-any */
 import * as utils from '../utils';
 import { Viewport } from '../../models/viewport';
 
