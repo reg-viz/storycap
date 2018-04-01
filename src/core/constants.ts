@@ -30,4 +30,5 @@ export const defaultScreenshotOptions: ScreenshotOptions = {
     hasTouch: false,
     isLandscape: false,
   },
+  knobs: {},
 };

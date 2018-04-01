@@ -230,10 +230,21 @@ storiesOf('Addon Notes', module)
     }))
   );
 
+/* eslint-enable react/react-in-jsx-scope */
 storiesOf('Addon Knobs', module)
   .addDecorator(withKnobs)
-  .addDecorator(withScreenshot())
-  .add('Simple', () => {
+  .add('Simple', withScreenshot({
+    knobs: {
+      Name: [
+        'John Doe',
+        'Hello Knobs',
+      ],
+      Age: [
+        44,
+        25,
+      ],
+    },
+  })(() => {
     const name = text('Name', 'John Doe');
     const age = number('Age', 44);
     const content = `I am ${name} and I'm ${age} years old.`;
@@ -241,8 +252,20 @@ storiesOf('Addon Knobs', module)
     return {
       template: `<div>${content}</div>`,
     };
-  })
-  .add('All knobs', () => {
+  }))
+  .add('All knobs', withScreenshot({
+    knobs: {
+      Name: [
+        'Jane',
+        'Hello Knobs',
+      ],
+      Stock: [
+        20,
+        200,
+        2000,
+      ],
+    },
+  })(() => {
     const name = text('Name', 'Jane');
     const stock = number('Stock', 20, {
       range: true,
@@ -284,6 +307,6 @@ storiesOf('Addon Knobs', module)
           </div>
         `,
     };
-  });
+  }));
 
 /* eslint-enable react/react-in-jsx-scope */

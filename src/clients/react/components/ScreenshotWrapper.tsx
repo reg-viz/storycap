@@ -6,12 +6,14 @@ import { sleep } from '../../../core/utils';
 import { Story } from '../../../models/story';
 import { Channel } from '../../../models/storybook';
 import { Viewport } from '../../../models/viewport';
+import { Knobs } from '../../../models/knobs';
 
 export interface Props extends React.Props<{}> {
   channel: Channel;
   context: Story;
   delay: number;
   viewport: Viewport | Viewport[];
+  knobs: Knobs;
   namespace?: string;
 }
 
@@ -36,13 +38,14 @@ export default class ScreenshotWrapper extends React.Component<Props> {
   }
 
   emit(type: string) {
-    const { context, channel, viewport, namespace } = this.props;
+    const { context, channel, viewport, knobs, namespace } = this.props;
 
     channel.emit(
       type,
       {
         ...context,
         viewport,
+        knobs,
         namespace,
       },
     );

@@ -9,18 +9,19 @@ import { Story } from '../../models/story';
 import { VueStory } from './models';
 
 const withScreenshot = (options: PartialScreenshotOptions = {}) => {
-  const { delay, viewport, namespace } = mergeScreenshotOptions(options);
+  const { delay, viewport, knobs, namespace } = mergeScreenshotOptions(options);
   const channel = addons.getChannel();
 
-  return (getStory: () => VueStory, ctx: Story | undefined) => {
-    const component = getStory();
-
+  return (getStory: (story: Story) => VueStory, ctx: Story | undefined) => {
     const withContext = (context: Story) => {
+      const component = getStory(context);
+
       const emit = (type: string) => {
         channel.emit(type, {
           ...context,
           viewport,
           namespace,
+          knobs,
         });
       };
 

@@ -1,4 +1,4 @@
-/* tslint:disable:no-any */
+/* tslint:disable: no-any */
 import { StoryWithOptions, StoredStory } from '../../models/story';
 
 export interface Adapter {

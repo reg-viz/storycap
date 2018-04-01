@@ -1,4 +1,5 @@
 import { Viewport } from './viewport';
+import { Knobs } from './knobs';
 
 export type AppType = 'react';
 
@@ -24,10 +25,12 @@ export interface ScreenshotOptions {
   namespace?: string;
   delay: number;
   viewport: Viewport | Viewport[];
+  knobs: Knobs;
 }
 
 export interface PartialScreenshotOptions {
   namespace?: string;
   delay?: number;
   viewport?: Partial<Viewport> | Partial<Viewport>[];
+  knobs?: Knobs;
 }

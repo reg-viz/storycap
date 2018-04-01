@@ -7,7 +7,7 @@
     "module": "commonjs",
     "target": "es5",
     "lib": [
-      "es6",
+      "esnext",
       "dom"
     ],
     "declaration": true,

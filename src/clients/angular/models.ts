@@ -1,4 +1,4 @@
-/* tslint:disable:no-any */
+/* tslint:disable: no-any */
 export interface NgStory {
   component: any;
   props: any;

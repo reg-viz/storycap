@@ -10,7 +10,7 @@ const initScreenshot = () => (getStory: (context: Story) => NgStory, ctx: Story)
     const clazz = story.component.prototype;
     clazz.__getStoryContext__ = () => ctx;
     if (!clazz.__WRAPPED_INIT_SCREENSHOT__) {
-      const delegateAfterViewInit = clazz.ngAfterViewInit || (() => {}); // tslint:disable-line:no-empty
+      const delegateAfterViewInit = clazz.ngAfterViewInit || (() => {}); // tslint:disable-line: no-empty
       clazz.ngAfterViewInit = function afterViewInit() {
         delegateAfterViewInit.call(this);
         addons.getChannel().emit(EventTypes.COMPONENT_FINISH_MOUNT, {
