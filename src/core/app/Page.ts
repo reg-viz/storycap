@@ -5,6 +5,7 @@ import * as puppeteer from 'puppeteer';
 import { PhaseIdentity, PhaseTypes, EventTypes } from '../constants';
 import { StoryWithOptions, StoredStory } from '../../models/story';
 import { CLIOptions } from '../../models/options';
+import { knobsQueryObject } from '../utils';
 
 export interface ConsoleHandler {
   (type: string, text: string): void;
@@ -28,7 +29,7 @@ export default class Page extends EventEmitter {
     this.options = options;
 
     this.page.on('console', (data: puppeteer.ConsoleMessage) => {
-      consoleHandler(data.type, data.text);
+      consoleHandler(data.type(), data.text());
     });
   }
 
@@ -59,6 +60,7 @@ export default class Page extends EventEmitter {
       this.goto(PhaseTypes.CAPTURE, {
         selectKind: story.kind,
         selectStory: story.story,
+        ...knobsQueryObject(story.knobs),
       }),
     ]);
 

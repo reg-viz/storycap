@@ -1,6 +1,7 @@
 /* tslint:disable: no-any */
 import * as utils from '../utils';
 import { Viewport } from '../../models/viewport';
+import { Knobs, StoredKnobs } from '../../models/knobs';
 
 describe('Utilities', () => {
   it('filenamify()', () => {
@@ -12,6 +13,70 @@ describe('Utilities', () => {
 
     for (const [s, o] of table) {
       expect(utils.filenamify(s)).toBe(o);
+    }
+  });
+
+  it('permutationKnobs()', () => {
+    const table = [
+      [
+        {},
+        [],
+      ],
+      [
+        {
+          bool: [
+            true,
+            false,
+          ],
+          label: [
+            'foo',
+            'bar',
+          ],
+          num: [
+            10,
+            20,
+          ],
+        },
+        [
+          { bool: true, label: 'foo', num: 10 },
+          { bool: false, label: 'foo', num: 10 },
+          { bool: true, label: 'bar', num: 10 },
+          { bool: false, label: 'bar', num: 10 },
+          { bool: true, label: 'foo', num: 20 },
+          { bool: false, label: 'foo', num: 20 },
+          { bool: true, label: 'bar', num: 20 },
+          { bool: false, label: 'bar', num: 20 },
+        ],
+      ],
+    ];
+
+    for (const [v, o] of table) {
+      expect(utils.permutationKnobs(<Knobs> v)).toEqual(o);
+    }
+  });
+
+  it('knobsQueryObject()', () => {
+    const table = [
+      [
+        {},
+        {},
+      ],
+      [
+        {
+          label: 'text',
+          number: 100,
+          bool: true,
+        },
+        {
+          'knob-label': 'text',
+          'knob-number': 100,
+          'knob-bool': true,
+        },
+      ],
+    ];
+
+    for (const [v, o] of table) {
+      expect(utils.knobsQueryObject(v)).toEqual(o);
     }
   });
 
@@ -57,22 +122,48 @@ describe('Utilities', () => {
     }
   });
 
-  it('story2filename', () => {
-    const table: [[string, string, Viewport | null, string | null], string][] = [
+  it('knobs2string()', () => {
+    const table = [
       [
-        [
-          'Kind',
-          'Story',
-          null,
-          null,
-        ],
+        {
+          key4: false,
+          key3: true,
+          key2: 10,
+          key1: 'string',
+        },
+        'key1-string_key2-10_key3-true_key4-false',
+      ],
+      [
+        {
+          'Spacing name': 'string',
+          'Spacing number': 102,
+        },
+        'Spacing name-string_Spacing number-102',
+      ],
+    ];
+
+    for (const [v, o] of table) {
+      expect(utils.knobs2string(<StoredKnobs> v)).toBe(o);
+    }
+  });
+
+  it('story2filename', () => {
+    const table: [utils.Story2FilenameParams, string][] = [
+      [
+        {
+          kind: 'Kind',
+          story: 'Story',
+          viewport: null,
+          namespace: null,
+          knobs: null,
+        },
         'Kind-Story.png',
       ],
       [
-        [
-          'foo',
-          'bar',
-          {
+        {
+          kind: 'foo',
+          story: 'bar',
+          viewport: {
             width: 100,
             height: 200,
             isMobile: false,
@@ -80,15 +171,16 @@ describe('Utilities', () => {
             isLandscape: false,
             deviceScaleFactor: 2,
           },
-          null,
-        ],
+          namespace: null,
+          knobs: null,
+        },
         'foo-bar-100x200@2x.png',
       ],
       [
-        [
-          'foo',
-          'bar',
-          {
+        {
+          kind: 'foo',
+          story: 'bar',
+          viewport: {
             width: 1,
             height: 2,
             isMobile: false,
@@ -96,14 +188,36 @@ describe('Utilities', () => {
             isLandscape: false,
             deviceScaleFactor: 1,
           },
-          'baz',
-        ],
+          namespace: 'baz',
+          knobs: null,
+        },
         'foo-bar_baz-1x2.png',
+      ],
+      [
+        {
+          kind: 'foo',
+          story: 'bar',
+          viewport: {
+            width: 1,
+            height: 2,
+            isMobile: false,
+            hasTouch: false,
+            isLandscape: false,
+            deviceScaleFactor: 1,
+          },
+          namespace: 'baz',
+          knobs: {
+            'Component Label': 'string',
+            falsy: false,
+            truthy: true,
+          },
+        },
+        'foo-bar-Component-Label-string_falsy-false_truthy-true_baz-1x2.png',
       ],
     ];
 
-    for (const [[kind, story, vp, ns], o] of table) {
-      expect(utils.story2filename(kind, story, vp, ns)).toBe(o);
+    for (const [p, o] of table) {
+      expect(utils.story2filename(p)).toBe(o);
     }
   });
 

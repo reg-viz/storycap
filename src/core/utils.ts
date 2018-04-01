@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import sanitize = require('sanitize-filename');
 import { Viewport } from '../models/viewport';
+import { Knobs, StoredKnobs } from '../models/knobs';
 import { StorybookEnv } from '../models/storybook';
 
 export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -18,6 +19,41 @@ export const filenamify = (filename: string) => (
     .replace(/\s/g, '-')
 );
 
+export const permutationKnobs = (knobs: Knobs): StoredKnobs[] => {
+  const keys = Object.keys(knobs).sort();
+  if (keys.length === 0) {
+    return [];
+  }
+
+  const total = keys.reduce((previous, current) => (previous * knobs[current].length), 1);
+  const result: StoredKnobs[] = [];
+  let q, r = 0;
+
+  for (let i = 0; i < total; i += 1) {
+    result[i] = {};
+    q = i;
+
+    for (let n = 0; n < keys.length; n += 1) {
+      const key = keys[n];
+      r = q % knobs[key].length;
+      q = Math.floor(q / knobs[key].length);
+      result[i][key] = knobs[key][r];
+    }
+  }
+
+  return result;
+};
+
+export const knobsQueryObject = (knobs: StoredKnobs): StoredKnobs => {
+  const queryObject: StoredKnobs = {};
+
+  for (const [name, knob] of Object.entries(knobs)) {
+    queryObject[`knob-${name}`] = knob;
+  }
+
+  return queryObject;
+};
+
 export const viewport2string = (viewport: Viewport) => ([
   `${viewport.width}x${viewport.height}`,
   `${viewport.isMobile ? '-mobile' : ''}`,
@@ -26,9 +62,28 @@ export const viewport2string = (viewport: Viewport) => ([
   `${viewport.deviceScaleFactor > 1 ? `@${viewport.deviceScaleFactor}x` : ''}`,
 ].join(''));
 
-export const story2filename = (kind: string, story: string, vp: Viewport | null, ns: string | null) => (
-  `${filenamify(`${kind}-${story}${ns ? `_${ns}` : ''}${vp ? `-${viewport2string(vp)}` : ''}`)}.png`
+export const knobs2string = (knobs: StoredKnobs) => (
+  Object.keys(knobs).sort().map((key) => (
+    `${key}-${knobs[key]}`
+  )).join('_')
 );
+
+export interface Story2FilenameParams {
+  kind: string;
+  story: string;
+  viewport: Viewport | null;
+  namespace: string | null;
+  knobs: StoredKnobs | null;
+}
+
+export const story2filename = (params: Story2FilenameParams) => {
+  const ns = params.namespace ? `_${params.namespace}` : '';
+  const vp = params.viewport ? `-${viewport2string(params.viewport)}` : '';
+  const knobs = params.knobs ? `-${knobs2string(params.knobs)}` : '';
+  const filename = `${filenamify(`${params.kind}-${params.story}${knobs}${ns}${vp}`)}`;
+
+  return `${filename}.png`;
+};
 
 export const pascalize = (v: string) => (
   `${v.charAt(0).toUpperCase()}${_.camelCase(v.slice(1))}`
