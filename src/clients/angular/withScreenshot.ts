@@ -7,65 +7,79 @@ import { PartialScreenshotOptions } from '../../models/options';
 import { Story } from '../../models/story';
 import { NgStory } from './models';
 
-const noopHook = () => {}; // tslint:disable-line:no-empty
-
+// TODO:
+// According to Issue below, because Angular can not change knob from URL, we are not able to respond.
+// Once Issue is resolved, knobs integration will be implemented :)
+// https://github.com/storybooks/storybook/issues/3042
 const withScreenshot = (options: PartialScreenshotOptions = {}) => {
   const opts = mergeScreenshotOptions(options);
 
-  return (getStory: () => NgStory) => {
-    const story = getStory();
-    const clazz = story.component.prototype;
-    if (clazz.__WRAPPED_WITH_SCREENSHOT__) {
-      return getStory;
+  return (getStory: (story: Story) => NgStory | NgStory) => {
+    // tslint:disable-next-line: no-any
+    const isFuncStoryGetter = typeof getStory === 'function' || !(getStory as any).component;
+
+    const wrapScreenshotHandler = (ngStory: NgStory, context: Story | null): NgStory => {
+      const getContext = (component: ScreenshotWrapperComponent) => (
+        component.__getStoryContext__ ? component.__getStoryContext__() : context
+      );
+
+      const emit = (type: string, ctx: Story) => {
+        addons.getChannel().emit(type, {
+          ...ctx,
+          viewport: opts.viewport,
+          knobs: opts.knobs,
+          namespace: opts.namespace,
+        });
+      };
+
+      class ScreenshotWrapperComponent extends ngStory.component {
+        public ngOnInit() {
+          if (super.ngOnInit) {
+            super.ngOnInit();
+          }
+          emit(EventTypes.COMPONENT_INIT, getContext(this));
+        }
+
+        public ngAfterViewInit() {
+          if (super.ngAfterViewInit) {
+            super.ngAfterViewInit();
+          }
+          const { delay } = opts;
+          emit(EventTypes.COMPONENT_MOUNT, getContext(this));
+          // FIXME:
+          // The "[ng-version]" selector means "Angular application root element".
+          // We should use [elementRef](https://angular.io/api/core/ElementRef) to get DOM node.
+          // However it's hard to override class's constructor and inject depndency on `ElementRef`.
+          // Is there a better way?
+          const node = document.querySelector('[ng-version]');
+          if (!node) {
+            return;
+          }
+          imagesLoaded(node, async () => {
+            await sleep(delay);
+            emit(EventTypes.COMPONENT_READY, getContext(this));
+          });
+        }
+      }
+
+      if (ScreenshotWrapperComponent.prototype.__WRAPPED_WITH_SCREENSHOT__) {
+        return ngStory;
+      }
+
+      ScreenshotWrapperComponent.prototype.__WRAPPED_WITH_SCREENSHOT__ = true;
+
+      return {
+        ...ngStory,
+        component: ScreenshotWrapperComponent,
+      };
+    };
+
+    if (isFuncStoryGetter) {
+      return (story: Story) => wrapScreenshotHandler(getStory(story), story);
     }
 
-    const delegateOnInit = clazz.ngOnInit || noopHook;
-    const delegateAfterViewInit = clazz.ngAfterViewInit || noopHook;
-
-    const emit = (type: string, context: Story) => {
-      addons.getChannel().emit(type, {
-        ...context,
-        viewport: opts.viewport,
-        namespace: opts.namespace,
-      });
-    };
-
-    clazz.ngOnInit = function onInit() {
-      delegateOnInit.call(this);
-      if (!this.__getStoryContext__) {
-        return;
-      }
-      emit(EventTypes.COMPONENT_INIT, this.__getStoryContext__());
-    };
-
-    clazz.ngAfterViewInit = function afterViewInit() {
-      delegateAfterViewInit.call(this);
-      if (!this.__getStoryContext__) {
-        return;
-      }
-      const { delay } = opts;
-      emit(EventTypes.COMPONENT_MOUNT, this.__getStoryContext__());
-      // FIXME
-      // The "[ng-version]" selector means "Angular application root element".
-      // We should use [elementRef](https://angular.io/api/core/ElementRef) to get DOM node.
-      // However it's hard to override class's constructor and inject depndency on `ElementRef`.
-      // Is there a better way?
-      const node = document.querySelector('[ng-version]');
-      if (!node) {
-        return;
-      }
-      imagesLoaded(node, async () => {
-        await sleep(delay);
-        emit(EventTypes.COMPONENT_READY, this.__getStoryContext__());
-      });
-    };
-
-    clazz.__WRAPPED_WITH_SCREENSHOT__ = true;
-
-    return () => ({
-      ...story,
-      component: story.component,
-    });
+    // tslint:disable-next-line: no-any
+    return wrapScreenshotHandler(getStory as any, null);
   };
 };
 
