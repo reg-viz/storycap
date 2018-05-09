@@ -36,7 +36,10 @@ export default class Page extends EventEmitter {
   public async goto(phase: string, query: object = {}) {
     const q = {
       ...query,
-      full: 1,
+      full: 0,
+      addons: 0,
+      stories: 0,
+      panelRight: 0,
       [PhaseIdentity]: phase,
     };
 
@@ -72,9 +75,12 @@ export default class Page extends EventEmitter {
       })
     )));
 
-    await this.page.screenshot({
+    const elementHandle = await this.page.$('#storybook-preview-iframe');
+
+    await elementHandle!.screenshot({
       path: path.resolve(cwd, file),
-      fullPage: true,
+      // shooting elements is "fullPage" by default
+      // fullPage: true,
     });
 
     return file;
