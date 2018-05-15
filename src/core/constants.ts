@@ -31,4 +31,7 @@ export const defaultScreenshotOptions: ScreenshotOptions = {
     isLandscape: false,
   },
   knobs: {},
+  filePattern: null,
+  imageComparison: null,
+  imageThreshold: 0.2
 };

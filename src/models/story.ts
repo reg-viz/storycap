@@ -10,6 +10,7 @@ export interface StoryWithOptions extends Story {
   namespace: string | null;
   viewport: Viewport | Viewport[];
   knobs: Knobs;
+  filePattern: string;
 }
 
 export interface StoredStory extends Story {

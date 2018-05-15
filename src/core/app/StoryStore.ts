@@ -36,6 +36,7 @@ export default class StoryStore {
             kind: story.kind,
             story: story.story,
             namespace: story.namespace,
+            filePattern: story.filePattern,
             viewport: isMultipleViewport ? viewport : null,
             knobs: !isEmptyKnobs ? knobs : null,
           }),
