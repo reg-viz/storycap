@@ -29,9 +29,14 @@ export default class ScreenshotWrapper extends React.Component<Props> {
     const { delay } = this.props;
     const node = findDOMNode(this.component);
 
+    if (!node) {
+      this.emit(EventTypes.COMPONENT_ERROR);
+      return;
+    }
+
     this.emit(EventTypes.COMPONENT_MOUNT);
 
-    imagesLoaded(node, async () => {
+    imagesLoaded((node as Element), async () => {
       await sleep(delay);
       this.emit(EventTypes.COMPONENT_READY);
     });
