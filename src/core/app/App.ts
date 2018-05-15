@@ -109,12 +109,13 @@ export default class App {
       .blank()
       .progressStart(emojify(':camera:  [:bar] :current/:total'), stories.length);
 
-    await Promise.all(chunkedStories.map((arr, i) => (
-      Promise.all(arr.map(async (story) => {
-        await this.pages[i].screenshot(story);
-        this.terminal.progressTick();
-      }))
-    )));
+    await Promise.all(chunkedStories.map(async (arr, i) => {
+        for (let story of arr) {
+          await this.pages[i].screenshot(story);
+          this.terminal.progressTick();
+        }
+      }
+    ));
 
     this.terminal.progressStop();
   }
