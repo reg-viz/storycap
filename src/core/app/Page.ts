@@ -29,7 +29,13 @@ export default class Page extends EventEmitter {
     this.options = options;
 
     this.page.on('console', (data: puppeteer.ConsoleMessage) => {
-      consoleHandler(data.type(), data.text());
+      if (typeof data.type === 'function') {
+        consoleHandler(data.type(), data.text());
+      } else {
+        // it IS a string, by fact. Type definitions are wrong
+        // @ts-ignore
+        consoleHandler((data.type as string), (data.text as string));
+      }
     });
   }
 
