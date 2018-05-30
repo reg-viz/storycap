@@ -1,7 +1,6 @@
 import * as puppeteer from 'puppeteer';
 import { EventTypes } from '../constants';
 import { CLIOptions } from '../../models/options';
-import { createArray } from '../utils';
 import StoryStore from './StoryStore';
 import Page, { ConsoleHandler } from './Page';
 
@@ -25,8 +24,7 @@ export default class Browser {
     return this.browser.close();
   }
 
-  public createPages(url: string, consoleHandler: ConsoleHandler) {
-    return Promise.all(createArray(this.options.parallel).map(async () => {
+  public async createPage(url: string, consoleHandler: ConsoleHandler) {
       const page = new Page(
         await this.browser.newPage(),
         url,
@@ -47,6 +45,5 @@ export default class Browser {
       });
 
       return page;
-    }));
   }
 }

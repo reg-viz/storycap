@@ -20,7 +20,8 @@ export default class App {
   private store: StoryStore;
   private terminal: Terminal;
   private server: Server;
-  private browser: Browser;
+  // private browser: Browser;
+  private browsers: Browser[];
   private pages: Page[];
   private first: Page;
   private startTime: number;
@@ -30,13 +31,14 @@ export default class App {
     store: StoryStore,
     terminal: Terminal,
     server: Server,
-    browser: Browser,
+    browserFactory: () => Browser,
   ) {
     this.options = options;
     this.store = store;
     this.terminal = terminal;
     this.server = server;
-    this.browser = browser;
+    // this.browser = browserFactory();
+    this.browsers = _.range(this.options.parallel).map(browserFactory);
     this.startTime = Date.now();
   }
 
@@ -64,15 +66,15 @@ export default class App {
 
     await Promise.all([
       this.server.start(),
-      this.browser.launch(),
+      Promise.all(this.browsers.map(b => b.launch())),
     ]);
 
-    this.pages = await this.browser.createPages(
+    this.pages = await Promise.all(this.browsers.map(b => b.createPage(
       this.server.getURL(),
       (type: string, text: string) => {
         this.terminal.log('BROWSER', `${type}: ${text.trim()}`);
       },
-    );
+    )));
 
     this.first = this.pages[0];
   }
@@ -151,6 +153,6 @@ export default class App {
       this.terminal.error(`An unexpected error occurred, Please make sure message below\n${e}`);
     }
     this.server.stop();
-    await this.browser.close();
+    await Promise.all(this.browsers.map(b => b.close()));
   }
 }
