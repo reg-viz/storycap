@@ -25,25 +25,25 @@ export default class Browser {
   }
 
   public async createPage(url: string, consoleHandler: ConsoleHandler) {
-      const page = new Page(
-        await this.browser.newPage(),
-        url,
-        this.options,
-        consoleHandler,
-      );
+    const page = new Page(
+      await this.browser.newPage(),
+      url,
+      this.options,
+      consoleHandler,
+    );
 
-      await page.exposeFunction('readyComponentScreenshot', (index: number) => {
-        page.emit(EventTypes.COMPONENT_READY, index);
-      });
+    await page.exposeFunction('readyComponentScreenshot', (index: number) => {
+      page.emit(EventTypes.COMPONENT_READY, index);
+    });
 
-      await page.exposeFunction('getScreenshotStories', () => (
-        this.store.get()
-      ));
+    await page.exposeFunction('getScreenshotStories', () => (
+      this.store.get()
+    ));
 
-      await page.exposeFunction('failureScreenshot', (error: string) => {
-        throw new Error(error);
-      });
+    await page.exposeFunction('failureScreenshot', (error: string) => {
+      throw new Error(error);
+    });
 
-      return page;
+    return page;
   }
 }
