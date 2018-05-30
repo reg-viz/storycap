@@ -13,14 +13,13 @@ import Terminal from './Terminal';
 import Server from './Server';
 import Browser from './Browser';
 import Page from './Page';
-import { humanizeDuration } from '../utils';
+import { humanizeDuration, execParalell } from '../utils';
 
 export default class App {
   private options: CLIOptions;
   private store: StoryStore;
   private terminal: Terminal;
   private server: Server;
-  // private browser: Browser;
   private browsers: Browser[];
   private pages: Page[];
   private first: Page;
@@ -37,7 +36,6 @@ export default class App {
     this.store = store;
     this.terminal = terminal;
     this.server = server;
-    // this.browser = browserFactory();
     this.browsers = _.range(this.options.parallel).map(browserFactory);
     this.startTime = Date.now();
   }
@@ -104,20 +102,19 @@ export default class App {
   public async capture() {
     const stories = this.store.get();
     const parallel = Math.min(stories.length, this.options.parallel);
-    const chunkedStories = _.chunk(stories, Math.max(1, Math.ceil(stories.length / parallel)));
 
     this.terminal
       .section('yellow', PhaseTypes.CAPTURE, 'Capturing component screenshots ...')
       .blank()
       .progressStart(emojify(':camera:  [:bar] :current/:total'), stories.length);
 
-    await Promise.all(chunkedStories.map(async (arr, i) => {
-        for (let story of arr) {
-          await this.pages[i].screenshot(story);
-          this.terminal.progressTick();
-        }
-      }
-    ));
+    await execParalell(
+      stories.map(story => async (workerIndex: number) => {
+        await this.pages[workerIndex].screenshot(story);
+        this.terminal.progressTick();
+      }),
+      parallel
+    );
 
     this.terminal.progressStop();
   }
