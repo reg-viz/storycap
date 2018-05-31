@@ -115,10 +115,6 @@ export const humanizeDuration = (timestamp: number) => {
   return arr.join(' ');
 };
 
-export const createArray = (length: number) => (
-  (new Array(length)).fill(null)
-);
-
 export type Task<T> = (idx: number) => Promise<T>;
 
 export const execParalell = <T>(tasks: Task<T>[], p: number = 1) => {
