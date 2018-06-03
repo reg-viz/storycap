@@ -14,9 +14,11 @@
 [#24]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/24
 [#34]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/34
 [#35]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/35
+[#43]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/43
+[#50]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/50
 
 
-## 1.1.0
+## 1.1.0 (currently alpha version)
 
 > 0000-00-00
 
@@ -28,6 +30,17 @@
     - Knobs integration frameworks
         + React
         + Vue.js
+
+### Performance Improves
+
+* Parallelize browser processes rather than pages [#50][#50]. Thanks [@Quramy](https://github.com/Quramy) !!
+    - The performance of `CAPTURE` phase has improved greatly.
+
+
+### Bugfix
+
+* Fix parallel rendering [#43][#43]. Thanks [@theKashey](https://github.com/theKashey) !!
+
 
 ### Minor changes
 
