@@ -23,7 +23,6 @@ export default class App {
   private server: Server;
   private browsers: Browser[];
   private pages: Page[];
-  // private first: Page;
   private startTime: number;
 
   public constructor(

@@ -66,7 +66,7 @@ export default class Client {
       this.channel.once('setStories', ({ stories }: { stories: Group[] }) => {
         // flatten stories
         const list = stories.reduce(
-          (acc, cur, i) => [
+          (acc, cur) => [
             ...acc,
             ...cur.stories.map((story) => ({
               kind: cur.kind,
