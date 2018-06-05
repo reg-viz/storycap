@@ -7,7 +7,7 @@ import { emojify } from 'node-emoji';
 import chalk from 'chalk';
 import { PhaseTypes } from '../constants';
 import { CLIOptions } from '../../models/options';
-import { StoryWithOptions } from '../../models/story'
+import { StoryWithOptions } from '../../models/story';
 import inspect = require('util-inspect');
 import StoryStore from './StoryStore';
 import Terminal from './Terminal';
@@ -31,7 +31,7 @@ export default class App {
     store: StoryStore,
     terminal: Terminal,
     server: Server,
-    browserFactory: () => Browser,
+    browserFactory: (id: number) => Browser,
   ) {
     this.options = options;
     this.store = store;
