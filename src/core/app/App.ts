@@ -7,6 +7,7 @@ import { emojify } from 'node-emoji';
 import chalk from 'chalk';
 import { PhaseTypes } from '../constants';
 import { CLIOptions } from '../../models/options';
+import { StoryWithOptions } from '../../models/story'
 import inspect = require('util-inspect');
 import StoryStore from './StoryStore';
 import Terminal from './Terminal';
@@ -22,7 +23,7 @@ export default class App {
   private server: Server;
   private browsers: Browser[];
   private pages: Page[];
-  private first: Page;
+  // private first: Page;
   private startTime: number;
 
   public constructor(
@@ -73,8 +74,6 @@ export default class App {
         this.terminal.log('BROWSER', `${type}: ${text.trim()}`);
       },
     )));
-
-    this.first = this.pages[0];
   }
 
   public prepare() {
@@ -82,21 +81,16 @@ export default class App {
       .section('cyan', PhaseTypes.PREPARE, 'Fetching the target components ...')
       .blank();
 
-    return new Promise(async (resolve, reject) => {
+    mkdirp.sync(this.options.outputDir);
+    return Promise.all(this.pages.map((p, i) => new Promise<StoryWithOptions[]>(async (resolve, reject) => {
       try {
-        mkdirp.sync(this.options.outputDir);
-
-        this.first.waitScreenshotStories().then((stories) => {
-          this.store.set(stories);
-          resolve();
-        }).catch(reject);
-
-        await this.first.exposeSetScreenshotStories();
-        await this.first.goto(PhaseTypes.PREPARE);
+        p.waitScreenshotStories().then(resolve).catch(reject);
+        await p.exposeSetScreenshotStories(i, this.options.parallel);
+        await p.goto(PhaseTypes.PREPARE);
       } catch (e) {
         reject(e);
       }
-    });
+    }))).then(storiesList => this.store.set(storiesList.reduce((acc, cur) => [...acc, ...cur], [])));
   }
 
   public async capture() {
