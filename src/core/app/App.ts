@@ -81,10 +81,11 @@ export default class App {
       .blank();
 
     mkdirp.sync(this.options.outputDir);
-    return Promise.all(this.pages.map((p, i) => new Promise<StoryWithOptions[]>(async (resolve, reject) => {
+
+    return Promise.all(this.pages.map(p => new Promise<StoryWithOptions[]>(async (resolve, reject) => {
       try {
         p.waitScreenshotStories().then(resolve).catch(reject);
-        await p.exposeSetScreenshotStories(i, this.options.parallel);
+        await p.exposeSetScreenshotStories();
         await p.goto(PhaseTypes.PREPARE);
       } catch (e) {
         reject(e);

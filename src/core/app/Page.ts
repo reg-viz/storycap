@@ -86,7 +86,7 @@ export default class Page extends EventEmitter {
     return file;
   }
 
-  public exposeSetScreenshotStories(pageIndex: number, parallel: number) {
+  public exposeSetScreenshotStories() {
     return this.exposeFunction('setScreenshotStories', (stories: StoryWithOptions[]) => {
       this.emit('handleScreenshotStories', stories);
     });
