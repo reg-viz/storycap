@@ -16,6 +16,7 @@
 [#35]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/35
 [#43]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/43
 [#50]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/50
+[#52]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/52
 
 
 ## 1.1.0 (currently alpha version)
@@ -35,6 +36,8 @@
 
 * Parallelize browser processes rather than pages [#50][#50]. Thanks [@Quramy](https://github.com/Quramy) !!
     - The performance of `CAPTURE` phase has improved greatly.
+* Perf tune on prepare phase [#52][#52]. Thanks [@Quramy](https://github.com/Quramy) !!!!
+    - The performance of `PREPARE` phase has improved very greatly.
 
 
 ### Bugfix
