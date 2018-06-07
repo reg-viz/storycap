@@ -1,7 +1,9 @@
 /* tslint:disable: no-any */
+import { ClientMetadata } from '../app/Browser';
 import { StoryWithOptions, StoredStory } from '../../models/story';
 
 export interface Adapter {
+  getMetadata(): Promise<ClientMetadata>;
   readyComponentScreenshot(): void;
   getScreenshotStories(): StoredStory[];
   setScreenshotStories(stories: StoryWithOptions[]): void;
@@ -9,6 +11,11 @@ export interface Adapter {
 }
 
 export default class AppAdapter implements Adapter {
+
+  public getMetadata(): Promise<ClientMetadata> {
+    return (window as any).getPageId();
+  }
+
   public readyComponentScreenshot(): void {
     (window as any).readyComponentScreenshot();
   }

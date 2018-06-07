@@ -4,12 +4,19 @@ import { CLIOptions } from '../../models/options';
 import StoryStore from './StoryStore';
 import Page, { ConsoleHandler } from './Page';
 
+export type ClientMetadata = {
+  clientId: number;
+  clientsCount: number;
+};
+
 export default class Browser {
-  private store: StoryStore;
-  private options: CLIOptions;
+  private readonly id: number;
+  private readonly store: StoryStore;
+  private readonly options: CLIOptions;
   private browser: puppeteer.Browser;
 
-  public constructor(store: StoryStore, options: CLIOptions) {
+  public constructor(id: number, store: StoryStore, options: CLIOptions) {
+    this.id = id;
     this.store = store;
     this.options = options;
   }
@@ -31,6 +38,11 @@ export default class Browser {
       this.options,
       consoleHandler,
     );
+
+    await page.exposeFunction('getPageId', () => ({
+      clientId: this.id,
+      clientsCount: this.options.parallel
+    } as ClientMetadata));
 
     await page.exposeFunction('readyComponentScreenshot', (index: number) => {
       page.emit(EventTypes.COMPONENT_READY, index);
