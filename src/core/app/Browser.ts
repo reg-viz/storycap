@@ -22,9 +22,7 @@ export default class Browser {
   }
 
   public async launch() {
-    this.browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    });
+    this.browser = await puppeteer.launch(JSON.parse(this.options.puppeteerLaunchConfig));
   }
 
   public async close() {

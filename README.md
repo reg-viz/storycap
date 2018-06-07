@@ -340,20 +340,21 @@ $ $(npm bin)/storybook-chrome-screenshot --help
 
   Options:
 
-    -V, --version                 output the version number
-    -p, --port [number]           Storybook server port. (default: 9001)
-    -h, --host [string]           Storybook server host. (default: localhost)
-    -s, --static-dir <dir-names>  Directory where to load static files from.
-    -c, --config-dir [dir-name]   Directory where to load Storybook configurations from. (default: .storybook)
-    -o, --output-dir [dir-name]   Directory where screenshot images are saved. (default: __screenshots__)
-    --parallel [number]           Number of Page Instances of Puppeteer to be activated when shooting screenshots. (default: 4)
-    --filter-kind [regexp]        Filter of kind with RegExp. (example: "Button$")
-    --filter-story [regexp]       Filter of story with RegExp. (example: "^with\s.+$")
-    --inject-files <file-names>   Path to the JavaScript file to be injected into frame. (default: )
-    --browser-timeout [number]    Timeout milliseconds when Puppeteer opens Storybook. (default: 30000)
-    --silent                      Suppress standard output.
-    --debug                       Enable debug mode.
-    -h, --help                    output usage information
+    -V, --version                    output the version number
+    -p, --port [number]              Storybook server port. (default: 9001)
+    -h, --host [string]              Storybook server host. (default: localhost)
+    -s, --static-dir <dir-names>     Directory where to load static files from.
+    -c, --config-dir [dir-name]      Directory where to load Storybook configurations from. (default: .storybook)
+    -o, --output-dir [dir-name]      Directory where screenshot images are saved. (default: __screenshots__)
+    --parallel [number]              Number of Page Instances of Puppeteer to be activated when shooting screenshots. (default: 4)
+    --filter-kind [regexp]           Filter of kind with RegExp. (example: "Button$")
+    --filter-story [regexp]          Filter of story with RegExp. (example: "^with\s.+$")
+    --inject-files <file-names>      Path to the JavaScript file to be injected into frame. (default: )
+    --browser-timeout [number]       Timeout milliseconds when Puppeteer opens Storybook. (default: 30000)
+    --puppeteer-launch-config [json] JSON string of launch config for Puppeteer. (default: {"args":["--no-sandbox","--disable-setuid-sandbox"]})
+    --silent                         Suppress standard output.
+    --debug                          Enable debug mode.
+    -h, --help                       output usage information
 ```
 
 

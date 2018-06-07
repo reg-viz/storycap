@@ -25,6 +25,7 @@ program
   .option('--filter-story [regexp]', 'Filter of story with RegExp. (example: "^with\\s.+$")', parser.regexp)
   .option('--inject-files <file-names>', 'Path to the JavaScript file to be injected into frame.', parser.list, [])
   .option('--browser-timeout [number]', 'Timeout milliseconds when Puppeteer opens Storybook.', parser.number, 30000)
+  .option('--puppeteer-launch-config [json]', 'JSON string of launch config for Puppeteer.', parser.identity, '{"args":["--no-sandbox","--disable-setuid-sandbox"]}')
   .option('--silent', 'Suppress standard output.', parser.identity, false)
   .option('--debug', 'Enable debug mode.', parser.identity, false)
   .parse(process.argv);
@@ -45,6 +46,7 @@ const options: CLIOptions = {
   browserTimeout: program.browserTimeout,
   parallel: program.parallel,
   injectFiles: program.injectFiles,
+  puppeteerLaunchConfig: program.puppeteerLaunchConfig,
   silent: !!program.silent,
   debug: !!program.debug,
   ciMode: isCI,
