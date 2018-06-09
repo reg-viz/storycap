@@ -1,3 +1,3 @@
 export function noopDecorator() {
-  return (story: any) => story;
+  return (story: Function) => story;
 }

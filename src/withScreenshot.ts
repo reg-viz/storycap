@@ -13,7 +13,6 @@ const storybookEnv = getStorybookEnv();
 let withScreenshot: WithScreenshot;
 
 if (!storybookEnv) {
-  console.warn('can\'t detect storybook env.');
   withScreenshot = noopDecorator as WithScreenshot;
 } else {
   switch (storybookEnv) {
