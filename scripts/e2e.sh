@@ -17,4 +17,4 @@ run() {
   popd
 }
 
-run examples/react && run examples/angular && run examples/vue
+run examples/react && run examples/react-storyshots run examples/angular && run examples/vue
