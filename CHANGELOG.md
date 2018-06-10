@@ -17,6 +17,8 @@
 [#43]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/43
 [#50]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/50
 [#52]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/52
+[#53]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/53
+[#54]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/54
 
 
 ## 1.1.0 (currently alpha version)
@@ -43,6 +45,7 @@
 ### Bugfix
 
 * Fix parallel rendering [#43][#43]. Thanks [@theKashey](https://github.com/theKashey) !!
+* Fixed a bug that caused an error when used in conjunction with `Storyshots`. Thanks [@Quramy](https://github.com/Quramy) !!
 
 
 ### Minor changes
