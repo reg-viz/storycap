@@ -1,0 +1,29 @@
+{
+  "name": "react-storyshots",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "react-scripts": "1.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "postinstall": "rm -rf node_modules/@storybook/addons",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public",
+    "prescreenshot": "CI=true npm run test",
+    "screenshot": "node ../../lib/cli.js -p 9002 -c .storybook"
+  },
+  "devDependencies": {
+    "@storybook/addon-storyshots": "^3.4.6",
+    "@storybook/cli": "^3.4.6",
+    "@storybook/react": "^3.4.6",
+    "babel-core": "^6.26.3",
+    "babel-runtime": "^6.26.0",
+    "react-test-renderer": "^16.4.0"
+  }
+}

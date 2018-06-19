@@ -71,7 +71,7 @@ const options: CLIOptions = {
     store,
     terminal,
     new Server(options, terminal, spawn),
-    new Browser(store, options),
+    (id: number) => new Browser(id, store, options),
   );
 
   try {

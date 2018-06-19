@@ -43,7 +43,8 @@ export default class Client {
   }
 
   private async prepare() {
-    const stories = await this.searchTargetStories();
+    const { clientId, clientsCount } = await this.gateway.getMetadata();
+    const stories = await this.searchTargetStories(clientId, clientsCount);
     this.gateway.setStories(stories);
   }
 
@@ -74,7 +75,7 @@ export default class Client {
     );
   }
 
-  private searchTargetStories() {
+  private searchTargetStories(clientIndex: number, clientsCount: number) {
     return new Promise<StoryWithOptions[]>((resolve, reject) => {
       this.channel.once('setStories', ({ stories }: { stories: Group[] }) => {
         // flatten stories
@@ -91,8 +92,11 @@ export default class Client {
 
         // sequential promises
         list.reduce(
-          (acc: Promise<StoryWithOptions[]>, cur: Story) => acc
+          (acc: Promise<StoryWithOptions[]>, cur: Story, i: number) => acc
             .then(async (results) => {
+              if (i % (clientsCount || 1) !== clientIndex) {
+                return results;
+              }
               const res = await this.searchScreenshotWrappersByStory(cur.kind, cur.story);
               return [...results, ...res];
             })

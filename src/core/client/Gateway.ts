@@ -8,6 +8,10 @@ export default class Gateway {
     this.adapter = adapter;
   }
 
+  public getMetadata() {
+    return this.adapter.getMetadata();
+  }
+
   public readyComponent() {
     return this.adapter.readyComponentScreenshot();
   }

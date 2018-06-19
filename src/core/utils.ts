@@ -115,9 +115,24 @@ export const humanizeDuration = (timestamp: number) => {
   return arr.join(' ');
 };
 
-export const createArray = (length: number) => (
-  (new Array(length)).fill(null)
-);
+export type Task<T> = (idx: number) => Promise<T>;
+
+export const execParalell = <T>(tasks: Task<T>[], p: number = 1) => {
+  const copied = tasks.slice();
+  const results = [] as T[];
+  return Promise.all(_.range(p).map(i => {
+    return new Promise((res, rej) => {
+    function next(): Promise<number | void> {
+      const t = copied.shift();
+      if (!t) {
+        return Promise.resolve(res());
+      }
+      return t(i).then(r => results.push(r)).then(next).catch(err => rej(err));
+    }
+    return next();
+    });
+  })).then(() => results);
+};
 
 export const getStorybookEnv = () => (
   ((window as any).STORYBOOK_ENV as StorybookEnv) // tslint:disable-line: no-any
