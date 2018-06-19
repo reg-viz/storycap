@@ -51,7 +51,9 @@ export default class Client {
   private async capture() {
     this.channel.on(EventTypes.COMPONENT_READY, (story: StoryWithOptions) => {
       if (this.env.getKind() === story.kind && this.env.getStory() === story.story) {
+
         const frame: HTMLIFrameElement = document.querySelector('#storybook-preview-iframe') as HTMLIFrameElement;
+        frame.style.width = frame.contentDocument!.body.clientWidth + 'px';
         const frameHeight = frame.contentDocument!.body.clientHeight + 'px';
 
         // propagate content height to iframe
@@ -60,8 +62,7 @@ export default class Client {
         document.body.style.height = frameHeight;
 
         // remove all internal scrolls from the page, unhiding iframe content
-        const style = document.getElementById('shoot-style-inject') || document.createElement('div');
-        style.id = 'shoot-style-inject';
+        const style = document.createElement('div');
         style.innerHTML = `<style>* {overflow: visibile !important; }</style>`;
         document.body.appendChild(style);
 

@@ -60,7 +60,7 @@ export default class Page extends EventEmitter {
   }
 
   public async screenshot(story: StoredStory) {
-    const { cwd, outputDir, injectFiles } = this.options;
+    const {cwd, outputDir, injectFiles} = this.options;
 
     await this.page.setViewport(story.viewport);
 
@@ -81,13 +81,23 @@ export default class Page extends EventEmitter {
       })
     )));
 
-    const elementHandle = await this.page.$('#storybook-preview-iframe');
+    try {
+      const elementHandle = await this.page.$('#storybook-preview-iframe');
 
-    await elementHandle!.screenshot({
-      path: path.resolve(cwd, file),
-      // shooting elements is "fullPage" by default
-      // fullPage: true,
-    });
+      await elementHandle!.screenshot({
+        path: path.resolve(cwd, file),
+        // shooting elements is "fullPage" by default
+        // fullPage: true,
+      });
+
+    } catch (e) {
+      // tslint:disable-next-line:no-console
+      console.error(`storybook's iframe was not found while shooting ${file}`);
+      await this.page.screenshot({
+        path: path.resolve(cwd, file),
+        fullPage: true,
+      });
+    }
 
     return file;
   }
