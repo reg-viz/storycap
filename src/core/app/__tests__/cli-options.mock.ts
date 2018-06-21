@@ -11,6 +11,7 @@ export const cliOptions: CLIOptions = {
   browserTimeout: 10000,
   parallel: 4,
   injectFiles: [],
+  puppeteerLaunchConfig: '{"args":["--no-sandbox","--disable-setuid-sandbox"]}',
   silent: false,
   debug: false,
   ciMode: false,

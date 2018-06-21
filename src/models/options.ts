@@ -14,6 +14,7 @@ export interface CLIOptions {
   browserTimeout: number;
   parallel: number;
   injectFiles: string[];
+  puppeteerLaunchConfig: string;
   silent: boolean;
   debug: boolean;
   ciMode: boolean;
