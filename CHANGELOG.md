@@ -19,6 +19,7 @@
 [#52]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/52
 [#53]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/53
 [#54]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/54
+[#55]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/55
 
 
 ## 1.1.0 (currently alpha version)
@@ -33,6 +34,7 @@
     - Knobs integration frameworks
         + React
         + Vue.js
+* Add `--puppeteer-launch-config` CLI config ([#55][#55]), Thanks [@janpaul123](https://github.com/janpaul123) !!
 
 ### Performance Improves
 
