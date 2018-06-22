@@ -22,9 +22,9 @@
 [#55]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/55
 
 
-## 1.1.0 (currently alpha version)
+## 1.1.0
 
-> 0000-00-00
+> 2018-06-22
 
 ### New features
 
