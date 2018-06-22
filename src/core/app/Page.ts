@@ -42,7 +42,10 @@ export default class Page extends EventEmitter {
   public async goto(phase: string, query: object = {}) {
     const q = {
       ...query,
-      full: 1,
+      full: 0,
+      addons: 0,
+      stories: 0,
+      panelRight: 0,
       [PhaseIdentity]: phase,
     };
 
@@ -57,7 +60,7 @@ export default class Page extends EventEmitter {
   }
 
   public async screenshot(story: StoredStory) {
-    const { cwd, outputDir, injectFiles } = this.options;
+    const {cwd, outputDir, injectFiles} = this.options;
 
     await this.page.setViewport(story.viewport);
 
@@ -78,10 +81,23 @@ export default class Page extends EventEmitter {
       })
     )));
 
-    await this.page.screenshot({
-      path: path.resolve(cwd, file),
-      fullPage: true,
-    });
+    try {
+      const elementHandle = await this.page.$('#storybook-preview-iframe');
+
+      await elementHandle!.screenshot({
+        path: path.resolve(cwd, file),
+        // shooting elements is "fullPage" by default
+        // fullPage: true,
+      });
+
+    } catch (e) {
+      // tslint:disable-next-line:no-console
+      console.error(`storybook's iframe was not found while shooting ${file}`);
+      await this.page.screenshot({
+        path: path.resolve(cwd, file),
+        fullPage: true,
+      });
+    }
 
     return file;
   }
