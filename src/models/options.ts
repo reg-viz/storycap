@@ -27,8 +27,6 @@ export interface ScreenshotOptions {
   viewport: Viewport | Viewport[];
   knobs: Knobs;
   filePattern: string | null;
-  imageComparison: ((file1: string, file2: string) => boolean) | null;
-  imageThreshold: number | 0;
 }
 
 export interface PartialScreenshotOptions {
@@ -37,6 +35,4 @@ export interface PartialScreenshotOptions {
   viewport?: Partial<Viewport> | Partial<Viewport>[];
   knobs?: Knobs;
   filePattern?: string | null;
-  imageComparison?: ((file1: string, file2: string) => boolean) | null;
-  imageThreshold?: number | 0;
 }

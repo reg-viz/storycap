@@ -117,6 +117,8 @@ export default class App {
       }
     ));
 
+    fs.writeFileSync(path.join(this.options.outputDir, 'stories.json'), JSON.stringify(stories));
+
     this.terminal.progressStop();
   }
 

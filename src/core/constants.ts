@@ -32,6 +32,4 @@ export const defaultScreenshotOptions: ScreenshotOptions = {
   },
   knobs: {},
   filePattern: null,
-  imageComparison: null,
-  imageThreshold: 0.2
 };

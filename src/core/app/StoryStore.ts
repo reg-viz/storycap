@@ -29,6 +29,7 @@ export default class StoryStore {
         this.stories.push({
           kind: story.kind,
           story: story.story,
+          parameters: story.parameters,
           viewport,
           knobs,
           skipped,
