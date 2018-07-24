@@ -15,7 +15,6 @@ const withScreenshot = (options: PartialScreenshotOptions = {}) => {
   const opts = mergeScreenshotOptions(options);
 
   return (getStory: (story: Story) => NgStory | NgStory) => {
-    // tslint:disable-next-line: no-any
     const isFuncStoryGetter = typeof getStory === 'function' || !(getStory as any).component;
 
     const wrapScreenshotHandler = (ngStory: NgStory, context: Story | null): NgStory => {
@@ -78,7 +77,6 @@ const withScreenshot = (options: PartialScreenshotOptions = {}) => {
       return (story: Story) => wrapScreenshotHandler(getStory(story), story);
     }
 
-    // tslint:disable-next-line: no-any
     return wrapScreenshotHandler(getStory as any, null);
   };
 };

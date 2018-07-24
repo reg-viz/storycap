@@ -1,4 +1,3 @@
-/* tslint:disable: no-any */
 import { ClientMetadata } from '../app/Browser';
 import { StoryWithOptions, StoredStory } from '../../models/story';
 

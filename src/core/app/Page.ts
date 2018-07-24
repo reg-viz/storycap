@@ -116,7 +116,6 @@ export default class Page extends EventEmitter {
     });
   }
 
-  // tslint:disable-next-line: no-any
   public async exposeFunction(name: string, fn: (...args: any[]) => any) {
     return this.page.exposeFunction(name, fn);
   }

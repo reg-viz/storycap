@@ -1,7 +1,6 @@
 declare module '@storybook/addon-knobs/react' {
   import * as React from 'react';
 
-  // tslint:disable-next-line: no-any
   export function withKnobs(storyFn: Function, context: { kind: string, story: string }): React.ReactElement<any>;
 
   export function boolean(name: string, value: boolean): boolean;

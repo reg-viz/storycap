@@ -1,4 +1,3 @@
-/* tslint:disable: no-any */
 import { EventEmitter } from 'events';
 import * as React from 'react';
 import { mount } from 'enzyme';
