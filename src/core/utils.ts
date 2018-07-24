@@ -115,25 +115,86 @@ export const humanizeDuration = (timestamp: number) => {
   return arr.join(' ');
 };
 
+interface Delayed {
+  resolve: Function;
+  fn: Function;
+  args: any[];
+}
+
+class Queue<T = Delayed> {
+  private _s1: T[] = [];
+  private _s2: T[] = [];
+
+  push(value: T) {
+    this._s1.push(value);
+  }
+
+  shift() {
+    let s2 = this._s2;
+    if (s2.length === 0) {
+      const s1 = this._s1;
+      if (s1.length === 0) {
+        return;
+      }
+      this._s1 = s2;
+      s2 = this._s2 = s1.reverse();
+    }
+    return s2.pop();
+  }
+
+  isEmpty() {
+    return !this._s1.length && !this._s2.length;
+  }
+}
+
+const throat = (parallel: number, fn: Function) => {
+  const queue = new Queue();
+  const con = _.range(parallel);
+
+  const run = (f: Function, args: any[]): Promise<void> => {
+    const index = con.pop();
+
+    if (index !== undefined) {
+      const result = new Promise((resolve) => {
+        resolve(f.apply(null, [index, ...args]));
+      });
+
+      return result.then(release(index), release(index));
+    }
+
+    return new Promise((resolve) => {
+      queue.push({
+        resolve,
+        fn: f,
+        args,
+      });
+    });
+  };
+
+  const release = (index: number) => () => {
+    if (!queue.isEmpty()) {
+      const next = queue.shift() as Delayed;
+      con.push(index);
+      next.resolve(run(next.fn, next.args));
+    }
+  };
+
+  return (...args: any[]) => run(fn, args);
+};
+
 export type Task<T> = (idx: number) => Promise<T>;
 
-export const execParalell = <T>(tasks: Task<T>[], p: number = 1) => {
-  const copied = tasks.slice();
-  const results = [] as T[];
-  return Promise.all(_.range(p).map(i => {
-    return new Promise((res, rej) => {
-    function next(): Promise<number | void> {
-      const t = copied.shift();
-      if (!t) {
-        return Promise.resolve(res());
-      }
-      return t(i).then(r => results.push(r)).then(next).catch(err => rej(err));
-    }
-    return next();
-    });
-  })).then(() => results);
+export const execParallel = <T>(parallel: number, tasks: Task<T>[]) => {
+  const results: T[] = [];
+
+  return Promise
+    .all(tasks.map(throat(parallel, async (index: number, fn: Function) => {
+      const res = await fn(index);
+      results.push(res);
+    })))
+    .then(() => results);
 };
 
 export const getStorybookEnv = () => (
-  ((window as any).STORYBOOK_ENV as StorybookEnv) // tslint:disable-line: no-any
+  ((window as any).STORYBOOK_ENV as StorybookEnv)
 );

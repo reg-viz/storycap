@@ -14,7 +14,7 @@ import Terminal from './Terminal';
 import Server from './Server';
 import Browser from './Browser';
 import Page from './Page';
-import { humanizeDuration, execParalell } from '../utils';
+import { humanizeDuration, execParallel } from '../utils';
 
 export default class App {
   private options: CLIOptions;
@@ -102,12 +102,12 @@ export default class App {
       .blank()
       .progressStart(emojify(':camera:  [:bar] :current/:total'), stories.length);
 
-    await execParalell(
+    await execParallel(
+      parallel,
       stories.map(story => async (workerIndex: number) => {
         await this.pages[workerIndex].screenshot(story);
         this.terminal.progressTick();
       }),
-      parallel
     );
 
     this.terminal.progressStop();
