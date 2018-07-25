@@ -20,7 +20,7 @@ export default class Page extends EventEmitter {
     page: puppeteer.Page,
     url: string,
     options: CLIOptions,
-    consoleHandler: ConsoleHandler,
+    consoleHandler: ConsoleHandler
   ) {
     super();
 
@@ -34,7 +34,7 @@ export default class Page extends EventEmitter {
       } else {
         // it IS a string, by fact. Type definitions are wrong
         // @ts-ignore
-        consoleHandler((data.type as string), (data.text as string));
+        consoleHandler(data.type as string, data.text as string);
       }
     });
   }
@@ -46,19 +46,19 @@ export default class Page extends EventEmitter {
       addons: 0,
       stories: 0,
       panelRight: 0,
-      [PhaseIdentity]: phase,
+      [PhaseIdentity]: phase
     };
 
     const url = `${this.url}?${qs.stringify(q)}`;
 
     return this.page.goto(url, {
       timeout: this.options.browserTimeout,
-      waitUntil: 'domcontentloaded',
+      waitUntil: 'domcontentloaded'
     });
   }
 
   public async screenshot(story: StoredStory) {
-    const {cwd, outputDir, injectFiles} = this.options;
+    const { cwd, outputDir, injectFiles } = this.options;
 
     await this.page.setViewport(story.viewport);
 
@@ -67,17 +67,19 @@ export default class Page extends EventEmitter {
       this.goto(PhaseTypes.CAPTURE, {
         selectKind: story.kind,
         selectStory: story.story,
-        ...knobsQueryObject(story.knobs),
-      }),
+        ...knobsQueryObject(story.knobs)
+      })
     ]);
 
     const file = path.join(outputDir, story.filename);
 
-    await Promise.all(injectFiles.map((fpath) => (
-      this.page.addScriptTag({
-        path: fpath,
-      })
-    )));
+    await Promise.all(
+      injectFiles.map((fpath) =>
+        this.page.addScriptTag({
+          path: fpath
+        })
+      )
+    );
 
     const frameName = 'storybook-preview-iframe';
 
@@ -92,7 +94,7 @@ export default class Page extends EventEmitter {
     }
 
     await body.screenshot({
-      path: path.resolve(cwd, file),
+      path: path.resolve(cwd, file)
     });
 
     return file;

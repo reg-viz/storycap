@@ -14,65 +14,53 @@
 `storybook-chrome-screenshot` takes a screenshot and saves it.  
 It is primarily responsible for image generation necessary for Visual Testing such as `reg-viz`.
 
-
-
-
 ## Table of Contents
 
-* [Features](#features)
-* [How it works](#how-it-works)
-* [Getting Started](#getting-started)
-    - [Installation](#installation)
-    - [Register Addon](#register-addon)
-    - [Register initialization process](#register-initialization-process)
-    - [Setup your stories](#setup-your-stories)
-        - [React](#react)
-        - [Angular](#angular)
-        - [Vue.js](#vuejs)
-    - [Run `storybook-chrome-screenshot` Command](#run-storybook-chrome-screenshot-command)
-    - [Support for addDecorator](#support-for-adddecorator)
-* [API](#api)
-    - [initScreenshot()](#initscreenshot)
-    - [withScreenshot(options = {})](#withscreenshotoptions--)
-    - [setScreenshotOptions(options = {})](#setscreenshotoptionsoptions--)
-    - [getScreenshotOptions()](#getscreenshotoptions)
-* [Command Line Options](#command-line-options)
-* [Tips](#tips)
-    - [Disable component animation](#disable-component-animation)
-* [Examples](#examples)
-* [TODO](#todo)
-* [Contribute](#contribute)
-    - [Development](#development)
-        - [`npm run test`](#npm-run-test)
-        - [`npm run build`](#npm-run-build)
-* [License](#license)
-
-
-
+- [Features](#features)
+- [How it works](#how-it-works)
+- [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [Register Addon](#register-addon)
+  - [Register initialization process](#register-initialization-process)
+  - [Setup your stories](#setup-your-stories)
+    - [React](#react)
+    - [Angular](#angular)
+    - [Vue.js](#vuejs)
+  - [Run `storybook-chrome-screenshot` Command](#run-storybook-chrome-screenshot-command)
+  - [Support for addDecorator](#support-for-adddecorator)
+- [API](#api)
+  - [initScreenshot()](#initscreenshot)
+  - [withScreenshot(options = {})](#withscreenshotoptions--)
+  - [setScreenshotOptions(options = {})](#setscreenshotoptionsoptions--)
+  - [getScreenshotOptions()](#getscreenshotoptions)
+- [Command Line Options](#command-line-options)
+- [Tips](#tips)
+  - [Disable component animation](#disable-component-animation)
+- [Examples](#examples)
+- [TODO](#todo)
+- [Contribute](#contribute)
+  - [Development](#development)
+    - [`npm run test`](#npm-run-test)
+    - [`npm run build`](#npm-run-build)
+- [License](#license)
 
 ## Features
 
-* :camera: Take screenshots of each stories. via [Puppeteer][puppeteer].
-* :rocket: Provide flexible screenshot shooting options.
-* :tada: Supports the following framework / View framework.
-    - [React](https://github.com/facebook/react/)
-    - [Angular](https://github.com/angular/angular)
-    - [Vue.js](https://github.com/vuejs/vue)
-
-
+- :camera: Take screenshots of each stories. via [Puppeteer][puppeteer].
+- :rocket: Provide flexible screenshot shooting options.
+- :tada: Supports the following framework / View framework.
+  - [React](https://github.com/facebook/react/)
+  - [Angular](https://github.com/angular/angular)
+  - [Vue.js](https://github.com/vuejs/vue)
 
 ## How it works
 
 `storybook-chrome-screenshot` executes [Storybook][storybook] in a child process and accesses the launched page using [Puppeteer][puppeteer]. It is a very simple mechanism.  
 For that reason, you can easily shoot screenshots by simply creating a story that works with the browser.
 
-
-
-
 ## Getting Started
 
 It is very easy to introduce `storybook-chrome-screenshot` in your project.
-
 
 ### Installation
 
@@ -84,7 +72,6 @@ $ npm install --save-dev storybook-chrome-screenshot
 
 > **Note:** Please do not use globally but let it operate locally.
 
-
 ### Register Addon
 
 Next, register Addon.
@@ -95,7 +82,6 @@ Next, register Addon.
 // Other addons...
 import 'storybook-chrome-screenshot/register';
 ```
-
 
 ### Register initialization process
 
@@ -110,11 +96,9 @@ import { initScreenshot } from 'storybook-chrome-screenshot';
 addDecorator(initScreenshot());
 ```
 
-
 ### Setup your stories
 
 Create a story with [withScreenshot](#withscreenshotoptions--).
-
 
 #### React
 
@@ -124,14 +108,8 @@ import { storiesOf } from '@storybook/react';
 import { withScreenshot } from 'storybook-chrome-screenshot';
 import Button from './Button';
 
-storiesOf('Button', module)
-  .add('with text',
-    withScreenshot()(() => (
-      <Button>Text</Button>
-    ))
-  );
+storiesOf('Button', module).add('with text', withScreenshot()(() => <Button>Text</Button>));
 ```
-
 
 #### Angular
 
@@ -142,17 +120,16 @@ import { storiesOf } from '@storybook/angular';
 import { withScreenshot } from 'storybook-chrome-screenshot';
 import { MyButtonComponent } from '../src/app/my-button/my-button.component';
 
-storiesOf('Button', module)
-  .add('with custom label',
-    withScreenshot()(() => ({
-      component: MyButtonComponent,
-      props: {
-        text: 'Text',
-      },
-    }))
-  );
+storiesOf('Button', module).add(
+  'with custom label',
+  withScreenshot()(() => ({
+    component: MyButtonComponent,
+    props: {
+      text: 'Text'
+    }
+  }))
+);
 ```
-
 
 #### Vue.js
 
@@ -164,24 +141,26 @@ import { withScreenshot } from 'storybook-chrome-screenshot';
 import MyButton from './Button.vue';
 
 storiesOf('MyButton', module)
-  .add('pre-registered component',
+  .add(
+    'pre-registered component',
     withScreenshot()(() => ({
-      template: '<my-button :rounded="true">A Button with rounded edges</my-button>',
+      template: '<my-button :rounded="true">A Button with rounded edges</my-button>'
     }))
   )
-  .add('template + component',
+  .add(
+    'template + component',
     withScreenshot()(() => ({
       components: { MyButton },
-      template: '<my-button>Button rendered in a template</my-button>',
+      template: '<my-button>Button rendered in a template</my-button>'
     }))
   )
-  .add('render + component',
+  .add(
+    'render + component',
     withScreenshot()(() => ({
-      render: h => h(MyButton, { props: { color: 'pink' } }, ['renders component: MyButton']),
+      render: (h) => h(MyButton, { props: { color: 'pink' } }, ['renders component: MyButton'])
     }))
   );
 ```
-
 
 ### Run `storybook-chrome-screenshot` Command
 
@@ -203,7 +182,6 @@ After that, just run the `npm run screenshot` command, shotting a component wrap
 $ npm run screenshot
 ```
 
-
 ### Support for addDecorator
 
 Or by using `addDecorator()`, it is possible to shotting all the decorated stories.
@@ -213,22 +191,16 @@ import { storiesOf } from '@storybook/react';
 import { withScreenshot } from 'storybook-chrome-screenshot';
 
 storiesOf('Button', module)
-  .addDecorator(withScreenshot({
-    /* ...options */
-  }))
-  .add('with primary', () => (
-    <Button primary>Primary Button</Button>
-  ))
-  .add('with secondary', () => (
-    <Button secondary>Secondary Button</Button>
-  ));
+  .addDecorator(
+    withScreenshot({
+      /* ...options */
+    })
+  )
+  .add('with primary', () => <Button primary>Primary Button</Button>)
+  .add('with secondary', () => <Button secondary>Secondary Button</Button>);
 ```
 
-
-
-
 ## API
-
 
 ### initScreenshot()
 
@@ -244,7 +216,6 @@ import { initScreenshot } from 'storybook-chrome-screenshot';
 
 addDecorator(initScreenshot());
 ```
-
 
 ### withScreenshot(options = {})
 
@@ -295,7 +266,6 @@ Also, By passing the `array` to `viewport`, you can easily shoot multiple Viewpo
 }
 ```
 
-
 ### setScreenshotOptions(options = {})
 
 Sets the default value of the option used with [withScreenshot()](#withscreenshotoptions--).  
@@ -310,11 +280,10 @@ setScreenshotOptions({
   viewport: {
     width: 768,
     height: 400,
-    deviceScaleFactor: 2,
-  },
+    deviceScaleFactor: 2
+  }
 });
 ```
-
 
 ### getScreenshotOptions()
 
@@ -326,9 +295,6 @@ import { getScreenshotOptions } from 'storybook-chrome-screenshot';
 console.log(getScreenshotOptions());
 // => Current screenshot options...
 ```
-
-
-
 
 ## Command Line Options
 
@@ -357,11 +323,7 @@ $ $(npm bin)/storybook-chrome-screenshot --help
     -h, --help                       output usage information
 ```
 
-
-
-
 ## Tips
-
 
 ### Disable component animation
 
@@ -390,46 +352,35 @@ Pass the created file to the `--inject-files` option.
 $ $(npm bin)/storybook-chrome-screenshot --inject-files ./disable-animation.js [...more options]
 ```
 
-
-
-
 ## Examples
 
-* [tsuyoshiwada/scs-with-reg-viz](https://github.com/tsuyoshiwada/scs-with-reg-viz) : A example repository of visual regression test using storybook-chrome-screenshot and reg-suit.
-* [Quramy/angular-sss-demo](https://github.com/Quramy/angular-sss-demo) : Storybook, Screenshot, and Snapshot testing for Angular
-* [viswiz-io/viswiz-tutorial-storybook](https://github.com/viswiz-io/viswiz-tutorial-storybook) : A tutorial repository for setting up visual regression testing with VisWiz.io
-
-
-
+- [tsuyoshiwada/scs-with-reg-viz](https://github.com/tsuyoshiwada/scs-with-reg-viz) : A example repository of visual regression test using storybook-chrome-screenshot and reg-suit.
+- [Quramy/angular-sss-demo](https://github.com/Quramy/angular-sss-demo) : Storybook, Screenshot, and Snapshot testing for Angular
+- [viswiz-io/viswiz-tutorial-storybook](https://github.com/viswiz-io/viswiz-tutorial-storybook) : A tutorial repository for setting up visual regression testing with VisWiz.io
 
 ## TODO
 
 The following tasks remain. Contributes are welcome :smiley:
 
-* [x] Global Options.
-* [x] ~~Shooting at an arbitrary timing.~~ (No plan for support)
-* [x] Support for [Angular](https://angular.io).
-* [x] Support for [Vue.js](https://github.com/vuejs/vue).
-* [ ] More unit testing.
-
-
-
+- [x] Global Options.
+- [x] ~~Shooting at an arbitrary timing.~~ (No plan for support)
+- [x] Support for [Angular](https://angular.io).
+- [x] Support for [Vue.js](https://github.com/vuejs/vue).
+- [ ] More unit testing.
 
 ## Contribute
 
-1. Fork it!
-1. Create your feature branch: `git checkout -b my-new-feature`
-1. Commit your changes: `git commit -am 'Add some feature'`
-1. Push to the branch: `git push origin my-new-feature`
-1. Submit a pull request :muscle:
+1.  Fork it!
+1.  Create your feature branch: `git checkout -b my-new-feature`
+1.  Commit your changes: `git commit -am 'Add some feature'`
+1.  Push to the branch: `git push origin my-new-feature`
+1.  Submit a pull request :muscle:
 
 Bugs, feature requests and comments are more than welcome in the [issues](https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues).
-
 
 ### Development
 
 We will develop using the following npm scripts.
-
 
 #### `npm run test`
 
@@ -450,13 +401,9 @@ $ npm run test:e2e
 $ npm run test:watch
 ```
 
-
 #### `npm run build`
 
 Compile the source code written in TypeScript.
-
-
-
 
 ## License
 

@@ -1,7 +1,10 @@
 declare module '@storybook/addon-knobs/react' {
   import * as React from 'react';
 
-  export function withKnobs(storyFn: Function, context: { kind: string, story: string }): React.ReactElement<any>;
+  export function withKnobs(
+    storyFn: Function,
+    context: { kind: string; story: string }
+  ): React.ReactElement<any>;
 
   export function boolean(name: string, value: boolean): boolean;
 

@@ -21,7 +21,7 @@ const withScreenshot = (options: PartialScreenshotOptions = {}) => {
           ...context,
           viewport,
           namespace,
-          knobs,
+          knobs
         });
       };
 
@@ -35,7 +35,7 @@ const withScreenshot = (options: PartialScreenshotOptions = {}) => {
             await sleep(delay);
             emit(EventTypes.COMPONENT_READY);
           });
-        },
+        }
       });
     };
 

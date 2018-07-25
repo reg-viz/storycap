@@ -14,7 +14,7 @@ import {
   select,
   color,
   date,
-  button,
+  button
 } from '@storybook/addon-knobs/vue';
 import Centered from '@storybook/addon-centered';
 import { withScreenshot } from '../../../../lib/';
@@ -23,39 +23,39 @@ import MyButton from './Button.vue';
 import Welcome from './Welcome.vue';
 import App from '../App.vue';
 
-storiesOf('Welcome', module)
-  .add('Welcome',
-    withScreenshot({
-      viewport: [
-        // Mobile
-        {
-          width: 300,
-          height: 420,
-          isMobile: true,
-          hasTouch: true,
-        },
-        // Tablet
-        {
-          width: 768,
-          height: 800,
-          isMobile: true,
-          hasTouch: true,
-        },
-        // Desktop
-        {
-          width: 1024,
-          height: 768,
-        },
-      ],
-    })(() => ({
-      render: h => h(Welcome),
-    }))
-  );
+storiesOf('Welcome', module).add(
+  'Welcome',
+  withScreenshot({
+    viewport: [
+      // Mobile
+      {
+        width: 300,
+        height: 420,
+        isMobile: true,
+        hasTouch: true
+      },
+      // Tablet
+      {
+        width: 768,
+        height: 800,
+        isMobile: true,
+        hasTouch: true
+      },
+      // Desktop
+      {
+        width: 1024,
+        height: 768
+      }
+    ]
+  })(() => ({
+    render: (h) => h(Welcome)
+  }))
+);
 
 storiesOf('App', module)
   .addDecorator(withScreenshot())
   .add('App', () => ({
-    render: h => h(App),
+    render: (h) => h(App)
   }));
 
 storiesOf('Button', module)
@@ -63,34 +63,36 @@ storiesOf('Button', module)
   .addDecorator(withScreenshot())
   // Works if Vue.component is called in the config.js in .storybook
   .add('rounded', () => ({
-    template: '<my-button :rounded="true">A Button with rounded edges</my-button>',
+    template: '<my-button :rounded="true">A Button with rounded edges</my-button>'
   }))
   .add('square', () => ({
-    template: '<my-button :rounded="false">A Button with square edges</my-button>',
+    template: '<my-button :rounded="false">A Button with square edges</my-button>'
   }));
 
 storiesOf('Method for rendering Vue', module)
-  .addDecorator(withScreenshot({
-    namespace: 'test',
-  }))
+  .addDecorator(
+    withScreenshot({
+      namespace: 'test'
+    })
+  )
   .add('render', () => ({
-    render: h => h('div', ['renders a div with some text in it..']),
+    render: (h) => h('div', ['renders a div with some text in it..'])
   }))
   .add('render + component', () => ({
     render(h) {
       return h(MyButton, { props: { color: 'pink' } }, ['renders component: MyButton']);
-    },
+    }
   }))
   .add('template', () => ({
     template: `
       <div>
         <h1>A template</h1>
         <p>rendered in vue in storybook</p>
-      </div>`,
+      </div>`
   }))
   .add('template + component', () => ({
     components: { MyButton },
-    template: '<my-button>MyButton rendered in a template</my-button>',
+    template: '<my-button>MyButton rendered in a template</my-button>'
   }))
   .add('template + methods', () => ({
     components: { MyButton },
@@ -100,14 +102,14 @@ storiesOf('Method for rendering Vue', module)
         <my-button :rounded="true" :handle-click="action">MyButton rendered in a template + props & methods</my-button>
       </p>`,
     methods: {
-      action: linkTo('Button'),
-    },
+      action: linkTo('Button')
+    }
   }))
   .add('JSX', () => ({
     components: { MyButton },
     render() {
       return <my-button>MyButton rendered with JSX</my-button>;
-    },
+    }
   }))
   .add('vuex + actions', () => ({
     components: { MyButton },
@@ -118,14 +120,14 @@ storiesOf('Method for rendering Vue', module)
         increment(state) {
           state.count += 1; // eslint-disable-line
           action('vuex state')(state);
-        },
-      },
+        }
+      }
     }),
     methods: {
       log() {
         this.$store.commit('increment');
-      },
-    },
+      }
+    }
   }))
   .add('whatever you want', () => ({
     components: { MyButton },
@@ -137,14 +139,14 @@ storiesOf('Method for rendering Vue', module)
         increment(state) {
           state.count += 1; // eslint-disable-line
           action('vuex state')(state);
-        },
-      },
+        }
+      }
     }),
     methods: {
       log() {
         this.$store.commit('increment');
-      },
-    },
+      }
+    }
   }))
   .add('pre-registered component', () => ({
     /* By pre-registering component in config.js,
@@ -154,11 +156,11 @@ storiesOf('Method for rendering Vue', module)
       <p>
         <em>This component was pre-registered in .storybook/config.js</em><br/>
         <my-button>MyButton rendered in a template</my-button>
-      </p>`,
+      </p>`
   }));
 
 storiesOf('Decorator for Vue', module)
-  .addDecorator(story => {
+  .addDecorator((story) => {
     // Decorated with story function
     const WrapButton = story();
     return {
@@ -166,7 +168,7 @@ storiesOf('Decorator for Vue', module)
       template: '<div :style="{ border: borderStyle }"><wrap-button/></div>',
       data() {
         return { borderStyle: 'medium solid red' };
-      },
+      }
     };
   })
   .addDecorator(() => ({
@@ -174,18 +176,18 @@ storiesOf('Decorator for Vue', module)
     template: '<div :style="{ border: borderStyle }"><story/></div>',
     data() {
       return {
-        borderStyle: 'medium solid blue',
+        borderStyle: 'medium solid blue'
       };
-    },
+    }
   }))
   .addDecorator(withScreenshot())
   .add('template', () => ({
-    template: '<my-button>MyButton with template</my-button>',
+    template: '<my-button>MyButton with template</my-button>'
   }))
   .add('render', () => ({
     render(h) {
       return h(MyButton, { props: { color: 'pink' } }, ['renders component: MyButton']);
-    },
+    }
   }));
 
 storiesOf('Addon Actions', module)
@@ -193,17 +195,17 @@ storiesOf('Addon Actions', module)
   .add('Action only', () => ({
     template: '<my-button :handle-click="log">Click me to log the action</my-button>',
     methods: {
-      log: action('log1'),
-    },
+      log: action('log1')
+    }
   }))
   .add('Action and method', () => ({
     template: '<my-button :handle-click="log">Click me to log the action</my-button>',
     methods: {
-      log: e => {
+      log: (e) => {
         e.preventDefault();
         action('log2')(e.target);
-      },
-    },
+      }
+    }
   }));
 
 storiesOf('Addon Notes', module)
@@ -212,7 +214,7 @@ storiesOf('Addon Notes', module)
     'Simple note',
     withNotes({ text: 'My notes on some bold text' })(() => ({
       template:
-        '<p><strong>Etiam vulputate elit eu venenatis eleifend. Duis nec lectus augue. Morbi egestas diam sed vulputate mollis. Fusce egestas pretium vehicula. Integer sed neque diam. Donec consectetur velit vitae enim varius, ut placerat arcu imperdiet. Praesent sed faucibus arcu. Nullam sit amet nibh a enim eleifend rhoncus. Donec pretium elementum leo at fermentum. Nulla sollicitudin, mauris quis semper tempus, sem metus tristique diam, efficitur pulvinar mi urna id urna.</strong></p>',
+        '<p><strong>Etiam vulputate elit eu venenatis eleifend. Duis nec lectus augue. Morbi egestas diam sed vulputate mollis. Fusce egestas pretium vehicula. Integer sed neque diam. Donec consectetur velit vitae enim varius, ut placerat arcu imperdiet. Praesent sed faucibus arcu. Nullam sit amet nibh a enim eleifend rhoncus. Donec pretium elementum leo at fermentum. Nulla sollicitudin, mauris quis semper tempus, sem metus tristique diam, efficitur pulvinar mi urna id urna.</strong></p>'
     }))
   )
   .add(
@@ -224,89 +226,82 @@ storiesOf('Addon Notes', module)
       <em>It's not all that important to be honest, but..</em>
 
       Emojis are great, I love emojis, in fact I like using them in my Component notes too! 😇
-    `,
+    `
     })(() => ({
-      template: '<p>🤔😳😯😮<br/>😄😩😓😱<br/>🤓😑😶😊</p>',
+      template: '<p>🤔😳😯😮<br/>😄😩😓😱<br/>🤓😑😶😊</p>'
     }))
   );
 
 /* eslint-enable react/react-in-jsx-scope */
 storiesOf('Addon Knobs', module)
   .addDecorator(withKnobs)
-  .add('Simple', withScreenshot({
-    knobs: {
-      Name: [
-        'John Doe',
-        'Hello Knobs',
-      ],
-      Age: [
-        44,
-        25,
-      ],
-    },
-  })(() => {
-    const name = text('Name', 'John Doe');
-    const age = number('Age', 44);
-    const content = `I am ${name} and I'm ${age} years old.`;
+  .add(
+    'Simple',
+    withScreenshot({
+      knobs: {
+        Name: ['John Doe', 'Hello Knobs'],
+        Age: [44, 25]
+      }
+    })(() => {
+      const name = text('Name', 'John Doe');
+      const age = number('Age', 44);
+      const content = `I am ${name} and I'm ${age} years old.`;
 
-    return {
-      template: `<div>${content}</div>`,
-    };
-  }))
-  .add('All knobs', withScreenshot({
-    knobs: {
-      Name: [
-        'Jane',
-        'Hello Knobs',
-      ],
-      Stock: [
-        20,
-        200,
-        2000,
-      ],
-    },
-  })(() => {
-    const name = text('Name', 'Jane');
-    const stock = number('Stock', 20, {
-      range: true,
-      min: 0,
-      max: 30,
-      step: 5,
-    });
-    const fruits = {
-      apples: 'Apple',
-      bananas: 'Banana',
-      cherries: 'Cherry',
-    };
-    const fruit = select('Fruit', fruits, 'apple');
-    const price = number('Price', 2.25);
+      return {
+        template: `<div>${content}</div>`
+      };
+    })
+  )
+  .add(
+    'All knobs',
+    withScreenshot({
+      knobs: {
+        Name: ['Jane', 'Hello Knobs'],
+        Stock: [20, 200, 2000]
+      }
+    })(() => {
+      const name = text('Name', 'Jane');
+      const stock = number('Stock', 20, {
+        range: true,
+        min: 0,
+        max: 30,
+        step: 5
+      });
+      const fruits = {
+        apples: 'Apple',
+        bananas: 'Banana',
+        cherries: 'Cherry'
+      };
+      const fruit = select('Fruit', fruits, 'apple');
+      const price = number('Price', 2.25);
 
-    const colour = color('Border', 'deeppink');
-    const today = date('Today', new Date('Jan 20 2017'));
-    const items = array('Items', ['Laptop', 'Book', 'Whiskey']);
-    const nice = boolean('Nice', true);
+      const colour = color('Border', 'deeppink');
+      const today = date('Today', new Date('Jan 20 2017'));
+      const items = array('Items', ['Laptop', 'Book', 'Whiskey']);
+      const nice = boolean('Nice', true);
 
-    const stockMessage = stock
-      ? `I have a stock of ${stock} ${fruit}, costing &dollar;${price} each.`
-      : `I'm out of ${fruit}${nice ? ', Sorry!' : '.'}`;
-    const salutation = nice ? 'Nice to meet you!' : 'Leave me alone!';
+      const stockMessage = stock
+        ? `I have a stock of ${stock} ${fruit}, costing &dollar;${price} each.`
+        : `I'm out of ${fruit}${nice ? ', Sorry!' : '.'}`;
+      const salutation = nice ? 'Nice to meet you!' : 'Leave me alone!';
 
-    button('Arbitrary action', action('You clicked it!'));
+      button('Arbitrary action', action('You clicked it!'));
 
-    return {
-      template: `
+      return {
+        template: `
           <div style="border:2px dotted ${colour}; padding: 8px 22px; border-radius: 8px">
             <h1>My name is ${name},</h1>
             <h3>today is ${new Date(today).toLocaleDateString()}</h3>
             <p>${stockMessage}</p>
             <p>Also, I have:</p>
             <ul>
-              ${items.map(item => `<li key=${item}>${item}</li>`).join('')}
+              ${items.map((item) => `<li key=${item}>${item}</li>`).join('')}
             </ul>
             <p>${salutation}</p>
           </div>
-        `,
-    };
-  }));
+        `
+      };
+    })
+  );
 
 /* eslint-enable react/react-in-jsx-scope */

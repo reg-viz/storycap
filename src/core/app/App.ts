@@ -30,7 +30,7 @@ export default class App {
     store: StoryStore,
     terminal: Terminal,
     server: Server,
-    browserFactory: (id: number) => Browser,
+    browserFactory: (id: number) => Browser
   ) {
     this.options = options;
     this.store = store;
@@ -58,39 +58,40 @@ export default class App {
   }
 
   public async launch() {
-    this.terminal
-      .section('green', PhaseTypes.LAUNCH, 'Launching storybook server ...')
-      .blank();
+    this.terminal.section('green', PhaseTypes.LAUNCH, 'Launching storybook server ...').blank();
 
-    await Promise.all([
-      this.server.start(),
-      Promise.all(this.browsers.map(b => b.launch())),
-    ]);
+    await Promise.all([this.server.start(), Promise.all(this.browsers.map((b) => b.launch()))]);
 
-    this.pages = await Promise.all(this.browsers.map(b => b.createPage(
-      this.server.getURL(),
-      (type: string, text: string) => {
-        this.terminal.log('BROWSER', `${type}: ${text.trim()}`);
-      },
-    )));
+    this.pages = await Promise.all(
+      this.browsers.map((b) =>
+        b.createPage(this.server.getURL(), (type: string, text: string) => {
+          this.terminal.log('BROWSER', `${type}: ${text.trim()}`);
+        })
+      )
+    );
   }
 
   public prepare() {
-    this.terminal
-      .section('cyan', PhaseTypes.PREPARE, 'Fetching the target components ...')
-      .blank();
+    this.terminal.section('cyan', PhaseTypes.PREPARE, 'Fetching the target components ...').blank();
 
     mkdirp.sync(this.options.outputDir);
 
-    return Promise.all(this.pages.map(p => new Promise<StoryWithOptions[]>(async (resolve, reject) => {
-      try {
-        p.waitScreenshotStories().then(resolve).catch(reject);
-        await p.exposeSetScreenshotStories();
-        await p.goto(PhaseTypes.PREPARE);
-      } catch (e) {
-        reject(e);
-      }
-    }))).then(storiesList => this.store.set(storiesList.reduce((acc, cur) => [...acc, ...cur], [])));
+    return Promise.all(
+      this.pages.map(
+        (p) =>
+          new Promise<StoryWithOptions[]>(async (resolve, reject) => {
+            try {
+              p.waitScreenshotStories()
+                .then(resolve)
+                .catch(reject);
+              await p.exposeSetScreenshotStories();
+              await p.goto(PhaseTypes.PREPARE);
+            } catch (e) {
+              reject(e);
+            }
+          })
+      )
+    ).then((storiesList) => this.store.set(storiesList.reduce((acc, cur) => [...acc, ...cur], [])));
   }
 
   public async capture() {
@@ -104,19 +105,17 @@ export default class App {
 
     await execParallel(
       parallel,
-      stories.map(story => async (workerIndex: number) => {
+      stories.map((story) => async (workerIndex: number) => {
         await this.pages[workerIndex].screenshot(story);
         this.terminal.progressTick();
-      }),
+      })
     );
 
     this.terminal.progressStop();
   }
 
   public async teardown() {
-    this.terminal
-      .section('cyan', PhaseTypes.DONE, 'Screenshot image saving is completed!')
-      .blank();
+    this.terminal.section('cyan', PhaseTypes.DONE, 'Screenshot image saving is completed!').blank();
 
     const { outputDir } = this.options;
     const takedStories = this.store.get(false);
@@ -127,13 +126,19 @@ export default class App {
     });
 
     skippedStories.forEach(({ filename }) => {
-      this.terminal.echo(`  ${logSymbols.warning}  ${outputDir}/${chalk.bold(filename)} ${chalk.yellow('(skipped)')}`);
+      this.terminal.echo(
+        `  ${logSymbols.warning}  ${outputDir}/${chalk.bold(filename)} ${chalk.yellow('(skipped)')}`
+      );
     });
 
     this.terminal
       .blank(1)
       .echo(`${chalk.bold('Time')}:        ${humanizeDuration(Date.now() - this.startTime)}`)
-      .echo(`${chalk.bold('Screenshots')}: ${takedStories.length} total (${skippedStories.length} skipped)`)
+      .echo(
+        `${chalk.bold('Screenshots')}: ${takedStories.length} total (${
+          skippedStories.length
+        } skipped)`
+      )
       .blank(2);
 
     await this.terminate();
@@ -144,6 +149,6 @@ export default class App {
       this.terminal.error(`An unexpected error occurred, Please make sure message below\n${e}`);
     }
     this.server.stop();
-    await Promise.all(this.browsers.map(b => b.close()));
+    await Promise.all(this.browsers.map((b) => b.close()));
   }
 }

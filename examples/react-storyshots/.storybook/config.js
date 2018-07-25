@@ -3,9 +3,11 @@ import { withScreenshot, initScreenshot } from '../../../lib/';
 
 // Screenshots
 addDecorator(initScreenshot());
-addDecorator(withScreenshot({
-  namespace: 'global',
-}));
+addDecorator(
+  withScreenshot({
+    namespace: 'global'
+  })
+);
 
 // initialize
 const req = require.context('../src', true, /\.stories\.js/);

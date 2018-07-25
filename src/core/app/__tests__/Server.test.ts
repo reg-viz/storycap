@@ -9,17 +9,17 @@ describe('Server', () => {
     const opts = {
       ...cliOptions,
       host: 'localhost',
-      port: 3030,
+      port: 3030
     };
 
     const { term } = factory(false, false);
-    const calls: { command: string, args: string[], options: SpawnOptions }[] = [];
+    const calls: { command: string; args: string[]; options: SpawnOptions }[] = [];
     const proc = new MockChildProcess();
     const spawn = (command: string, args?: string[], options?: SpawnOptions) => {
       calls.push({
         command,
         args: args || [],
-        options: options || {},
+        options: options || {}
       });
       return proc;
     };
@@ -34,15 +34,18 @@ describe('Server', () => {
       new Promise((resolve) => {
         proc.stderr.emit('data', new Buffer('Storybook started on => http://localhost:3030'));
         resolve();
-      }),
+      })
     ]);
 
     expect(calls).toHaveLength(1);
     expect(calls[0].command).toBe('start-storybook');
     expect(calls[0].args).toEqual([
-      '-p', opts.port.toString(),
-      '-c', opts.configDir,
-      '-h', opts.host,
+      '-p',
+      opts.port.toString(),
+      '-c',
+      opts.configDir,
+      '-h',
+      opts.host
     ]);
     expect(calls[0].options).toEqual({ cwd: opts.cwd });
     expect(server.getURL()).toBe('http://localhost:3030');

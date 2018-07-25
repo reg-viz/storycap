@@ -12,9 +12,9 @@ export const hoc = (component: any, wrap: any): any => ({
         attrs: self.$attrs,
         props: self.$props,
         on: self.$listeners,
-        scopedSlots: self.$scopedSlots,
+        scopedSlots: self.$scopedSlots
       },
-      self.$slots,
+      self.$slots
     );
-  },
+  }
 });
