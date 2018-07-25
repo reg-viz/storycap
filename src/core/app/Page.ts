@@ -49,12 +49,32 @@ export default class Page extends EventEmitter {
       [PhaseIdentity]: phase
     };
 
-    const url = `${this.url}?${qs.stringify(q)}`;
+    const queryString = qs.stringify(q);
+    const url = `${this.url}?${queryString}`;
 
-    return this.page.goto(url, {
-      timeout: this.options.browserTimeout,
-      waitUntil: 'domcontentloaded'
+    await this.page.goto(url, {
+      timeout: this.options.browserTimeout
+      // waitUntil: 'domcontentloaded'
     });
+
+    return await this.page.waitForFunction(
+      (expectQuery: string) => {
+        const { search } = window.location;
+        const { readyState } = document;
+        const expectQueryObject = new window.URLSearchParams(expectQuery);
+        const actualQueryObject = new window.URLSearchParams(search);
+
+        for (let [key, value] of expectQueryObject as any) {
+          if (!actualQueryObject.has(key) || actualQueryObject.get(key) !== value) {
+            return false;
+          }
+        }
+
+        return readyState === 'interative' || readyState === 'complete';
+      },
+      undefined,
+      queryString
+    );
   }
 
   public async screenshot(story: StoredStory) {

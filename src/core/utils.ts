@@ -156,7 +156,9 @@ const throat = (parallel: number, fn: Function) => {
         resolve(f.apply(null, [index, ...args]));
       });
 
-      return result.then(release(index), release(index));
+      return result.then(release(index)).catch((err) => {
+        throw err;
+      });
     }
 
     return new Promise((resolve) => {
