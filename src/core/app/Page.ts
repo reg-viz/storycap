@@ -53,9 +53,7 @@ export default class Page extends EventEmitter {
 
     return this.page.goto(url, {
       timeout: this.options.browserTimeout,
-      waitUntil: [
-        'domcontentloaded',
-      ],
+      waitUntil: 'domcontentloaded',
     });
   }
 
@@ -81,23 +79,21 @@ export default class Page extends EventEmitter {
       })
     )));
 
-    try {
-      const elementHandle = await this.page.$('#storybook-preview-iframe');
+    const frameName = 'storybook-preview-iframe';
 
-      await elementHandle!.screenshot({
-        path: path.resolve(cwd, file),
-        // shooting elements is "fullPage" by default
-        // fullPage: true,
-      });
-
-    } catch (e) {
-      // tslint:disable-next-line:no-console
-      console.error(`storybook's iframe was not found while shooting ${file}`);
-      await this.page.screenshot({
-        path: path.resolve(cwd, file),
-        fullPage: true,
-      });
+    const frame = await this.page.frames().find((f) => f.name() === frameName);
+    if (frame == null) {
+      throw new Error(`"${frameName}" not founded, Probably failed navigation...`);
     }
+
+    const body = await frame.$('body');
+    if (body == null) {
+      throw new Error(`"body" element not found in "${frameName}"`);
+    }
+
+    await body.screenshot({
+      path: path.resolve(cwd, file),
+    });
 
     return file;
   }
