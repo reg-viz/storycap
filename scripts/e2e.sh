@@ -6,7 +6,12 @@ run() {
     yarn --pure-lockfile
   fi
   rm -rf __screenshots__
-  npm run screenshot
+  yarn screenshot --debug
+  if [ "$?" -ne 0 ]; then
+    echo "An error occurred ... 😢"
+    popd
+    exit 1
+  fi
   count=$(ls __screenshots__ | wc -w)
   if [ "$count" -eq 0 ]; then
     echo "There is no PNG files... 😢"

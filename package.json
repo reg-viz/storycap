@@ -15,6 +15,7 @@
     "test:e2e": "bash scripts/e2e.sh",
     "test:watch": "npm run test:unit -- --watch",
     "clean": "rm -rf lib",
+    "format": "prettier --write \"**/*.+(ts|tsx|js|md|json)\"",
     "prebuild": "npm run clean",
     "prescreenshot": "npm run build",
     "prepublish": "npm run build"
@@ -60,10 +61,12 @@
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "jest": "^22.4.3",
+    "prettier": "^1.13.7",
     "react": "^16.3.0",
     "react-dom": "^16.3.0",
     "react-test-renderer": "^16.3.0",
     "tslint": "^5.9.1",
+    "tslint-config-prettier": "^1.14.0",
     "tslint-react": "^3.5.1",
     "typescript": "^2.8.1"
   },
@@ -75,7 +78,7 @@
     "@types/mkdirp": "^0.5.2",
     "@types/node-emoji": "^1.8.0",
     "@types/progress": "^2.0.1",
-    "@types/puppeteer": "^1.2.0",
+    "@types/puppeteer": "^1.5.1",
     "@types/query-string": "^5.1.0",
     "@types/sanitize-filename": "^1.1.28",
     "@types/storybook__react": "^3.0.7",
@@ -89,7 +92,7 @@
     "mkdirp": "^0.5.1",
     "node-emoji": "^1.8.1",
     "progress": "^2.0.0",
-    "puppeteer": "^1.4.0",
+    "puppeteer": "^1.6.0",
     "query-string": "^6.0.0",
     "sanitize-filename": "^1.6.1",
     "util-inspect": "^0.1.8"

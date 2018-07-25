@@ -20,7 +20,7 @@ export default class Page extends EventEmitter {
     page: puppeteer.Page,
     url: string,
     options: CLIOptions,
-    consoleHandler: ConsoleHandler,
+    consoleHandler: ConsoleHandler
   ) {
     super();
 
@@ -34,7 +34,7 @@ export default class Page extends EventEmitter {
       } else {
         // it IS a string, by fact. Type definitions are wrong
         // @ts-ignore
-        consoleHandler((data.type as string), (data.text as string));
+        consoleHandler(data.type as string, data.text as string);
       }
     });
   }
@@ -46,21 +46,39 @@ export default class Page extends EventEmitter {
       addons: 0,
       stories: 0,
       panelRight: 0,
-      [PhaseIdentity]: phase,
+      [PhaseIdentity]: phase
     };
 
-    const url = `${this.url}?${qs.stringify(q)}`;
+    const queryString = qs.stringify(q);
+    const url = `${this.url}?${queryString}`;
 
-    return this.page.goto(url, {
-      timeout: this.options.browserTimeout,
-      waitUntil: [
-        'domcontentloaded',
-      ],
+    await this.page.goto(url, {
+      timeout: this.options.browserTimeout
+      // waitUntil: 'domcontentloaded'
     });
+
+    return await this.page.waitForFunction(
+      (expectQuery: string) => {
+        const { search } = window.location;
+        const { readyState } = document;
+        const expectQueryObject = new window.URLSearchParams(expectQuery);
+        const actualQueryObject = new window.URLSearchParams(search);
+
+        for (let [key, value] of expectQueryObject as any) {
+          if (!actualQueryObject.has(key) || actualQueryObject.get(key) !== value) {
+            return false;
+          }
+        }
+
+        return readyState === 'interative' || readyState === 'complete';
+      },
+      undefined,
+      queryString
+    );
   }
 
   public async screenshot(story: StoredStory) {
-    const {cwd, outputDir, injectFiles} = this.options;
+    const { cwd, outputDir, injectFiles } = this.options;
 
     await this.page.setViewport(story.viewport);
 
@@ -69,35 +87,35 @@ export default class Page extends EventEmitter {
       this.goto(PhaseTypes.CAPTURE, {
         selectKind: story.kind,
         selectStory: story.story,
-        ...knobsQueryObject(story.knobs),
-      }),
+        ...knobsQueryObject(story.knobs)
+      })
     ]);
 
     const file = path.join(outputDir, story.filename);
 
-    await Promise.all(injectFiles.map((fpath) => (
-      this.page.addScriptTag({
-        path: fpath,
-      })
-    )));
+    await Promise.all(
+      injectFiles.map((fpath) =>
+        this.page.addScriptTag({
+          path: fpath
+        })
+      )
+    );
 
-    try {
-      const elementHandle = await this.page.$('#storybook-preview-iframe');
+    const frameName = 'storybook-preview-iframe';
 
-      await elementHandle!.screenshot({
-        path: path.resolve(cwd, file),
-        // shooting elements is "fullPage" by default
-        // fullPage: true,
-      });
-
-    } catch (e) {
-      // tslint:disable-next-line:no-console
-      console.error(`storybook's iframe was not found while shooting ${file}`);
-      await this.page.screenshot({
-        path: path.resolve(cwd, file),
-        fullPage: true,
-      });
+    const frame = await this.page.frames().find((f) => f.name() === frameName);
+    if (frame == null) {
+      throw new Error(`"${frameName}" not founded, Probably failed navigation...`);
     }
+
+    const body = await frame.$('body');
+    if (body == null) {
+      throw new Error(`"body" element not found in "${frameName}"`);
+    }
+
+    await body.screenshot({
+      path: path.resolve(cwd, file)
+    });
 
     return file;
   }
@@ -116,7 +134,6 @@ export default class Page extends EventEmitter {
     });
   }
 
-  // tslint:disable-next-line: no-any
   public async exposeFunction(name: string, fn: (...args: any[]) => any) {
     return this.page.exposeFunction(name, fn);
   }

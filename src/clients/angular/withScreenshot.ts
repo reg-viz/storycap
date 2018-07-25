@@ -15,20 +15,18 @@ const withScreenshot = (options: PartialScreenshotOptions = {}) => {
   const opts = mergeScreenshotOptions(options);
 
   return (getStory: (story: Story) => NgStory | NgStory) => {
-    // tslint:disable-next-line: no-any
     const isFuncStoryGetter = typeof getStory === 'function' || !(getStory as any).component;
 
     const wrapScreenshotHandler = (ngStory: NgStory, context: Story | null): NgStory => {
-      const getContext = (component: ScreenshotWrapperComponent) => (
-        component.__getStoryContext__ ? component.__getStoryContext__() : context
-      );
+      const getContext = (component: ScreenshotWrapperComponent) =>
+        component.__getStoryContext__ ? component.__getStoryContext__() : context;
 
       const emit = (type: string, ctx: Story) => {
         addons.getChannel().emit(type, {
           ...ctx,
           viewport: opts.viewport,
           knobs: opts.knobs,
-          namespace: opts.namespace,
+          namespace: opts.namespace
         });
       };
 
@@ -70,7 +68,7 @@ const withScreenshot = (options: PartialScreenshotOptions = {}) => {
 
       return {
         ...ngStory,
-        component: ScreenshotWrapperComponent,
+        component: ScreenshotWrapperComponent
       };
     };
 
@@ -78,7 +76,6 @@ const withScreenshot = (options: PartialScreenshotOptions = {}) => {
       return (story: Story) => wrapScreenshotHandler(getStory(story), story);
     }
 
-    // tslint:disable-next-line: no-any
     return wrapScreenshotHandler(getStory as any, null);
   };
 };

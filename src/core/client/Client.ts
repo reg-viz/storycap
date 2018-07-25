@@ -51,8 +51,9 @@ export default class Client {
   private async capture() {
     this.channel.on(EventTypes.COMPONENT_READY, (story: StoryWithOptions) => {
       if (this.env.getKind() === story.kind && this.env.getStory() === story.story) {
-
-        const frame: HTMLIFrameElement = document.querySelector('#storybook-preview-iframe') as HTMLIFrameElement;
+        const frame: HTMLIFrameElement = document.querySelector(
+          '#storybook-preview-iframe'
+        ) as HTMLIFrameElement;
         frame.style.width = frame.contentDocument!.body.clientWidth + 'px';
         const frameHeight = frame.contentDocument!.body.clientHeight + 'px';
 
@@ -70,10 +71,7 @@ export default class Client {
       }
     });
 
-    this.api.selectStory(
-      this.env.getKind(),
-      this.env.getStory(),
-    );
+    this.api.selectStory(this.env.getKind(), this.env.getStory());
   }
 
   private searchTargetStories(clientIndex: number, clientsCount: number) {
@@ -85,27 +83,30 @@ export default class Client {
             ...acc,
             ...cur.stories.map((story) => ({
               kind: cur.kind,
-              story,
-            })),
+              story
+            }))
           ],
-          [],
+          []
         );
 
         // sequential promises
-        list.reduce(
-          (acc: Promise<StoryWithOptions[]>, cur: Story, i: number) => acc
-            .then(async (results) => {
-              if (i % (clientsCount || 1) !== clientIndex) {
-                return results;
-              }
-              const res = await this.searchScreenshotWrappersByStory(cur.kind, cur.story);
-              return [...results, ...res];
-            })
-            .catch(reject),
-          Promise.resolve([]),
-        ).then((results: StoryWithOptions[]) => {
-          resolve(results);
-        });
+        list
+          .reduce(
+            (acc: Promise<StoryWithOptions[]>, cur: Story, i: number) =>
+              acc
+                .then(async (results) => {
+                  if (i % (clientsCount || 1) !== clientIndex) {
+                    return results;
+                  }
+                  const res = await this.searchScreenshotWrappersByStory(cur.kind, cur.story);
+                  return [...results, ...res];
+                })
+                .catch(reject),
+            Promise.resolve([])
+          )
+          .then((results: StoryWithOptions[]) => {
+            resolve(results);
+          });
 
         this.channel.on(EventTypes.COMPONENT_ERROR, reject);
       });

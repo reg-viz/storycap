@@ -16,5 +16,5 @@ export const cliOptions: CLIOptions = {
   debug: false,
   ciMode: false,
   cwd: '/repo',
-  cmd: 'start-storybook',
+  cmd: 'start-storybook'
 };

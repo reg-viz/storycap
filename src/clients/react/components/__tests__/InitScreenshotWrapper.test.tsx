@@ -1,4 +1,3 @@
-/* tslint:disable: no-any */
 import { EventEmitter } from 'events';
 import * as React from 'react';
 import { mount } from 'enzyme';
@@ -19,9 +18,8 @@ describe('React#InitScreenshotWrapper', () => {
         channel={channel}
         context={{
           kind: 'kind-test',
-          story: 'story-test',
-        }}
-      >
+          story: 'story-test'
+        }}>
         <div>foo</div>
       </InitScreenshotWrapper>
     );
@@ -33,8 +31,8 @@ describe('React#InitScreenshotWrapper', () => {
     expect(finished).toEqual([
       {
         kind: 'kind-test',
-        story: 'story-test',
-      },
+        story: 'story-test'
+      }
     ]);
   });
 });

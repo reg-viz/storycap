@@ -6,7 +6,7 @@ export const PhaseTypes = {
   LAUNCH: 'LAUNCH',
   PREPARE: 'PREPARE',
   CAPTURE: 'CAPTURE',
-  DONE: 'DONE',
+  DONE: 'DONE'
 };
 
 const prefix = PhaseIdentity;
@@ -17,7 +17,7 @@ export const EventTypes = {
   COMPONENT_READY: `${prefix}/component-ready`,
   COMPONENT_ERROR: `${prefix}/component-error`,
   COMPONENT_FINISH_MOUNT: `${prefix}/component-finish-mount`,
-  READY: `${prefix}/ready`,
+  READY: `${prefix}/ready`
 };
 
 export const defaultScreenshotOptions: ScreenshotOptions = {
@@ -28,7 +28,7 @@ export const defaultScreenshotOptions: ScreenshotOptions = {
     deviceScaleFactor: 1,
     isMobile: false,
     hasTouch: false,
-    isLandscape: false,
+    isLandscape: false
   },
-  knobs: {},
+  knobs: {}
 };

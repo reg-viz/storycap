@@ -10,9 +10,9 @@ const Button = withProps<Props, HTMLButtonElement>(styled.button)`
   margin: 0;
   padding: .6em 2.2em;
   background: transparent;
-  border: 1px solid ${props => props.primary ? '#03a9f4' : '#000'};
+  border: 1px solid ${(props) => (props.primary ? '#03a9f4' : '#000')};
   border-radius: 3px;
-  color: ${props => props.primary ? '#03a9f4' : '#000'};
+  color: ${(props) => (props.primary ? '#03a9f4' : '#000')};
   text-align: center;
   font-family: sans-serif;
   font-size: 1rem;

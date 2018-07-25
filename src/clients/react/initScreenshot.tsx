@@ -4,10 +4,7 @@ import InitScreenshotWrapper from './components/InitScreenshotWrapper';
 import { Story } from '../../models/story';
 
 const initScreenshot = () => (storyFn: Function, ctx: Story) => (
-  <InitScreenshotWrapper
-    channel={addons.getChannel()}
-    context={ctx}
-  >
+  <InitScreenshotWrapper channel={addons.getChannel()} context={ctx}>
     {storyFn()}
   </InitScreenshotWrapper>
 );

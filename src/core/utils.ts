@@ -4,20 +4,17 @@ import { Viewport } from '../models/viewport';
 import { Knobs, StoredKnobs } from '../models/knobs';
 import { StorybookEnv } from '../models/storybook';
 
-export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const parser = {
   identity: (v: string | undefined) => v,
-  number: (v: string | undefined) => v ? parseInt(v, 10) : 0,
-  list: (v: string | undefined) => v ? v.split(',').map(o => o.trim()) : null,
-  regexp: (v: string | undefined) => v ? new RegExp(v) : null,
+  number: (v: string | undefined) => (v ? parseInt(v, 10) : 0),
+  list: (v: string | undefined) => (v ? v.split(',').map((o) => o.trim()) : null),
+  regexp: (v: string | undefined) => (v ? new RegExp(v) : null)
 };
 
-export const filenamify = (filename: string) => (
-  (sanitize(filename.trim()) as string)
-    .replace(/\s{2,}/g, ' ')
-    .replace(/\s/g, '-')
-);
+export const filenamify = (filename: string) =>
+  (sanitize(filename.trim()) as string).replace(/\s{2,}/g, ' ').replace(/\s/g, '-');
 
 export const permutationKnobs = (knobs: Knobs): StoredKnobs[] => {
   const keys = Object.keys(knobs).sort();
@@ -25,9 +22,10 @@ export const permutationKnobs = (knobs: Knobs): StoredKnobs[] => {
     return [];
   }
 
-  const total = keys.reduce((previous, current) => (previous * knobs[current].length), 1);
+  const total = keys.reduce((previous, current) => previous * knobs[current].length, 1);
   const result: StoredKnobs[] = [];
-  let q, r = 0;
+  let q,
+    r = 0;
 
   for (let i = 0; i < total; i += 1) {
     result[i] = {};
@@ -54,19 +52,20 @@ export const knobsQueryObject = (knobs: StoredKnobs): StoredKnobs => {
   return queryObject;
 };
 
-export const viewport2string = (viewport: Viewport) => ([
-  `${viewport.width}x${viewport.height}`,
-  `${viewport.isMobile ? '-mobile' : ''}`,
-  `${viewport.hasTouch ? '-touch' : ''}`,
-  `${viewport.isLandscape ? '-landscape' : ''}`,
-  `${viewport.deviceScaleFactor > 1 ? `@${viewport.deviceScaleFactor}x` : ''}`,
-].join(''));
+export const viewport2string = (viewport: Viewport) =>
+  [
+    `${viewport.width}x${viewport.height}`,
+    `${viewport.isMobile ? '-mobile' : ''}`,
+    `${viewport.hasTouch ? '-touch' : ''}`,
+    `${viewport.isLandscape ? '-landscape' : ''}`,
+    `${viewport.deviceScaleFactor > 1 ? `@${viewport.deviceScaleFactor}x` : ''}`
+  ].join('');
 
-export const knobs2string = (knobs: StoredKnobs) => (
-  Object.keys(knobs).sort().map((key) => (
-    `${key}-${knobs[key]}`
-  )).join('_')
-);
+export const knobs2string = (knobs: StoredKnobs) =>
+  Object.keys(knobs)
+    .sort()
+    .map((key) => `${key}-${knobs[key]}`)
+    .join('_');
 
 export interface Story2FilenameParams {
   kind: string;
@@ -85,13 +84,11 @@ export const story2filename = (params: Story2FilenameParams) => {
   return `${filename}.png`;
 };
 
-export const pascalize = (v: string) => (
-  `${v.charAt(0).toUpperCase()}${_.camelCase(v.slice(1))}`
-);
+export const pascalize = (v: string) => `${v.charAt(0).toUpperCase()}${_.camelCase(v.slice(1))}`;
 
 const Time = {
   MINUTES: 1000 * 60,
-  SECONDS: 1000,
+  SECONDS: 1000
 };
 
 export const humanizeDuration = (timestamp: number) => {
@@ -100,14 +97,14 @@ export const humanizeDuration = (timestamp: number) => {
 
   if (timestamp > Time.MINUTES) {
     const min = Math.floor(ts / Time.MINUTES);
-    ts = ts - (min * Time.MINUTES);
+    ts = ts - min * Time.MINUTES;
     arr.push(`${min}min`);
   }
 
   const sec = (ts / Time.SECONDS)
     .toString()
     .split('.')
-    .map(s => s.slice(0, 2))
+    .map((s) => s.slice(0, 2))
     .join('.');
 
   arr.push(`${sec}s`);
@@ -115,25 +112,88 @@ export const humanizeDuration = (timestamp: number) => {
   return arr.join(' ');
 };
 
-export type Task<T> = (idx: number) => Promise<T>;
+interface Delayed {
+  resolve: Function;
+  fn: Function;
+  args: any[];
+}
 
-export const execParalell = <T>(tasks: Task<T>[], p: number = 1) => {
-  const copied = tasks.slice();
-  const results = [] as T[];
-  return Promise.all(_.range(p).map(i => {
-    return new Promise((res, rej) => {
-    function next(): Promise<number | void> {
-      const t = copied.shift();
-      if (!t) {
-        return Promise.resolve(res());
+class Queue<T = Delayed> {
+  private _s1: T[] = [];
+  private _s2: T[] = [];
+
+  push(value: T) {
+    this._s1.push(value);
+  }
+
+  shift() {
+    let s2 = this._s2;
+    if (s2.length === 0) {
+      const s1 = this._s1;
+      if (s1.length === 0) {
+        return;
       }
-      return t(i).then(r => results.push(r)).then(next).catch(err => rej(err));
+      this._s1 = s2;
+      s2 = this._s2 = s1.reverse();
     }
-    return next();
+    return s2.pop();
+  }
+
+  isEmpty() {
+    return !this._s1.length && !this._s2.length;
+  }
+}
+
+const throat = (parallel: number, fn: Function) => {
+  const queue = new Queue();
+  const con = _.range(parallel);
+
+  const run = (f: Function, args: any[]): Promise<void> => {
+    const index = con.pop();
+
+    if (index !== undefined) {
+      const result = new Promise((resolve) => {
+        resolve(f.apply(null, [index, ...args]));
+      });
+
+      return result.then(release(index)).catch((err) => {
+        throw err;
+      });
+    }
+
+    return new Promise((resolve) => {
+      queue.push({
+        resolve,
+        fn: f,
+        args
+      });
     });
-  })).then(() => results);
+  };
+
+  const release = (index: number) => () => {
+    if (!queue.isEmpty()) {
+      const next = queue.shift() as Delayed;
+      con.push(index);
+      next.resolve(run(next.fn, next.args));
+    }
+  };
+
+  return (...args: any[]) => run(fn, args);
 };
 
-export const getStorybookEnv = () => (
-  ((window as any).STORYBOOK_ENV as StorybookEnv) // tslint:disable-line: no-any
-);
+export type Task<T> = (idx: number) => Promise<T>;
+
+export const execParallel = <T>(parallel: number, tasks: Task<T>[]) => {
+  const results: T[] = [];
+
+  return Promise.all(
+    tasks.map(
+      throat(parallel, async (index: number, fn: Function) => {
+        const res = await fn(index);
+        results.push(res);
+      })
+    )
+  ).then(() => results);
+};
+
+export const getStorybookEnv = () => (window as any).STORYBOOK_ENV as StorybookEnv;
