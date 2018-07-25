@@ -15,6 +15,7 @@
     "test:e2e": "bash scripts/e2e.sh",
     "test:watch": "npm run test:unit -- --watch",
     "clean": "rm -rf lib",
+    "format": "prettier --write \"**/*.+(ts|tsx|js|md|json)\"",
     "prebuild": "npm run clean",
     "prescreenshot": "npm run build",
     "prepublish": "npm run build"
@@ -60,10 +61,12 @@
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "jest": "^22.4.3",
+    "prettier": "^1.13.7",
     "react": "^16.3.0",
     "react-dom": "^16.3.0",
     "react-test-renderer": "^16.3.0",
     "tslint": "^5.9.1",
+    "tslint-config-prettier": "^1.14.0",
     "tslint-react": "^3.5.1",
     "typescript": "^2.8.1"
   },
