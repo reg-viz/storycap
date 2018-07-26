@@ -7,21 +7,20 @@ import { EventTypes } from '../../core/constants';
 import { PartialScreenshotOptions } from '../../models/options';
 import { Story } from '../../models/story';
 
-const withScreenshot = (options: PartialScreenshotOptions = {}) => (storyFn: Function, ctx: Story | undefined) => {
+const withScreenshot = (options: PartialScreenshotOptions = {}) => (
+  storyFn: Function,
+  ctx: Story | undefined
+) => {
   const channel = addons.getChannel();
 
   const wrapperWithContext = (context: Story) => {
     const props = {
       ...mergeScreenshotOptions(options),
       channel,
-      context,
+      context
     };
 
-    return (
-      <ScreenshotWrapper {...props}>
-        {storyFn(context)}
-      </ScreenshotWrapper>
-    );
+    return <ScreenshotWrapper {...props}>{storyFn(context)}</ScreenshotWrapper>;
   };
 
   if (typeof storyFn !== 'function') {
@@ -34,9 +33,7 @@ const withScreenshot = (options: PartialScreenshotOptions = {}) => (storyFn: Fun
     return wrapperWithContext(ctx);
   }
 
-  return (context: Story) => (
-    wrapperWithContext(context)
-  );
+  return (context: Story) => wrapperWithContext(context);
 };
 
 export default withScreenshot;

@@ -19,9 +19,8 @@ describe('React#InitScreenshotWrapper', () => {
         channel={channel}
         context={{
           kind: 'kind-test',
-          story: 'story-test',
-        }}
-      >
+          story: 'story-test'
+        }}>
         <div>foo</div>
       </InitScreenshotWrapper>
     );
@@ -33,8 +32,8 @@ describe('React#InitScreenshotWrapper', () => {
     expect(finished).toEqual([
       {
         kind: 'kind-test',
-        story: 'story-test',
-      },
+        story: 'story-test'
+      }
     ]);
   });
 });

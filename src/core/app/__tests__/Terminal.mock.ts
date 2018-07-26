@@ -25,6 +25,6 @@ export const factory = (silent: boolean, debug: boolean, ciMode: boolean = false
     clear: () => {
       stdout.clear();
       stderr.clear();
-    },
+    }
   };
 };

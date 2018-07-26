@@ -23,7 +23,7 @@ export default class StoryStore {
       const isEmptyKnobs = isEmpty(story.knobs);
       const viewports: Viewport[] = isMultipleViewport
         ? (story.viewport as Viewport[])
-        : [(story.viewport as Viewport)];
+        : [story.viewport as Viewport];
 
       const storyPush = (viewport: Viewport, knobs: StoredKnobs) => {
         this.stories.push({
@@ -39,8 +39,8 @@ export default class StoryStore {
             namespace: story.namespace,
             filePattern: story.filePattern,
             viewport: isMultipleViewport ? viewport : null,
-            knobs: !isEmptyKnobs ? knobs : null,
-          }),
+            knobs: !isEmptyKnobs ? knobs : null
+          })
         });
       };
 
@@ -60,7 +60,7 @@ export default class StoryStore {
   }
 
   public get(skipped: boolean = false) {
-    return this.stories.filter(story => story.skipped === skipped);
+    return this.stories.filter((story) => story.skipped === skipped);
   }
 
   private isSkipStory(story: StoryWithOptions) {

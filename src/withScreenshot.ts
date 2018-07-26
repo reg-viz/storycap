@@ -17,13 +17,13 @@ if (!storybookEnv) {
 } else {
   switch (storybookEnv) {
     case 'react':
-      withScreenshot = (ReactWithScreenshot as WithScreenshot);
+      withScreenshot = ReactWithScreenshot as WithScreenshot;
       break;
     case 'angular':
-      withScreenshot = (NgWithScreenshot as WithScreenshot);
+      withScreenshot = NgWithScreenshot as WithScreenshot;
       break;
     case 'vue':
-      withScreenshot = (VueWithScreenshot as WithScreenshot);
+      withScreenshot = VueWithScreenshot as WithScreenshot;
       break;
     default:
       throw new Error(`storybook-chrome-screenshot does not support "${storybookEnv}".`);

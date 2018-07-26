@@ -26,10 +26,7 @@ export default class Server {
   private proc: ChildProcess | null = null;
 
   private static optionsToCommandArgs(options: CLIOptions) {
-    const args = [
-      '-p', options.port.toString(),
-      '-c', options.configDir,
-    ];
+    const args = ['-p', options.port.toString(), '-c', options.configDir];
 
     if (options.host) {
       args.push('-h', options.host);

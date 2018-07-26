@@ -40,26 +40,19 @@ export default class ScreenshotWrapper extends React.Component<Props> {
   emit(type: string) {
     const { context, channel, viewport, knobs, namespace } = this.props;
 
-    channel.emit(
-      type,
-      {
-        ...context,
-        viewport,
-        knobs,
-        namespace,
-      },
-    );
+    channel.emit(type, {
+      ...context,
+      viewport,
+      knobs,
+      namespace
+    });
   }
 
   handleRef = (component: HTMLSpanElement) => {
     this.component = component;
-  }
+  };
 
   render() {
-    return (
-      <span ref={this.handleRef}>
-        {this.props.children}
-      </span>
-    );
+    return <span ref={this.handleRef}>{this.props.children}</span>;
   }
 }

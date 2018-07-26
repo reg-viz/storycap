@@ -19,16 +19,15 @@ const withScreenshot = (options: PartialScreenshotOptions = {}) => {
     const isFuncStoryGetter = typeof getStory === 'function' || !(getStory as any).component;
 
     const wrapScreenshotHandler = (ngStory: NgStory, context: Story | null): NgStory => {
-      const getContext = (component: ScreenshotWrapperComponent) => (
-        component.__getStoryContext__ ? component.__getStoryContext__() : context
-      );
+      const getContext = (component: ScreenshotWrapperComponent) =>
+        component.__getStoryContext__ ? component.__getStoryContext__() : context;
 
       const emit = (type: string, ctx: Story) => {
         addons.getChannel().emit(type, {
           ...ctx,
           viewport: opts.viewport,
           knobs: opts.knobs,
-          namespace: opts.namespace,
+          namespace: opts.namespace
         });
       };
 
@@ -70,7 +69,7 @@ const withScreenshot = (options: PartialScreenshotOptions = {}) => {
 
       return {
         ...ngStory,
-        component: ScreenshotWrapperComponent,
+        component: ScreenshotWrapperComponent
       };
     };
 

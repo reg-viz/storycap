@@ -10,10 +10,16 @@ export default class Terminal {
   private silent: boolean;
   private debug: boolean;
   private ciMode: boolean;
-  private progressCounter: { current: number; total: number; } | null = null;
+  private progressCounter: { current: number; total: number } | null = null;
   private progressbar: ProgressBar;
 
-  public constructor(stdout: Writer, stderr: Writer, silent: boolean, debug: boolean, ciMode: boolean) {
+  public constructor(
+    stdout: Writer,
+    stderr: Writer,
+    silent: boolean,
+    debug: boolean,
+    ciMode: boolean
+  ) {
     this.stdout = stdout;
     this.stderr = stderr;
     this.silent = silent;
@@ -30,11 +36,7 @@ export default class Terminal {
 
   public log(title: string, ...args: {}[]) {
     if (this.debug) {
-      this.echo(
-        this.createTitle('blue', 'DEBUG'),
-        chalk.blue(`[${title}]`),
-        ...args,
-      );
+      this.echo(this.createTitle('blue', 'DEBUG'), chalk.blue(`[${title}]`), ...args);
     }
     return this;
   }
@@ -72,14 +74,14 @@ export default class Terminal {
       if (this.ciMode) {
         this.progressCounter = {
           current: 0,
-          total,
+          total
         };
       } else if (!this.debug) {
         this.progressbar = new ProgressBar(format, {
           complete: '=',
           incomplete: ' ',
           width: 40,
-          total,
+          total
         });
       }
     }
