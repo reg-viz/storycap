@@ -29,6 +29,7 @@ export default class StoryStore {
         this.stories.push({
           kind: story.kind,
           story: story.story,
+          parameters: story.parameters,
           viewport,
           knobs,
           skipped,
@@ -36,6 +37,7 @@ export default class StoryStore {
             kind: story.kind,
             story: story.story,
             namespace: story.namespace,
+            filePattern: story.filePattern,
             viewport: isMultipleViewport ? viewport : null,
             knobs: !isEmptyKnobs ? knobs : null,
           }),

@@ -161,6 +161,17 @@ describe('Utilities', () => {
       ],
       [
         {
+          kind: 'Kind',
+          story: 'Story',
+          viewport: null,
+          namespace: null,
+          knobs: null,
+          filePattern: '{story}-{kind}',
+        },
+        'Story-Kind.png',
+      ],
+      [
+        {
           kind: 'foo',
           story: 'bar',
           viewport: {
@@ -192,6 +203,35 @@ describe('Utilities', () => {
           knobs: null,
         },
         'foo-bar_baz-1x2.png',
+      ],
+      [
+        {
+          kind: 'foo',
+          story: 'bar',
+          viewport: null,
+          namespace: 'baz',
+          knobs: null,
+          filePattern: '{ns}/{vp}/{kind}-{story}'
+        },
+        'baz/foo-bar.png',
+      ],
+      [
+        {
+          kind: 'foo',
+          story: 'bar',
+          viewport: {
+            width: 1,
+            height: 2,
+            isMobile: false,
+            hasTouch: false,
+            isLandscape: false,
+            deviceScaleFactor: 1,
+          },
+          namespace: 'baz',
+          knobs: null,
+          filePattern: '{ns}/{vp}/{kind}-{story}'
+        },
+        'baz/1x2/foo-bar.png',
       ],
       [
         {

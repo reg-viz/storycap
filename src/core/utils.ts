@@ -4,6 +4,8 @@ import { Viewport } from '../models/viewport';
 import { Knobs, StoredKnobs } from '../models/knobs';
 import { StorybookEnv } from '../models/storybook';
 
+const DEFAULT_FILE_PATTERN = '{kind}-{story}-{knobs}_{ns}-{vp}';
+
 export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const parser = {
@@ -74,13 +76,28 @@ export interface Story2FilenameParams {
   viewport: Viewport | null;
   namespace: string | null;
   knobs: StoredKnobs | null;
+  filePattern?: string | null;
 }
 
 export const story2filename = (params: Story2FilenameParams) => {
-  const ns = params.namespace ? `_${params.namespace}` : '';
-  const vp = params.viewport ? `-${viewport2string(params.viewport)}` : '';
-  const knobs = params.knobs ? `-${knobs2string(params.knobs)}` : '';
-  const filename = `${filenamify(`${params.kind}-${params.story}${knobs}${ns}${vp}`)}`;
+  const ns = params.namespace ? `${params.namespace}` : '_';
+  const vp = params.viewport ? `${viewport2string(params.viewport)}` : '_';
+  const knobs = params.knobs ? `${knobs2string(params.knobs)}` : '_';
+
+  const replacements = {
+    kind: params.kind,
+    story: params.story,
+    knobs,
+    ns,
+    vp
+  };
+
+  const filename =
+    (params.filePattern || DEFAULT_FILE_PATTERN)
+      .replace(/\{(\w+)\}/g, (match, key) => filenamify(replacements[key]))
+      .replace(/-_/g, '')
+      .replace(/__/g, '')
+      .replace(/\/_/g, '');
 
   return `${filename}.png`;
 };

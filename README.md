@@ -264,6 +264,7 @@ The following objects of `options` can be specified.
     hasTouch: false,
     isLandscape: false,
   },
+  filePattern: '{kind}-{story}-{knobs}_{ns}-{vp}' // file pattern, combined from kind, story name, used knobs, namespace and viewport
 }
 ```
 

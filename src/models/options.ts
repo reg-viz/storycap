@@ -27,6 +27,7 @@ export interface ScreenshotOptions {
   delay: number;
   viewport: Viewport | Viewport[];
   knobs: Knobs;
+  filePattern: string | null;
 }
 
 export interface PartialScreenshotOptions {
@@ -34,4 +35,5 @@ export interface PartialScreenshotOptions {
   delay?: number;
   viewport?: Partial<Viewport> | Partial<Viewport>[];
   knobs?: Knobs;
+  filePattern?: string | null;
 }
