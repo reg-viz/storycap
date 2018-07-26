@@ -15,11 +15,21 @@
 [#34]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/34
 [#35]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/35
 [#43]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/43
+[#46]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/46
 [#50]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/50
 [#52]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/52
 [#53]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/53
 [#54]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/54
 [#55]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/55
+
+
+## 1.2.0
+
+> 2018-07-26
+
+### New features
+
+* Add file saving pattern ([#46][#46]), Thanks [@theKashey](https://github.com/theKashey) !
 
 
 ## 1.1.0
