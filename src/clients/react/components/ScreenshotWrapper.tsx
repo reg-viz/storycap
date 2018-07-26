@@ -27,7 +27,7 @@ export default class ScreenshotWrapper extends React.Component<Props> {
 
   componentDidMount() {
     const { delay } = this.props;
-    const node = findDOMNode(this.component);
+    const node = findDOMNode(this.component) as HTMLElement;
 
     this.emit(EventTypes.COMPONENT_MOUNT);
 
