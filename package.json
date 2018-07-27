@@ -9,16 +9,16 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "npm run test:lint && npm run test:unit && npm run test:e2e",
+    "test": "yarn test:lint && yarn test:unit && yarn test:e2e",
     "test:lint": "tslint \"src/**/*.+(ts|tsx)\"",
     "test:unit": "jest",
     "test:e2e": "bash scripts/e2e.sh",
-    "test:watch": "npm run test:unit -- --watch",
+    "test:watch": "yarn test:unit --watch",
     "clean": "rm -rf lib",
     "format": "prettier --write \"**/*.+(ts|tsx|js|md|json)\"",
-    "prebuild": "npm run clean",
-    "prescreenshot": "npm run build",
-    "prepublish": "npm run build"
+    "prebuild": "yarn clean",
+    "prescreenshot": "yarn build",
+    "prepublish": "yarn build"
   },
   "repository": {
     "type": "git",
