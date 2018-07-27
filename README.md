@@ -318,7 +318,7 @@ $ $(npm bin)/storybook-chrome-screenshot --help
     --filter-story [regexp]          Filter of story with RegExp. (example: "^with\s.+$")
     --inject-files <file-names>      Path to the JavaScript file to be injected into frame. (default: )
     --browser-timeout [number]       Timeout milliseconds when Puppeteer opens Storybook. (default: 30000)
-    --puppeteer-launch-config [json] JSON string of launch config for Puppeteer. (default: {"args":["--no-sandbox","--disable-setuid-sandbox"]})
+    --puppeteer-launch-config [json] JSON string of launch config for Puppeteer. (default: {"args":["--no-sandbox","--disable-setuid-sandbox", "--disable-dev-shm-usage"]})
     --silent                         Suppress standard output.
     --debug                          Enable debug mode.
     -h, --help                       output usage information

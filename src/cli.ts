@@ -62,7 +62,7 @@ program
     '--puppeteer-launch-config [json]',
     'JSON string of launch config for Puppeteer.',
     parser.identity,
-    '{"args":["--no-sandbox","--disable-setuid-sandbox"]}'
+    '{"args":["--no-sandbox","--disable-setuid-sandbox", "--disable-dev-shm-usage"]}'
   )
   .option('--silent', 'Suppress standard output.', parser.identity, false)
   .option('--debug', 'Enable debug mode.', parser.identity, false)
