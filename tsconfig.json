@@ -1,15 +1,10 @@
 {
   "compilerOptions": {
     "outDir": "lib",
-    "rootDirs": [
-      "./src"
-    ],
+    "rootDirs": ["./src"],
     "module": "commonjs",
     "target": "es5",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["esnext", "dom"],
     "declaration": true,
     "sourceMap": true,
     "jsx": "react",
@@ -23,10 +18,7 @@
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true
   },
-  "include": [
-    "./src/**/*.ts",
-    "./types/**/*.d.ts"
-  ],
+  "include": ["./src/**/*.ts", "./types/**/*.d.ts"],
   "exclude": [
     "node_modules",
     "build",

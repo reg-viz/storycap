@@ -10,9 +10,9 @@ const initScreenshot = () => (getStory: (context: VueStory) => VueStory, ctx: St
   return hoc(component, {
     mounted() {
       addons.getChannel().emit(EventTypes.COMPONENT_FINISH_MOUNT, {
-        ...ctx,
+        ...ctx
       });
-    },
+    }
   });
 };
 

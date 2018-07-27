@@ -7,5 +7,5 @@ module.exports = {
       return tsc.transpile(src, tsConfig.compilerOptions, path, []);
     }
     return src;
-  },
+  }
 };

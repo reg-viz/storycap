@@ -17,9 +17,7 @@
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true
   },
-  "include": [
-    "../../types/**/*"
-  ],
+  "include": ["../../types/**/*"],
   "exclude": [
     "node_modules",
     "build",

@@ -12,7 +12,7 @@ describe('React#ScreenshotWrapper', () => {
     const state: any = {
       inited: [],
       mounted: [],
-      ready: [],
+      ready: []
     };
 
     channel.on(EventTypes.COMPONENT_INIT, (...args: any[]) => {
@@ -32,14 +32,13 @@ describe('React#ScreenshotWrapper', () => {
         channel={channel}
         context={{
           kind: 'foo',
-          story: 'bar',
+          story: 'bar'
         }}
         delay={0}
         viewport={{
-          ...defaultScreenshotOptions.viewport,
+          ...defaultScreenshotOptions.viewport
         }}
-        namespace={''}
-      >
+        namespace={''}>
         <div>foo</div>
       </ScreenshotWrapper>
     );
@@ -59,10 +58,10 @@ describe('React#ScreenshotWrapper', () => {
         kind: 'foo',
         story: 'bar',
         viewport: {
-          ...defaultScreenshotOptions.viewport,
+          ...defaultScreenshotOptions.viewport
         },
-        namespace: '',
-      },
+        namespace: ''
+      }
     ]);
 
     expect(state.mounted).toEqual(state.inited);

@@ -2,11 +2,15 @@
 
 run() {
   pushd $1
-  if [[ ! -d 'node_modules' ]]; then
-    yarn --pure-lockfile
-  fi
+  rm -rf node_modules
   rm -rf __screenshots__
-  npm run screenshot
+  yarn --pure-lockfile
+  yarn screenshot
+  if [ "$?" -ne 0 ]; then
+    echo "An error occurred ... 😢"
+    popd
+    exit 1
+  fi
   count=$(ls __screenshots__ | wc -w)
   if [ "$count" -eq 0 ]; then
     echo "There is no PNG files... 😢"

@@ -51,29 +51,20 @@ export default class Client {
   private async capture() {
     this.channel.on(EventTypes.COMPONENT_READY, (story: StoryWithOptions) => {
       if (this.env.getKind() === story.kind && this.env.getStory() === story.story) {
+        const frame = document.querySelector('#storybook-preview-iframe') as HTMLIFrameElement;
+        const contentDocument = frame.contentDocument as Document;
 
-        const frame: HTMLIFrameElement = document.querySelector('#storybook-preview-iframe') as HTMLIFrameElement;
-        frame.style.width = frame.contentDocument!.body.clientWidth + 'px';
-        const frameHeight = frame.contentDocument!.body.clientHeight + 'px';
+        frame.style.width = `${contentDocument.documentElement.scrollWidth}px`;
+        frame.style.height = `${contentDocument.documentElement.scrollHeight}px`;
 
-        // propagate content height to iframe
-        frame.style.height = frameHeight;
         // and document itself
-        document.body.style.height = frameHeight;
-
-        // remove all internal scrolls from the page, unhiding iframe content
-        const style = document.createElement('div');
-        style.innerHTML = `<style>* {overflow: visibile !important; }</style>`;
-        document.body.appendChild(style);
+        document.body.style.height = frame.style.height;
 
         this.gateway.readyComponent();
       }
     });
 
-    this.api.selectStory(
-      this.env.getKind(),
-      this.env.getStory(),
-    );
+    this.api.selectStory(this.env.getKind(), this.env.getStory());
   }
 
   private searchTargetStories(clientIndex: number, clientsCount: number) {
@@ -85,27 +76,30 @@ export default class Client {
             ...acc,
             ...cur.stories.map((story) => ({
               kind: cur.kind,
-              story,
-            })),
+              story
+            }))
           ],
-          [],
+          []
         );
 
         // sequential promises
-        list.reduce(
-          (acc: Promise<StoryWithOptions[]>, cur: Story, i: number) => acc
-            .then(async (results) => {
-              if (i % (clientsCount || 1) !== clientIndex) {
-                return results;
-              }
-              const res = await this.searchScreenshotWrappersByStory(cur.kind, cur.story);
-              return [...results, ...res];
-            })
-            .catch(reject),
-          Promise.resolve([]),
-        ).then((results: StoryWithOptions[]) => {
-          resolve(results);
-        });
+        list
+          .reduce(
+            (acc: Promise<StoryWithOptions[]>, cur: Story, i: number) =>
+              acc
+                .then(async (results) => {
+                  if (i % (clientsCount || 1) !== clientIndex) {
+                    return results;
+                  }
+                  const res = await this.searchScreenshotWrappersByStory(cur.kind, cur.story);
+                  return [...results, ...res];
+                })
+                .catch(reject),
+            Promise.resolve([])
+          )
+          .then((results: StoryWithOptions[]) => {
+            resolve(results);
+          });
 
         this.channel.on(EventTypes.COMPONENT_ERROR, reject);
       });

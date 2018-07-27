@@ -14,7 +14,7 @@ const initScreenshot = () => (getStory: (context: Story) => NgStory, ctx: Story)
       clazz.ngAfterViewInit = function afterViewInit() {
         delegateAfterViewInit.call(this);
         addons.getChannel().emit(EventTypes.COMPONENT_FINISH_MOUNT, {
-          ...this.__getStoryContext__(),
+          ...this.__getStoryContext__()
         });
         clazz.__WRAPPED_INIT_SCREENSHOT__ = true;
       };
