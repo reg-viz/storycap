@@ -5,7 +5,7 @@ run() {
   rm -rf node_modules
   rm -rf __screenshots__
   yarn --pure-lockfile
-  yarn screenshot --debug
+  yarn screenshot
   if [ "$?" -ne 0 ]; then
     echo "An error occurred ... 😢"
     popd
