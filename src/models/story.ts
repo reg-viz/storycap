@@ -1,5 +1,5 @@
-import { Viewport } from './viewport';
 import { Knobs, StoredKnobs } from './knobs';
+import { Viewport } from './viewport';
 
 export interface Story {
   kind: string;

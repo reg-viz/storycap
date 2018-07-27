@@ -1,22 +1,22 @@
-import * as path from 'path';
+import chalk from 'chalk';
 import * as fs from 'fs';
 import * as _ from 'lodash';
-import * as mkdirp from 'mkdirp';
 import * as logSymbols from 'log-symbols';
+import * as mkdirp from 'mkdirp';
 import { emojify } from 'node-emoji';
-import chalk from 'chalk';
-import { PhaseTypes } from '../constants';
+import * as path from 'path';
+import inspect from 'util-inspect';
 import { CLIOptions } from '../../models/options';
 import { StoryWithOptions } from '../../models/story';
-import inspect = require('util-inspect');
-import StoryStore from './StoryStore';
-import Terminal from './Terminal';
-import Server from './Server';
-import Browser from './Browser';
-import Page from './Page';
-import { humanizeDuration, execParalell } from '../utils';
+import { PhaseTypes } from '../constants';
+import { execParalell, humanizeDuration } from '../utils';
+import { Browser } from './Browser';
+import { Page } from './Page';
+import { Server } from './Server';
+import { StoryStore } from './StoryStore';
+import { Terminal } from './Terminal';
 
-export default class App {
+export class App {
   private options: CLIOptions;
   private store: StoryStore;
   private terminal: Terminal;
@@ -37,6 +37,7 @@ export default class App {
     this.terminal = terminal;
     this.server = server;
     this.browsers = _.range(this.options.parallel).map(browserFactory);
+    this.pages = [];
     this.startTime = Date.now();
   }
 
@@ -48,11 +49,13 @@ export default class App {
     if (!fs.existsSync(cmd)) {
       this.terminal.error(`Storybook does not exists. First, let's setup a Storybook!
         See: https://storybook.js.org/basics/quick-start-guide/`);
+
       return;
     }
 
     if (!fs.existsSync(path.resolve(cwd, configDir, 'config.js'))) {
       this.terminal.error(`"${configDir}/config.js" does not exists.`);
+
       return;
     }
   }
@@ -91,7 +94,9 @@ export default class App {
             }
           })
       )
-    ).then((storiesList) => this.store.set(storiesList.reduce((acc, cur) => [...acc, ...cur], [])));
+    ).then((storiesList) => {
+      this.store.set(storiesList.reduce((acc, cur) => [...acc, ...cur], []));
+    });
   }
 
   public async capture() {
@@ -147,7 +152,7 @@ export default class App {
   }
 
   public async terminate(e?: Error) {
-    if (e) {
+    if (e != null) {
       this.terminal.error(`An unexpected error occurred, Please make sure message below\n${e}`);
     }
     this.server.stop();

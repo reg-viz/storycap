@@ -1,7 +1,7 @@
-import { Adapter } from './AppAdapter';
 import { StoredStory, StoryWithOptions } from '../../models/story';
+import { Adapter } from './AppAdapter';
 
-export default class Gateway {
+export class Gateway {
   private adapter: Adapter;
 
   public constructor(adapter: Adapter) {
@@ -13,7 +13,7 @@ export default class Gateway {
   }
 
   public readyComponent() {
-    return this.adapter.readyComponentScreenshot();
+    this.adapter.readyComponentScreenshot();
   }
 
   public getStories(): StoredStory[] {
@@ -21,10 +21,10 @@ export default class Gateway {
   }
 
   public setStories(stories: StoryWithOptions[]) {
-    return this.adapter.setScreenshotStories(stories);
+    this.adapter.setScreenshotStories(stories);
   }
 
   public failure(err: Error | string) {
-    return this.adapter.failureScreenshot(err instanceof Error ? err.message : err);
+    this.adapter.failureScreenshot(err instanceof Error ? err.message : err);
   }
 }

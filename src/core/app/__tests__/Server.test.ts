@@ -1,5 +1,5 @@
 import { SpawnOptions } from 'child_process';
-import Server from '../Server';
+import { Server } from '../Server';
 import { cliOptions } from './cli-options.mock';
 import { MockChildProcess } from './Server.mock';
 import { factory } from './Terminal.mock';
@@ -18,9 +18,10 @@ describe('Server', () => {
     const spawn = (command: string, args?: string[], options?: SpawnOptions) => {
       calls.push({
         command,
-        args: args || [],
-        options: options || {}
+        args: args != null ? args : [],
+        options: options != null ? options : {}
       });
+
       return proc;
     };
 

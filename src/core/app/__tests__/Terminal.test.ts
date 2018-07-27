@@ -111,7 +111,7 @@ describe('Terminal', () => {
   });
 
   it('Should be handle progress counter', () => {
-    let { stdout, term, clear } = factory(false, false, true);
+    const { stdout, term, clear } = factory(false, false, true);
 
     term.progressStart('', 10);
     expect(stdout.list).toHaveLength(1);
@@ -130,6 +130,6 @@ describe('Terminal', () => {
     clear();
 
     term.progressStop();
-    expect((term as any).progressCounter).toBeNull(); // tslint:disable-line: no-any
+    expect((<any>term).progressCounter).toBeNull(); // tslint:disable-line: no-any
   });
 });

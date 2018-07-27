@@ -1,13 +1,16 @@
-import { getStorybookEnv } from './core/utils';
-import ReactInitScreenshot from './clients/react/initScreenshot';
-import NgInitScreenshot from './clients/angular/initScreenshot';
-import VueInitScreenshot from './clients/vue/initScreenshot';
+// tslint:disable: no-ordered-imports
+import { initScreenshot as NgInitScreenshot } from './clients/angular/initScreenshot';
+import { initScreenshot as ReactInitScreenshot } from './clients/react/initScreenshot';
+import { initScreenshot as VueInitScreenshot } from './clients/vue/initScreenshot';
+// tslint:enable
+
 import { noopDecorator } from './clients/noop';
+import { getStorybookEnv } from './core/utils';
 
 const storybookEnv = getStorybookEnv();
 let initScreenshot: Function;
 
-if (!storybookEnv) {
+if (storybookEnv == null) {
   initScreenshot = noopDecorator;
 } else {
   switch (storybookEnv) {
@@ -25,4 +28,4 @@ if (!storybookEnv) {
   }
 }
 
-export default initScreenshot;
+export { initScreenshot };

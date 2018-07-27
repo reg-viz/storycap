@@ -1,4 +1,4 @@
-export { default as AppAdapter } from './AppAdapter';
-export { default as Client } from './Client';
-export { default as Env } from './Env';
-export { default as Gateway } from './Gateway';
+export { AppAdapter } from './AppAdapter';
+export { Client } from './Client';
+export { Env } from './Env';
+export { Gateway } from './Gateway';

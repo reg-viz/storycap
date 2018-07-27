@@ -1,17 +1,18 @@
 #!/usr/bin/env node
 
+import 'babel-polyfill'; // tslint:disable-line: no-import-side-effect
+import { execSync, spawn } from 'child_process';
+import program from 'commander';
+import isCI from 'is-ci';
 import * as path from 'path';
-import { spawn, execSync } from 'child_process';
-import 'babel-polyfill';
+import { App, Browser, Server, StoryStore, Terminal } from './core/app';
 import { parser } from './core/utils';
-import { App, Terminal, Server, Browser, StoryStore } from './core/app/';
 import { CLIOptions } from './models/options';
-import program = require('commander');
-import isCI = require('is-ci');
 
+// tslint:disable-next-line: no-var-requires no-require-imports
 const pkg = require('../package.json');
 
-/* tslint:disable: max-line-length */
+// tslint:disable: max-line-length
 program
   .version(pkg.version)
   .usage('[options]')
@@ -67,7 +68,7 @@ program
   .option('--silent', 'Suppress standard output.', parser.identity, false)
   .option('--debug', 'Enable debug mode.', parser.identity, false)
   .parse(process.argv);
-/* tslint:enable */
+// tslint:enable
 
 const bin = execSync('echo $(npm bin)', { encoding: 'utf-8' })
   .toString()
@@ -92,6 +93,7 @@ const options: CLIOptions = {
   cmd: path.resolve(bin, 'start-storybook')
 };
 
+// tslint:disable-next-line: no-floating-promises
 (async () => {
   const store = new StoryStore(options.filterKind, options.filterStory);
 
@@ -119,7 +121,7 @@ const options: CLIOptions = {
     await app.teardown();
     process.exit(0);
   } catch (e) {
-    app.terminate(e);
+    await app.terminate(e);
     process.exit(1);
   }
 })();

@@ -1,5 +1,4 @@
 import { Story } from '../../models/story';
 
-export function noopDecorator() {
-  return (storyFn: Function, ctx: Story | undefined) => (ctx ? storyFn(ctx) : storyFn);
-}
+export const noopDecorator = () => (storyFn: Function, ctx: Story | undefined) =>
+  ctx != null ? storyFn(ctx) : storyFn;

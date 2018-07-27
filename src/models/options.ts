@@ -1,5 +1,5 @@
-import { Viewport } from './viewport';
 import { Knobs } from './knobs';
+import { Viewport } from './viewport';
 
 export type AppType = 'react';
 
