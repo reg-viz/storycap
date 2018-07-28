@@ -22,6 +22,25 @@
 [#54]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/54
 [#55]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/55
 
+## 1.2.1
+
+> 2018-07-28
+
+### New features
+
+- Bump `puppeteer` to 1.6.1
+
+### Bugfix
+
+- Fixed a bug where the bottom edge of the image can be overlooked.
+- `@types/commander` has been removed from dependency.
+
+### Development
+
+- Update code format (use `tslint-microsoft-contrib`)
+- Add prettier
+- Add renovate app
+
 ## 1.2.0
 
 > 2018-07-26
