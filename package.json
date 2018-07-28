@@ -116,6 +116,7 @@
     },
     "testMatch": [
       "**/__tests__/*.test.(ts|tsx)"
-    ]
+    ],
+    "testURL": "http://localhost"
   }
 }
