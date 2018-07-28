@@ -1,12 +1,12 @@
+import imagesLoaded from 'imagesloaded';
 import * as React from 'react';
-import { findDOMNode } from 'react-dom';
-import imagesLoaded = require('imagesloaded');
+import * as ReactDOM from 'react-dom';
 import { EventTypes } from '../../../core/constants';
 import { sleep } from '../../../core/utils';
+import { Knobs } from '../../../models/knobs';
 import { Story } from '../../../models/story';
 import { Channel } from '../../../models/storybook';
 import { Viewport } from '../../../models/viewport';
-import { Knobs } from '../../../models/knobs';
 
 export interface Props extends React.Props<{}> {
   channel: Channel;
@@ -17,17 +17,17 @@ export interface Props extends React.Props<{}> {
   namespace?: string;
 }
 
-export default class ScreenshotWrapper extends React.Component<Props> {
-  component: HTMLSpanElement;
+export class ScreenshotWrapper extends React.Component<Props> {
+  private component: HTMLSpanElement | null = null;
 
-  constructor(props: Props) {
+  public constructor(props: Props) {
     super(props);
     this.emit(EventTypes.COMPONENT_INIT);
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     const { delay } = this.props;
-    const node = findDOMNode(this.component) as HTMLElement;
+    const node = ReactDOM.findDOMNode(this.component as HTMLSpanElement) as HTMLElement;
 
     this.emit(EventTypes.COMPONENT_MOUNT);
 
@@ -37,7 +37,11 @@ export default class ScreenshotWrapper extends React.Component<Props> {
     });
   }
 
-  emit(type: string) {
+  public render() {
+    return <span ref={this.handleRef}>{this.props.children}</span>;
+  }
+
+  private emit(type: string) {
     const { context, channel, viewport, knobs, namespace } = this.props;
 
     channel.emit(type, {
@@ -48,11 +52,7 @@ export default class ScreenshotWrapper extends React.Component<Props> {
     });
   }
 
-  handleRef = (component: HTMLSpanElement) => {
+  private handleRef = (component: HTMLSpanElement) => {
     this.component = component;
   };
-
-  render() {
-    return <span ref={this.handleRef}>{this.props.children}</span>;
-  }
 }

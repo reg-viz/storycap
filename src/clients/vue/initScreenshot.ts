@@ -1,10 +1,10 @@
 import addons from '@storybook/addons';
 import { EventTypes } from '../../core/constants';
-import { hoc } from './hoc';
 import { Story } from '../../models/story';
+import { hoc } from './hoc';
 import { VueStory } from './models';
 
-const initScreenshot = () => (getStory: (context: VueStory) => VueStory, ctx: Story) => {
+export const initScreenshot = () => (getStory: (context: VueStory) => VueStory, ctx: Story) => {
   const component = getStory(ctx);
 
   return hoc(component, {
@@ -15,5 +15,3 @@ const initScreenshot = () => (getStory: (context: VueStory) => VueStory, ctx: St
     }
   });
 };
-
-export default initScreenshot;

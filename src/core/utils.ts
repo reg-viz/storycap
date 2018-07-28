@@ -1,22 +1,25 @@
 import * as _ from 'lodash';
-import sanitize = require('sanitize-filename');
-import { Viewport } from '../models/viewport';
+import sanitize from 'sanitize-filename';
 import { Knobs, StoredKnobs } from '../models/knobs';
 import { StorybookEnv } from '../models/storybook';
+import { Viewport } from '../models/viewport';
 
 const DEFAULT_FILE_PATTERN = '{kind}-{story}-{knobs}_{ns}-{vp}';
 
+// tslint:disable-next-line: no-string-based-set-timeout
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const parser = {
   identity: (v: string | undefined) => v,
-  number: (v: string | undefined) => (v ? parseInt(v, 10) : 0),
-  list: (v: string | undefined) => (v ? v.split(',').map((o) => o.trim()) : null),
-  regexp: (v: string | undefined) => (v ? new RegExp(v) : null)
+  number: (v: string | undefined) => (v != null ? parseInt(v, 10) : 0),
+  list: (v: string | undefined) => (v != null ? v.split(',').map((o) => o.trim()) : null),
+  regexp: (v: string | undefined) => (v != null ? new RegExp(v) : null)
 };
 
 export const filenamify = (filename: string) =>
-  (sanitize(filename.trim()) as string).replace(/\s{2,}/g, ' ').replace(/\s/g, '-');
+  sanitize(filename.trim())
+    .replace(/\s{2,}/g, ' ')
+    .replace(/\s/g, '-');
 
 export const permutationKnobs = (knobs: Knobs): StoredKnobs[] => {
   const keys = Object.keys(knobs).sort();
@@ -26,15 +29,14 @@ export const permutationKnobs = (knobs: Knobs): StoredKnobs[] => {
 
   const total = keys.reduce((previous, current) => previous * knobs[current].length, 1);
   const result: StoredKnobs[] = [];
-  let q,
-    r = 0;
+  let q = 0;
+  let r = 0;
 
   for (let i = 0; i < total; i += 1) {
     result[i] = {};
     q = i;
 
-    for (let n = 0; n < keys.length; n += 1) {
-      const key = keys[n];
+    for (const key of keys) {
       r = q % knobs[key].length;
       q = Math.floor(q / knobs[key].length);
       result[i][key] = knobs[key][r];
@@ -78,12 +80,20 @@ export interface Story2FilenameParams {
   filePattern?: string | null;
 }
 
-export const story2filename = (params: Story2FilenameParams) => {
-  const ns = params.namespace ? `${params.namespace}` : '_';
-  const vp = params.viewport ? `${viewport2string(params.viewport)}` : '_';
-  const knobs = params.knobs ? `${knobs2string(params.knobs)}` : '_';
+interface Story2FilenameReplacer {
+  kind: string;
+  story: string;
+  knobs: string;
+  ns: string;
+  vp: string;
+}
 
-  const replacements = {
+export const story2filename = (params: Story2FilenameParams) => {
+  const ns = params.namespace != null ? `${params.namespace}` : '_';
+  const vp = params.viewport != null ? `${viewport2string(params.viewport)}` : '_';
+  const knobs = params.knobs != null ? `${knobs2string(params.knobs)}` : '_';
+
+  const replacements: Story2FilenameReplacer = {
     kind: params.kind,
     story: params.story,
     knobs,
@@ -91,8 +101,8 @@ export const story2filename = (params: Story2FilenameParams) => {
     vp
   };
 
-  const filename = (params.filePattern || DEFAULT_FILE_PATTERN)
-    .replace(/\{(\w+)\}/g, (match, key) => filenamify(replacements[key]))
+  const filename = (params.filePattern != null ? params.filePattern : DEFAULT_FILE_PATTERN)
+    .replace(/\{(\w+)\}/g, (_, key: keyof Story2FilenameReplacer) => filenamify(replacements[key]))
     .replace(/-_/g, '')
     .replace(/__/g, '')
     .replace(/\/_/g, '');
@@ -132,24 +142,29 @@ export type Task<T> = (idx: number) => Promise<T>;
 
 export const execParalell = <T>(tasks: Task<T>[], p: number = 1) => {
   const copied = tasks.slice();
-  const results = [] as T[];
+  const results = <T[]>[];
+
   return Promise.all(
-    _.range(p).map((i) => {
-      return new Promise((res, rej) => {
-        function next(): Promise<number | void> {
-          const t = copied.shift();
-          if (!t) {
-            return Promise.resolve(res());
+    _.range(p).map(
+      (i) =>
+        new Promise((res, rej) => {
+          function next(): Promise<number | void> {
+            const t = copied.shift();
+
+            // tslint:disable: no-void-expression
+            return t == null
+              ? Promise.resolve(res())
+              : t(i)
+                  .then((r) => results.push(r))
+                  .then(next)
+                  .catch(rej);
+            // tslint:enable
           }
-          return t(i)
-            .then((r) => results.push(r))
-            .then(next)
-            .catch((err) => rej(err));
-        }
-        return next();
-      });
-    })
+
+          return next();
+        })
+    )
   ).then(() => results);
 };
 
-export const getStorybookEnv = () => (window as any).STORYBOOK_ENV as StorybookEnv; // tslint:disable-line: no-any
+export const getStorybookEnv = () => <StorybookEnv>(<any>window).STORYBOOK_ENV;

@@ -1,7 +1,6 @@
-/* tslint:disable: no-any */
-import * as utils from '../utils';
-import { Viewport } from '../../models/viewport';
 import { Knobs, StoredKnobs } from '../../models/knobs';
+import { Viewport } from '../../models/viewport';
+import * as utils from '../utils';
 
 describe('Utilities', () => {
   it('filenamify()', () => {
@@ -132,6 +131,7 @@ describe('Utilities', () => {
     }
   });
 
+  // tslint:disable: max-func-body-length
   it('story2filename', () => {
     const table: [utils.Story2FilenameParams, string][] = [
       [
@@ -245,6 +245,7 @@ describe('Utilities', () => {
       expect(utils.story2filename(p)).toBe(o);
     }
   });
+  // tslint:enable
 
   it('pascalize()', () => {
     const table = [
@@ -273,10 +274,10 @@ describe('Utilities', () => {
   });
 
   it('getStorybookEnv()', () => {
-    (window as any).STORYBOOK_ENV = 'react';
+    (<any>window).STORYBOOK_ENV = 'react';
     expect(utils.getStorybookEnv()).toBe('react');
 
-    (window as any).STORYBOOK_ENV = 'angular';
+    (<any>window).STORYBOOK_ENV = 'angular';
     expect(utils.getStorybookEnv()).toBe('angular');
   });
 });

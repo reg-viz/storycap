@@ -1,5 +1,5 @@
 import { PhaseIdentity } from '../../constants';
-import Env from '../Env';
+import { Env } from '../Env';
 
 describe('Env', () => {
   it('Should be get environment variables', () => {

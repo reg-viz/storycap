@@ -13,7 +13,7 @@ export const mergeScreenshotOptions = (options: PartialScreenshotOptions): Scree
     const base = !Array.isArray(opts.viewport) ? opts.viewport : defaultScreenshotOptions.viewport;
     viewport = options.viewport.map((vp) => _.merge({}, base, vp));
   } else {
-    viewport = _.merge({}, options.viewport || {});
+    viewport = _.merge({}, options.viewport != null ? options.viewport : {});
   }
 
   return _.merge({}, opts, {

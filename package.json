@@ -10,7 +10,7 @@
   "scripts": {
     "build": "tsc",
     "test": "yarn test:lint && yarn test:unit && yarn test:e2e",
-    "test:lint": "tslint \"src/**/*.+(ts|tsx)\"",
+    "test:lint": "tslint \"src/**/*.+(ts|tsx)\" --project tsconfig.json --format stylish",
     "test:unit": "jest",
     "test:e2e": "bash scripts/e2e.sh",
     "test:watch": "yarn test:unit --watch",
@@ -67,11 +67,11 @@
     "react-test-renderer": "16.4.1",
     "tslint": "5.11.0",
     "tslint-config-prettier": "1.14.0",
+    "tslint-microsoft-contrib": "^5.1.0",
     "tslint-react": "3.6.0",
     "typescript": "2.9.2"
   },
   "dependencies": {
-    "@types/commander": "^2.12.2",
     "@types/imagesloaded": "^4.1.1",
     "@types/lodash": "^4.14.113",
     "@types/log-symbols": "^2.0.0",
@@ -116,6 +116,7 @@
     },
     "testMatch": [
       "**/__tests__/*.test.(ts|tsx)"
-    ]
+    ],
+    "testURL": "http://localhost"
   }
 }

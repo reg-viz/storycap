@@ -1,13 +1,13 @@
-import * as React from 'react';
 import addons from '@storybook/addons';
-import inspect = require('util-inspect');
-import { mergeScreenshotOptions } from '../../screenshot-options';
-import ScreenshotWrapper from './components/ScreenshotWrapper';
+import * as React from 'react';
+import inspect from 'util-inspect';
 import { EventTypes } from '../../core/constants';
 import { PartialScreenshotOptions } from '../../models/options';
 import { Story } from '../../models/story';
+import { mergeScreenshotOptions } from '../../screenshot-options';
+import { ScreenshotWrapper } from './components/ScreenshotWrapper';
 
-const withScreenshot = (options: PartialScreenshotOptions = {}) => (
+export const withScreenshot = (options: PartialScreenshotOptions = {}) => (
   storyFn: Function,
   ctx: Story | undefined
 ) => {
@@ -29,11 +29,10 @@ const withScreenshot = (options: PartialScreenshotOptions = {}) => (
     throw new Error(msg); // For browser
   }
 
-  if (ctx) {
+  if (ctx != null) {
     return wrapperWithContext(ctx);
   }
 
+  // tslint:disable-next-line: no-unnecessary-callback-wrapper
   return (context: Story) => wrapperWithContext(context);
 };
-
-export default withScreenshot;

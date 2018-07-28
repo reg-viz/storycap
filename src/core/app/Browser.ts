@@ -1,24 +1,25 @@
-import * as puppeteer from 'puppeteer';
-import { EventTypes } from '../constants';
+import puppeteer from 'puppeteer';
 import { CLIOptions } from '../../models/options';
-import StoryStore from './StoryStore';
-import Page, { ConsoleHandler } from './Page';
+import { EventTypes } from '../constants';
+import { ConsoleHandler, Page } from './Page';
+import { StoryStore } from './StoryStore';
 
 export type ClientMetadata = {
   clientId: number;
   clientsCount: number;
 };
 
-export default class Browser {
+export class Browser {
   private readonly id: number;
   private readonly store: StoryStore;
   private readonly options: CLIOptions;
-  private browser: puppeteer.Browser;
+  private browser: puppeteer.Browser | null;
 
   public constructor(id: number, store: StoryStore, options: CLIOptions) {
     this.id = id;
     this.store = store;
     this.options = options;
+    this.browser = null;
   }
 
   public async launch() {
@@ -26,20 +27,24 @@ export default class Browser {
   }
 
   public async close() {
+    if (this.browser == null) {
+      throw new Error('Browser does not exist');
+    }
+
     return this.browser.close();
   }
 
   public async createPage(url: string, consoleHandler: ConsoleHandler) {
+    if (this.browser == null) {
+      throw new Error('Browser does not exist');
+    }
+
     const page = new Page(await this.browser.newPage(), url, this.options, consoleHandler);
 
-    await page.exposeFunction(
-      'getPageId',
-      () =>
-        ({
-          clientId: this.id,
-          clientsCount: this.options.parallel
-        } as ClientMetadata)
-    );
+    await page.exposeFunction('getPageId', () => ({
+      clientId: this.id,
+      clientsCount: this.options.parallel
+    }));
 
     await page.exposeFunction('readyComponentScreenshot', (index: number) => {
       page.emit(EventTypes.COMPONENT_READY, index);

@@ -1,6 +1,6 @@
-export { default as App } from './App';
-export { default as Browser } from './Browser';
-export { default as Page } from './Page';
-export { default as Server } from './Server';
-export { default as StoryStore } from './StoryStore';
-export { default as Terminal } from './Terminal';
+export { App } from './App';
+export { Browser } from './Browser';
+export { Page } from './Page';
+export { Server } from './Server';
+export { StoryStore } from './StoryStore';
+export { Terminal } from './Terminal';

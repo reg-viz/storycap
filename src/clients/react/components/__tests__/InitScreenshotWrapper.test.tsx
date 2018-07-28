@@ -1,9 +1,9 @@
-/* tslint:disable: no-any */
+// tslint:disable: no-implicit-dependencies
+import { mount } from 'enzyme';
 import { EventEmitter } from 'events';
 import * as React from 'react';
-import { mount } from 'enzyme';
 import { EventTypes } from '../../../../core/constants';
-import InitScreenshotWrapper from '../InitScreenshotWrapper';
+import { InitScreenshotWrapper } from '../InitScreenshotWrapper';
 
 describe('React#InitScreenshotWrapper', () => {
   it('Should be handle channel', () => {

@@ -1,22 +1,21 @@
 import addons from '@storybook/addons';
-import imagesLoaded = require('imagesloaded');
+import imagesLoaded from 'imagesloaded';
 import { EventTypes } from '../../core/constants';
 import { sleep } from '../../core/utils';
-import { mergeScreenshotOptions } from '../../screenshot-options';
 import { PartialScreenshotOptions } from '../../models/options';
 import { Story } from '../../models/story';
+import { mergeScreenshotOptions } from '../../screenshot-options';
 import { NgStory } from './models';
 
 // TODO:
 // According to Issue below, because Angular can not change knob from URL, we are not able to respond.
 // Once Issue is resolved, knobs integration will be implemented :)
 // https://github.com/storybooks/storybook/issues/3042
-const withScreenshot = (options: PartialScreenshotOptions = {}) => {
+export const withScreenshot = (options: PartialScreenshotOptions = {}) => {
   const opts = mergeScreenshotOptions(options);
 
   return (getStory: (story: Story) => NgStory | NgStory) => {
-    // tslint:disable-next-line: no-any
-    const isFuncStoryGetter = typeof getStory === 'function' || !(getStory as any).component;
+    const isFuncStoryGetter = typeof getStory === 'function' || (<any>getStory).component == null;
 
     const wrapScreenshotHandler = (ngStory: NgStory, context: Story | null): NgStory => {
       const getContext = (component: ScreenshotWrapperComponent) =>
@@ -51,7 +50,7 @@ const withScreenshot = (options: PartialScreenshotOptions = {}) => {
           // However it's hard to override class's constructor and inject depndency on `ElementRef`.
           // Is there a better way?
           const node = document.querySelector('[ng-version]');
-          if (!node) {
+          if (node == null) {
             return;
           }
           imagesLoaded(node, async () => {
@@ -78,8 +77,6 @@ const withScreenshot = (options: PartialScreenshotOptions = {}) => {
     }
 
     // tslint:disable-next-line: no-any
-    return wrapScreenshotHandler(getStory as any, null);
+    return wrapScreenshotHandler(<any>getStory, null);
   };
 };
-
-export default withScreenshot;

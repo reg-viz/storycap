@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
-import { mergeScreenshotOptions } from '../screenshot-options';
 import { defaultScreenshotOptions } from '../core/constants';
 import { PartialScreenshotOptions, ScreenshotOptions } from '../models/options';
+import { mergeScreenshotOptions } from '../screenshot-options';
 
 const defaults = _.merge({}, defaultScreenshotOptions);
 

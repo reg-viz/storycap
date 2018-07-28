@@ -1,10 +1,10 @@
-/* tslint:disable: no-any */
+// tslint:disable: no-implicit-dependencies
+import { mount } from 'enzyme';
 import { EventEmitter } from 'events';
 import * as React from 'react';
-import { mount } from 'enzyme';
-import { EventTypes, defaultScreenshotOptions } from '../../../../core/constants';
+import { defaultScreenshotOptions, EventTypes } from '../../../../core/constants';
 import { sleep } from '../../../../core/utils';
-import ScreenshotWrapper from '../ScreenshotWrapper';
+import { ScreenshotWrapper } from '../ScreenshotWrapper';
 
 describe('React#ScreenshotWrapper', () => {
   it('Should be handle channel', async () => {
@@ -38,6 +38,7 @@ describe('React#ScreenshotWrapper', () => {
         viewport={{
           ...defaultScreenshotOptions.viewport
         }}
+        knobs={{}}
         namespace={''}>
         <div>foo</div>
       </ScreenshotWrapper>
@@ -60,7 +61,8 @@ describe('React#ScreenshotWrapper', () => {
         viewport: {
           ...defaultScreenshotOptions.viewport
         },
-        namespace: ''
+        namespace: '',
+        knobs: {}
       }
     ]);
 

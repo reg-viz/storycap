@@ -2,7 +2,6 @@
 
 run() {
   pushd $1
-  rm -rf node_modules
   rm -rf __screenshots__
   yarn --pure-lockfile
   yarn screenshot

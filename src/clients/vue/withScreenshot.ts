@@ -1,14 +1,14 @@
 import addons from '@storybook/addons';
-import imagesLoaded = require('imagesloaded');
+import imagesLoaded from 'imagesloaded';
 import { EventTypes } from '../../core/constants';
 import { sleep } from '../../core/utils';
-import { mergeScreenshotOptions } from '../../screenshot-options';
-import { hoc } from './hoc';
 import { PartialScreenshotOptions } from '../../models/options';
 import { Story } from '../../models/story';
+import { mergeScreenshotOptions } from '../../screenshot-options';
+import { hoc } from './hoc';
 import { VueStory } from './models';
 
-const withScreenshot = (options: PartialScreenshotOptions = {}) => {
+export const withScreenshot = (options: PartialScreenshotOptions = {}) => {
   const { delay, viewport, knobs, namespace } = mergeScreenshotOptions(options);
   const channel = addons.getChannel();
 
@@ -25,6 +25,7 @@ const withScreenshot = (options: PartialScreenshotOptions = {}) => {
         });
       };
 
+      // tslint:disable: no-invalid-this
       return hoc(component, {
         beforeCreate() {
           emit(EventTypes.COMPONENT_INIT);
@@ -37,14 +38,14 @@ const withScreenshot = (options: PartialScreenshotOptions = {}) => {
           });
         }
       });
+      // tslint:enable
     };
 
-    if (ctx) {
+    if (ctx != null) {
       return withContext(ctx);
     }
 
+    // tslint:disable-next-line: no-unnecessary-callback-wrapper
     return (context: Story) => withContext(context);
   };
 };
-
-export default withScreenshot;

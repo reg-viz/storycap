@@ -1,17 +1,17 @@
+import chalk from 'chalk';
 import * as _ from 'lodash';
-import chalk, { Chalk } from 'chalk';
-import ProgressBar = require('progress');
-import { pascalize } from '../utils';
+import ProgressBar from 'progress';
 import { Writer } from '../../models/terminal';
+import { pascalize } from '../utils';
 
-export default class Terminal {
+export class Terminal {
   private stdout: Writer;
   private stderr: Writer;
   private silent: boolean;
   private debug: boolean;
   private ciMode: boolean;
   private progressCounter: { current: number; total: number } | null = null;
-  private progressbar: ProgressBar;
+  private progressbar: ProgressBar | null = null;
 
   public constructor(
     stdout: Writer,
@@ -31,6 +31,7 @@ export default class Terminal {
     if (!this.silent) {
       this.stdout.write(`${args.join(' ')}\n`);
     }
+
     return this;
   }
 
@@ -38,12 +39,14 @@ export default class Terminal {
     if (this.debug) {
       this.echo(this.createTitle('blue', 'DEBUG'), chalk.blue(`[${title}]`), ...args);
     }
+
     return this;
   }
 
   public section(color: string, title: string, message: string) {
     this.clear();
     this.echo(`${this.createTitle(color, title)} ${message}`);
+
     return this;
   }
 
@@ -51,6 +54,7 @@ export default class Terminal {
     for (let i = 0; i < repeat; i += 1) {
       this.echo();
     }
+
     return this;
   }
 
@@ -61,11 +65,13 @@ export default class Terminal {
     } else if (this.debug) {
       this.blank(2);
     }
+
     return this;
   }
 
   public error(message: string) {
     this.stderr.write(`\n\n${this.createTitle('red', 'ERROR')} ${message}\n\n`);
+
     return this;
   }
 
@@ -90,36 +96,41 @@ export default class Terminal {
   }
 
   public progressStop() {
-    if (this.progressCounter) {
+    if (this.progressCounter != null) {
       this.progressCounter = null;
-    } else if (this.progressbar) {
+    } else if (this.progressbar != null) {
       this.progressbar.terminate();
     }
+
     return this;
   }
 
   public progressTick() {
-    if (this.progressCounter) {
+    if (this.progressCounter != null) {
       this.progressCounter.current += 1;
       this.progressRender();
-    } else if (this.progressbar) {
+    } else if (this.progressbar != null) {
       this.progressbar.tick();
     }
+
     return this;
   }
 
   private progressRender() {
-    if (this.progressCounter) {
+    if (this.progressCounter != null) {
       const { current, total } = this.progressCounter;
       const paddedCurrent = _.padStart(`${current}`, `${total}`.length, ' ');
       this.stdout.write(`  ${paddedCurrent}/${total} (${Math.round((current / total) * 100)} %)\n`);
-    } else if (this.progressbar) {
+    } else if (this.progressbar != null) {
       this.progressbar.render();
     }
+
     return this;
   }
 
   private createTitle(color: string, title: string) {
-    return (chalk.black[`bg${pascalize(color)}`] as Chalk)(` ${title} `);
+    const fn = (<any>chalk.black)[`bg${pascalize(color)}`];
+
+    return fn == null ? '' : fn(` ${title} `);
   }
 }

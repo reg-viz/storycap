@@ -1,17 +1,17 @@
 import { EventEmitter } from 'events';
 import * as path from 'path';
+import puppeteer from 'puppeteer';
 import * as qs from 'query-string';
-import * as puppeteer from 'puppeteer';
-import { PhaseIdentity, PhaseTypes, EventTypes } from '../constants';
-import { StoryWithOptions, StoredStory } from '../../models/story';
 import { CLIOptions } from '../../models/options';
+import { StoredStory, StoryWithOptions } from '../../models/story';
+import { EventTypes, PhaseIdentity, PhaseTypes } from '../constants';
 import { knobsQueryObject } from '../utils';
 
 export interface ConsoleHandler {
   (type: string, text: string): void;
 }
 
-export default class Page extends EventEmitter {
+export class Page extends EventEmitter {
   private page: puppeteer.Page;
   private url: string;
   private options: CLIOptions;
@@ -33,8 +33,7 @@ export default class Page extends EventEmitter {
         consoleHandler(data.type(), data.text());
       } else {
         // it IS a string, by fact. Type definitions are wrong
-        // @ts-ignore
-        consoleHandler(data.type as string, data.text as string);
+        consoleHandler(data.type.toString(), <any>data.text);
       }
     });
   }
