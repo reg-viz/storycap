@@ -1,20 +1,20 @@
 import { EventEmitter } from 'events';
-import { ReadableStream, ChildProcess } from '../Server';
+import { ChildProcess, ReadableStream } from '../Server';
 
 export class MockReadableStream extends EventEmitter implements ReadableStream {}
 
 export class MockChildProcess extends EventEmitter implements ChildProcess {
-  stdout: MockReadableStream;
-  stderr: MockReadableStream;
-  killed: boolean = false;
+  public stdout: MockReadableStream;
+  public stderr: MockReadableStream;
+  public killed: boolean = false;
 
-  constructor() {
+  public constructor() {
     super();
     this.stdout = new MockReadableStream();
     this.stderr = new MockReadableStream();
   }
 
-  kill(signal?: string) {
+  public kill(_signal?: string) {
     this.killed = true;
   }
 }

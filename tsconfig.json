@@ -1,39 +1,30 @@
 {
   "compilerOptions": {
-    "outDir": "lib",
-    "rootDirs": [
-      "./src"
-    ],
     "module": "commonjs",
+    "outDir": "lib",
+    "rootDir": "src",
     "target": "es5",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["esnext", "dom"],
+    "allowJs": false,
+    "checkJs": false,
     "declaration": true,
     "sourceMap": true,
     "jsx": "react",
-    "moduleResolution": "node",
-    "rootDir": "src",
-    "forceConsistentCasingInFileNames": true,
+    "pretty": true,
+    "removeComments": false,
+    "noEmit": false,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false
   },
-  "include": [
-    "./src/**/*.ts",
-    "./types/**/*.d.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "build",
-    "scripts",
-    "acceptance-tests",
-    "webpack",
-    "jest",
-    "src/setupTests.ts"
-  ]
+  "include": ["src/**/*", "types/**/*.d.ts"],
+  "exclude": ["node_modules", "src/setupTests.ts"]
 }

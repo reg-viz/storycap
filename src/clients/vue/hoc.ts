@@ -4,7 +4,8 @@
 /* tslint:disable: no-any */
 export const hoc = (component: any, wrap: any): any => ({
   ...wrap,
-  render(h: any, context: any): any {
+  render(h: any): any {
+    // tslint:disable-next-line: no-this-assignment no-invalid-this
     const self: any = this;
 
     return h(
@@ -13,9 +14,9 @@ export const hoc = (component: any, wrap: any): any => ({
         attrs: self.$attrs,
         props: self.$props,
         on: self.$listeners,
-        scopedSlots: self.$scopedSlots,
+        scopedSlots: self.$scopedSlots
       },
-      self.$slots,
+      self.$slots
     );
-  },
+  }
 });

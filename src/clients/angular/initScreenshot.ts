@@ -3,18 +3,21 @@ import { EventTypes } from '../../core/constants';
 import { Story } from '../../models/story';
 import { NgStory } from './models';
 
-const initScreenshot = () => (getStory: (context: Story) => NgStory, ctx: Story) => {
+// tslint:disable: no-invalid-this
+export const initScreenshot = () => (getStory: (context: Story) => NgStory, ctx: Story) => {
   const story = getStory(ctx);
 
   if (story.component) {
     const clazz = story.component.prototype;
     clazz.__getStoryContext__ = () => ctx;
     if (!clazz.__WRAPPED_INIT_SCREENSHOT__) {
-      const delegateAfterViewInit = clazz.ngAfterViewInit || (() => {}); // tslint:disable-line: no-empty
+      const delegateAfterViewInit =
+        clazz.ngAfterViewInit != null ? clazz.ngAfterViewInit : () => {}; // tslint:disable-line: no-empty
+
       clazz.ngAfterViewInit = function afterViewInit() {
         delegateAfterViewInit.call(this);
         addons.getChannel().emit(EventTypes.COMPONENT_FINISH_MOUNT, {
-          ...this.__getStoryContext__(),
+          ...this.__getStoryContext__()
         });
         clazz.__WRAPPED_INIT_SCREENSHOT__ = true;
       };
@@ -23,5 +26,3 @@ const initScreenshot = () => (getStory: (context: Story) => NgStory, ctx: Story)
 
   return story;
 };
-
-export default initScreenshot;

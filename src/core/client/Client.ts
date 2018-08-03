@@ -1,10 +1,10 @@
-import Env from './Env';
-import Gateway from './Gateway';
-import { PhaseTypes, EventTypes } from '../constants';
-import { Group, Channel, API } from '../../models/storybook';
 import { Story, StoryWithOptions } from '../../models/story';
+import { API, Channel, Group } from '../../models/storybook';
+import { EventTypes, PhaseTypes } from '../constants';
+import { Env } from './Env';
+import { Gateway } from './Gateway';
 
-export default class Client {
+export class Client {
   private env: Env;
   private gateway: Gateway;
   private channel: Channel;
@@ -27,11 +27,13 @@ export default class Client {
     try {
       switch (phase) {
         case PhaseTypes.PREPARE:
-          this.prepare();
+          this.prepare(); // tslint:disable-line: no-floating-promises
+
           return;
 
         case PhaseTypes.CAPTURE:
-          this.capture();
+          this.capture(); // tslint:disable-line: no-floating-promises
+
           return;
 
         default:
@@ -51,14 +53,20 @@ export default class Client {
   private async capture() {
     this.channel.on(EventTypes.COMPONENT_READY, (story: StoryWithOptions) => {
       if (this.env.getKind() === story.kind && this.env.getStory() === story.story) {
+        const frame = <HTMLIFrameElement>document.querySelector('#storybook-preview-iframe');
+        const contentDocument = <Document>frame.contentDocument;
+
+        frame.style.width = `${contentDocument.documentElement.scrollWidth}px`;
+        frame.style.height = `${contentDocument.documentElement.scrollHeight}px`;
+
+        // and document itself
+        document.body.style.height = frame.style.height;
+
         this.gateway.readyComponent();
       }
     });
 
-    this.api.selectStory(
-      this.env.getKind(),
-      this.env.getStory(),
-    );
+    this.api.selectStory(this.env.getKind(), this.env.getStory());
   }
 
   private searchTargetStories(clientIndex: number, clientsCount: number) {
@@ -70,27 +78,33 @@ export default class Client {
             ...acc,
             ...cur.stories.map((story) => ({
               kind: cur.kind,
-              story,
-            })),
+              story
+            }))
           ],
-          [],
+          <Story[]>[]
         );
 
         // sequential promises
-        list.reduce(
-          (acc: Promise<StoryWithOptions[]>, cur: Story, i: number) => acc
-            .then(async (results) => {
-              if (i % (clientsCount || 1) !== clientIndex) {
-                return results;
-              }
-              const res = await this.searchScreenshotWrappersByStory(cur.kind, cur.story);
-              return [...results, ...res];
-            })
-            .catch(reject),
-          Promise.resolve([]),
-        ).then((results: StoryWithOptions[]) => {
-          resolve(results);
-        });
+        // tslint:disable-next-line: no-floating-promises
+        list
+          .reduce(
+            (acc: Promise<StoryWithOptions[] | void>, cur: Story, i: number) =>
+              acc
+                .then(async (results) => {
+                  if (i % (clientsCount !== 0 ? clientsCount : 1) !== clientIndex) {
+                    return results;
+                  }
+
+                  const res = await this.searchScreenshotWrappersByStory(cur.kind, cur.story);
+
+                  return [...(<StoryWithOptions[]>results), ...res];
+                })
+                .catch(reject),
+            <Promise<StoryWithOptions[]>>Promise.resolve([])
+          )
+          .then((results: StoryWithOptions[] | void) => {
+            resolve(<StoryWithOptions[]>results);
+          });
 
         this.channel.on(EventTypes.COMPONENT_ERROR, reject);
       });
@@ -122,6 +136,7 @@ export default class Client {
     };
 
     return new Promise<StoryWithOptions[]>((resolve) => {
+      // tslint:disable: no-use-before-declare
       const onInit = match((ctx) => {
         inited.push(ctx);
       });
@@ -133,7 +148,7 @@ export default class Client {
         }
       });
 
-      const onFinishMount = match((ctx) => {
+      const onFinishMount = match(() => {
         if (inited.length === 0) {
           doResolve([]);
         }
@@ -151,6 +166,7 @@ export default class Client {
       this.channel.on(EventTypes.COMPONENT_FINISH_MOUNT, onFinishMount);
 
       this.api.selectStory(kind, story);
+      // tslint:enable
     });
   }
 }

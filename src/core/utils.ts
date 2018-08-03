@@ -1,21 +1,32 @@
 import * as _ from 'lodash';
-import sanitize = require('sanitize-filename');
-import { Viewport } from '../models/viewport';
+import sanitize from 'sanitize-filename';
 import { Knobs, StoredKnobs } from '../models/knobs';
 import { StorybookEnv } from '../models/storybook';
+import { Viewport } from '../models/viewport';
 
-export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+type AdaptedWindow = typeof window & {
+  [key: string]: Function;
+  requestIdleCallback(cb: Function, opt: { timeout: number }): void;
+};
 
-export const getWaitForFn = (waitFor: string | undefined) => {
-  if (waitFor && typeof window[waitFor] === 'function') {
-    return window[waitFor] as () => Promise<void>;
+const DEFAULT_FILE_PATTERN = '{kind}-{story}-{knobs}_{ns}-{vp}';
+
+// tslint:disable-next-line: no-string-based-set-timeout
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export const getWaitForFn = (waitFor: string | undefined): () => Promise<void> => {
+  // tslint:disable-next-line: strict-boolean-expressions
+  if (waitFor && typeof (<AdaptedWindow>window)[waitFor] === 'function') {
+    return <() => Promise<void>>(<AdaptedWindow>window)[waitFor];
   }
+
   return () => Promise.resolve();
 };
 
 export const nextIdle = () => {
   return new Promise((resolve) => {
-    const ricFn = (window as any).requestIdleCallback; // tslint:disable-line: no-any
+    const ricFn = (<AdaptedWindow>window).requestIdleCallback;
+    // tslint:disable-next-line: strict-boolean-expressions
     if (ricFn) {
       ricFn(resolve, { timeout: 10000 });
     }
@@ -25,16 +36,15 @@ export const nextIdle = () => {
 
 export const parser = {
   identity: (v: string | undefined) => v,
-  number: (v: string | undefined) => v ? parseInt(v, 10) : 0,
-  list: (v: string | undefined) => v ? v.split(',').map(o => o.trim()) : null,
-  regexp: (v: string | undefined) => v ? new RegExp(v) : null,
+  number: (v: string | undefined) => (v != null ? parseInt(v, 10) : 0),
+  list: (v: string | undefined) => (v != null ? v.split(',').map((o) => o.trim()) : null),
+  regexp: (v: string | undefined) => (v != null ? new RegExp(v) : null)
 };
 
-export const filenamify = (filename: string) => (
-  (sanitize(filename.trim()) as string)
+export const filenamify = (filename: string) =>
+  sanitize(filename.trim())
     .replace(/\s{2,}/g, ' ')
-    .replace(/\s/g, '-')
-);
+    .replace(/\s/g, '-');
 
 export const permutationKnobs = (knobs: Knobs): StoredKnobs[] => {
   const keys = Object.keys(knobs).sort();
@@ -42,16 +52,16 @@ export const permutationKnobs = (knobs: Knobs): StoredKnobs[] => {
     return [];
   }
 
-  const total = keys.reduce((previous, current) => (previous * knobs[current].length), 1);
+  const total = keys.reduce((previous, current) => previous * knobs[current].length, 1);
   const result: StoredKnobs[] = [];
-  let q, r = 0;
+  let q = 0;
+  let r = 0;
 
   for (let i = 0; i < total; i += 1) {
     result[i] = {};
     q = i;
 
-    for (let n = 0; n < keys.length; n += 1) {
-      const key = keys[n];
+    for (const key of keys) {
       r = q % knobs[key].length;
       q = Math.floor(q / knobs[key].length);
       result[i][key] = knobs[key][r];
@@ -71,19 +81,20 @@ export const knobsQueryObject = (knobs: StoredKnobs): StoredKnobs => {
   return queryObject;
 };
 
-export const viewport2string = (viewport: Viewport) => ([
-  `${viewport.width}x${viewport.height}`,
-  `${viewport.isMobile ? '-mobile' : ''}`,
-  `${viewport.hasTouch ? '-touch' : ''}`,
-  `${viewport.isLandscape ? '-landscape' : ''}`,
-  `${viewport.deviceScaleFactor > 1 ? `@${viewport.deviceScaleFactor}x` : ''}`,
-].join(''));
+export const viewport2string = (viewport: Viewport) =>
+  [
+    `${viewport.width}x${viewport.height}`,
+    `${viewport.isMobile ? '-mobile' : ''}`,
+    `${viewport.hasTouch ? '-touch' : ''}`,
+    `${viewport.isLandscape ? '-landscape' : ''}`,
+    `${viewport.deviceScaleFactor > 1 ? `@${viewport.deviceScaleFactor}x` : ''}`
+  ].join('');
 
-export const knobs2string = (knobs: StoredKnobs) => (
-  Object.keys(knobs).sort().map((key) => (
-    `${key}-${knobs[key]}`
-  )).join('_')
-);
+export const knobs2string = (knobs: StoredKnobs) =>
+  Object.keys(knobs)
+    .sort()
+    .map((key) => `${key}-${knobs[key]}`)
+    .join('_');
 
 export interface Story2FilenameParams {
   kind: string;
@@ -91,24 +102,44 @@ export interface Story2FilenameParams {
   viewport: Viewport | null;
   namespace: string | null;
   knobs: StoredKnobs | null;
+  filePattern?: string | null;
+}
+
+interface Story2FilenameReplacer {
+  kind: string;
+  story: string;
+  knobs: string;
+  ns: string;
+  vp: string;
 }
 
 export const story2filename = (params: Story2FilenameParams) => {
-  const ns = params.namespace ? `_${params.namespace}` : '';
-  const vp = params.viewport ? `-${viewport2string(params.viewport)}` : '';
-  const knobs = params.knobs ? `-${knobs2string(params.knobs)}` : '';
-  const filename = `${filenamify(`${params.kind}-${params.story}${knobs}${ns}${vp}`)}`;
+  const ns = params.namespace != null ? `${params.namespace}` : '_';
+  const vp = params.viewport != null ? `${viewport2string(params.viewport)}` : '_';
+  const knobs = params.knobs != null ? `${knobs2string(params.knobs)}` : '_';
+
+  const replacements: Story2FilenameReplacer = {
+    kind: params.kind,
+    story: params.story,
+    knobs,
+    ns,
+    vp
+  };
+
+  const filename = (params.filePattern != null ? params.filePattern : DEFAULT_FILE_PATTERN)
+    .replace(/\{(\w+)\}/g, (_, key: keyof Story2FilenameReplacer) => filenamify(replacements[key]))
+    .replace(/-_/g, '')
+    .replace(/__/g, '')
+    .replace(/\/_/g, '');
 
   return `${filename}.png`;
 };
 
-export const pascalize = (v: string) => (
-  `${v.charAt(0).toUpperCase()}${_.camelCase(v.slice(1))}`
-);
+export const pascalize = (v: string) => `${v.charAt(0).toUpperCase()}${_.camelCase(v.slice(1))}`;
 
 const Time = {
   MINUTES: 1000 * 60,
-  SECONDS: 1000,
+  SECONDS: 1000
 };
 
 export const humanizeDuration = (timestamp: number) => {
@@ -117,14 +148,14 @@ export const humanizeDuration = (timestamp: number) => {
 
   if (timestamp > Time.MINUTES) {
     const min = Math.floor(ts / Time.MINUTES);
-    ts = ts - (min * Time.MINUTES);
+    ts = ts - min * Time.MINUTES;
     arr.push(`${min}min`);
   }
 
   const sec = (ts / Time.SECONDS)
     .toString()
     .split('.')
-    .map(s => s.slice(0, 2))
+    .map((s) => s.slice(0, 2))
     .join('.');
 
   arr.push(`${sec}s`);
@@ -136,21 +167,29 @@ export type Task<T> = (idx: number) => Promise<T>;
 
 export const execParalell = <T>(tasks: Task<T>[], p: number = 1) => {
   const copied = tasks.slice();
-  const results = [] as T[];
-  return Promise.all(_.range(p).map(i => {
-    return new Promise((res, rej) => {
-    function next(): Promise<number | void> {
-      const t = copied.shift();
-      if (!t) {
-        return Promise.resolve(res());
-      }
-      return t(i).then(r => results.push(r)).then(next).catch(err => rej(err));
-    }
-    return next();
-    });
-  })).then(() => results);
+  const results = <T[]>[];
+
+  return Promise.all(
+    _.range(p).map(
+      (i) =>
+        new Promise((res, rej) => {
+          function next(): Promise<number | void> {
+            const t = copied.shift();
+
+            // tslint:disable: no-void-expression
+            return t == null
+              ? Promise.resolve(res())
+              : t(i)
+                  .then((r) => results.push(r))
+                  .then(next)
+                  .catch(rej);
+            // tslint:enable
+          }
+
+          return next();
+        })
+    )
+  ).then(() => results);
 };
 
-export const getStorybookEnv = () => (
-  ((window as any).STORYBOOK_ENV as StorybookEnv) // tslint:disable-line: no-any
-);
+export const getStorybookEnv = () => <StorybookEnv>(<any>window).STORYBOOK_ENV;

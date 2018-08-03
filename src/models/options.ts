@@ -1,5 +1,5 @@
-import { Viewport } from './viewport';
 import { Knobs } from './knobs';
+import { Viewport } from './viewport';
 
 export type AppType = 'react';
 
@@ -14,6 +14,7 @@ export interface CLIOptions {
   browserTimeout: number;
   parallel: number;
   injectFiles: string[];
+  puppeteerLaunchConfig: string;
   silent: boolean;
   debug: boolean;
   ciMode: boolean;
@@ -27,6 +28,7 @@ export interface ScreenshotOptions {
   waitFor: string;
   viewport: Viewport | Viewport[];
   knobs: Knobs;
+  filePattern: string | null;
 }
 
 export interface PartialScreenshotOptions {
@@ -35,4 +37,5 @@ export interface PartialScreenshotOptions {
   waitFor?: string;
   viewport?: Partial<Viewport> | Partial<Viewport>[];
   knobs?: Knobs;
+  filePattern?: string | null;
 }

@@ -1,17 +1,17 @@
 import { EventEmitter } from 'events';
 import * as path from 'path';
+import puppeteer from 'puppeteer';
 import * as qs from 'query-string';
-import * as puppeteer from 'puppeteer';
-import { PhaseIdentity, PhaseTypes, EventTypes } from '../constants';
-import { StoryWithOptions, StoredStory } from '../../models/story';
 import { CLIOptions } from '../../models/options';
+import { StoredStory, StoryWithOptions } from '../../models/story';
+import { EventTypes, PhaseIdentity, PhaseTypes } from '../constants';
 import { knobsQueryObject } from '../utils';
 
 export interface ConsoleHandler {
   (type: string, text: string): void;
 }
 
-export default class Page extends EventEmitter {
+export class Page extends EventEmitter {
   private page: puppeteer.Page;
   private url: string;
   private options: CLIOptions;
@@ -20,7 +20,7 @@ export default class Page extends EventEmitter {
     page: puppeteer.Page,
     url: string,
     options: CLIOptions,
-    consoleHandler: ConsoleHandler,
+    consoleHandler: ConsoleHandler
   ) {
     super();
 
@@ -33,8 +33,7 @@ export default class Page extends EventEmitter {
         consoleHandler(data.type(), data.text());
       } else {
         // it IS a string, by fact. Type definitions are wrong
-        // @ts-ignore
-        consoleHandler((data.type as string), (data.text as string));
+        consoleHandler(data.type.toString(), <any>data.text);
       }
     });
   }
@@ -43,44 +42,49 @@ export default class Page extends EventEmitter {
     const q = {
       ...query,
       full: 1,
-      [PhaseIdentity]: phase,
+      [PhaseIdentity]: phase
     };
 
     const url = `${this.url}?${qs.stringify(q)}`;
 
-    return this.page.goto(url, {
+    await this.page.goto(url, {
       timeout: this.options.browserTimeout,
-      waitUntil: [
-        'domcontentloaded',
-      ],
+      waitUntil: ['domcontentloaded', 'networkidle2']
     });
   }
 
   public async screenshot(story: StoredStory) {
     const { cwd, outputDir, injectFiles } = this.options;
 
-    await this.page.setViewport(story.viewport);
+    await this.page.setViewport({
+      ...story.viewport,
+      height: 1
+    });
 
     await Promise.all([
       this.waitComponentReady(),
       this.goto(PhaseTypes.CAPTURE, {
         selectKind: story.kind,
         selectStory: story.story,
-        ...knobsQueryObject(story.knobs),
-      }),
+        ...knobsQueryObject(story.knobs)
+      })
     ]);
+
+    await this.page.bringToFront();
 
     const file = path.join(outputDir, story.filename);
 
-    await Promise.all(injectFiles.map((fpath) => (
-      this.page.addScriptTag({
-        path: fpath,
-      })
-    )));
+    await Promise.all(
+      injectFiles.map((fpath) =>
+        this.page.addScriptTag({
+          path: fpath
+        })
+      )
+    );
 
     await this.page.screenshot({
       path: path.resolve(cwd, file),
-      fullPage: true,
+      fullPage: true
     });
 
     return file;

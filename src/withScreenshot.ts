@@ -1,7 +1,11 @@
+// tslint:disable: no-ordered-imports
+import { withScreenshot as NgWithScreenshot } from './clients/angular/withScreenshot';
+import { withScreenshot as ReactWithScreenshot } from './clients/react/withScreenshot';
+import { withScreenshot as VueWithScreenshot } from './clients/vue/withScreenshot';
+// tslint:enable
+
+import { noopDecorator } from './clients/noop';
 import { getStorybookEnv } from './core/utils';
-import ReactWithScreenshot from './clients/react/withScreenshot';
-import NgWithScreenshot from './clients/angular/withScreenshot';
-import VueWithScreenshot from './clients/vue/withScreenshot';
 import { PartialScreenshotOptions } from './models/options';
 
 export interface WithScreenshot {
@@ -11,18 +15,22 @@ export interface WithScreenshot {
 const storybookEnv = getStorybookEnv();
 let withScreenshot: WithScreenshot;
 
-switch (storybookEnv) {
-  case 'react':
-    withScreenshot = (ReactWithScreenshot as WithScreenshot);
-    break;
-  case 'angular':
-    withScreenshot = (NgWithScreenshot as WithScreenshot);
-    break;
-  case 'vue':
-    withScreenshot = (VueWithScreenshot as WithScreenshot);
-    break;
-  default:
-    throw new Error(`storybook-chrome-screenshot does not support "${storybookEnv}".`);
+if (storybookEnv == null) {
+  withScreenshot = <WithScreenshot>noopDecorator;
+} else {
+  switch (storybookEnv) {
+    case 'react':
+      withScreenshot = <WithScreenshot>ReactWithScreenshot;
+      break;
+    case 'angular':
+      withScreenshot = <WithScreenshot>NgWithScreenshot;
+      break;
+    case 'vue':
+      withScreenshot = <WithScreenshot>VueWithScreenshot;
+      break;
+    default:
+      throw new Error(`storybook-chrome-screenshot does not support "${storybookEnv}".`);
+  }
 }
 
-export default withScreenshot;
+export { withScreenshot };

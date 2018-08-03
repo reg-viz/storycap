@@ -1,4 +1,4 @@
 declare module 'is-ci' {
-  var isCI: boolean;
+  const isCI: boolean;
   export = isCI;
 }

@@ -1,10 +1,10 @@
-/* tslint:disable: no-any */
+// tslint:disable: no-implicit-dependencies
+import { mount } from 'enzyme';
 import { EventEmitter } from 'events';
 import * as React from 'react';
-import { mount } from 'enzyme';
-import { EventTypes, defaultScreenshotOptions } from '../../../../core/constants';
+import { defaultScreenshotOptions, EventTypes } from '../../../../core/constants';
 import { sleep } from '../../../../core/utils';
-import ScreenshotWrapper from '../ScreenshotWrapper';
+import { ScreenshotWrapper } from '../ScreenshotWrapper';
 
 describe('React#ScreenshotWrapper', () => {
   it('Should be handle channel', async () => {
@@ -12,7 +12,7 @@ describe('React#ScreenshotWrapper', () => {
     const state: any = {
       inited: [],
       mounted: [],
-      ready: [],
+      ready: []
     };
 
     channel.on(EventTypes.COMPONENT_INIT, (...args: any[]) => {
@@ -32,14 +32,14 @@ describe('React#ScreenshotWrapper', () => {
         channel={channel}
         context={{
           kind: 'foo',
-          story: 'bar',
+          story: 'bar'
         }}
         delay={0}
         viewport={{
-          ...defaultScreenshotOptions.viewport,
+          ...defaultScreenshotOptions.viewport
         }}
-        namespace={''}
-      >
+        knobs={{}}
+        namespace={''}>
         <div>foo</div>
       </ScreenshotWrapper>
     );
@@ -59,10 +59,11 @@ describe('React#ScreenshotWrapper', () => {
         kind: 'foo',
         story: 'bar',
         viewport: {
-          ...defaultScreenshotOptions.viewport,
+          ...defaultScreenshotOptions.viewport
         },
         namespace: '',
-      },
+        knobs: {}
+      }
     ]);
 
     expect(state.mounted).toEqual(state.inited);

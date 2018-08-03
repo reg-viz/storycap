@@ -1,27 +1,26 @@
-import * as React from 'react';
 import addons from '@storybook/addons';
-import inspect = require('util-inspect');
-import { mergeScreenshotOptions } from '../../screenshot-options';
-import ScreenshotWrapper from './components/ScreenshotWrapper';
+import * as React from 'react';
+import inspect from 'util-inspect';
 import { EventTypes } from '../../core/constants';
 import { PartialScreenshotOptions } from '../../models/options';
 import { Story } from '../../models/story';
+import { mergeScreenshotOptions } from '../../screenshot-options';
+import { ScreenshotWrapper } from './components/ScreenshotWrapper';
 
-const withScreenshot = (options: PartialScreenshotOptions = {}) => (storyFn: Function, ctx: Story | undefined) => {
+export const withScreenshot = (options: PartialScreenshotOptions = {}) => (
+  storyFn: Function,
+  ctx: Story | undefined
+) => {
   const channel = addons.getChannel();
 
   const wrapperWithContext = (context: Story) => {
     const props = {
       ...mergeScreenshotOptions(options),
       channel,
-      context,
+      context
     };
 
-    return (
-      <ScreenshotWrapper {...props}>
-        {storyFn(context)}
-      </ScreenshotWrapper>
-    );
+    return <ScreenshotWrapper {...props}>{storyFn(context)}</ScreenshotWrapper>;
   };
 
   if (typeof storyFn !== 'function') {
@@ -30,13 +29,10 @@ const withScreenshot = (options: PartialScreenshotOptions = {}) => (storyFn: Fun
     throw new Error(msg); // For browser
   }
 
-  if (ctx) {
+  if (ctx != null) {
     return wrapperWithContext(ctx);
   }
 
-  return (context: Story) => (
-    wrapperWithContext(context)
-  );
+  // tslint:disable-next-line: no-unnecessary-callback-wrapper
+  return (context: Story) => wrapperWithContext(context);
 };
-
-export default withScreenshot;

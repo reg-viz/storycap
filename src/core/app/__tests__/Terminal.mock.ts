@@ -1,11 +1,12 @@
-import Terminal from '../Terminal';
 import { Writer } from '../../../models/terminal';
+import { Terminal } from '../Terminal';
 
 export class MockWriter implements Writer {
   public list: string[] = [];
 
   public write(msg: string) {
     this.list.push(msg);
+
     return true;
   }
 
@@ -25,6 +26,6 @@ export const factory = (silent: boolean, debug: boolean, ciMode: boolean = false
     clear: () => {
       stdout.clear();
       stderr.clear();
-    },
+    }
   };
 };
