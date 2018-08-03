@@ -256,6 +256,7 @@ The following objects of `options` can be specified.
 {
   namespace: 'global',    // namespace for your screenshots. It is using in the filenames, e.g.  Button-with-primary_global.png
   delay: 0,               // Delay milliseconds when shooting screenshots
+  waitFor: '',            // User defined trigger function name to shoot screenshots. See "Full control the screenshot timing" section below.
   viewport: {             // Browser's viewport when shooting screenshots. (See: https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagesetviewportviewport)
     width: 1024,
     height: 768,
@@ -389,7 +390,38 @@ Pass the created file to the `--inject-files` option.
 $ $(npm bin)/storybook-chrome-screenshot --inject-files ./disable-animation.js [...more options]
 ```
 
+### Full control the screenshot timing
 
+Sometimes you may want to full-manage the timing of performing screenshot.
+Use the `waitFor` option if you think so. This string parameter should points a global function to return `Promise`.
+
+For example, the following setting makes the screenshot function wait for firing of `fontLoading`:
+
+```html
+<!-- ./storybook/preview-head.html -->
+<link rel="preload" href="/some-heavy-asset.woff" as="font" onload="this.setAttribute('loaded', 'loaded')">
+<script>
+function fontLoading() {
+  const loaded = () => !!document.querySelector('link[rel="preload"][loaded="loaded"]');
+  if (loaded()) return Promise.resolve();
+  return new Promise((resolve, reject) => {
+    const id = setInterval(() => {
+      if (!loaded()) return;
+      clearInterval(id);
+      resolve();
+    }, 50);
+  });
+}
+</script>
+```
+
+```javascript
+import { setScreenshotOptions } from 'storybook-chrome-screenshot';
+
+setScreenshotOptions({
+  waitFor: 'fontLoading',
+});
+```
 
 
 ## Examples

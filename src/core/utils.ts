@@ -6,6 +6,23 @@ import { StorybookEnv } from '../models/storybook';
 
 export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
+export const getWaitForFn = (waitFor: string | undefined) => {
+  if (waitFor && typeof window[waitFor] === 'function') {
+    return window[waitFor] as () => Promise<void>;
+  }
+  return () => Promise.resolve();
+};
+
+export const nextIdle = () => {
+  return new Promise((resolve) => {
+    const ricFn = (window as any).requestIdleCallback; // tslint:disable-line: no-any
+    if (ricFn) {
+      ricFn(resolve, { timeout: 10000 });
+    }
+    resolve();
+  });
+};
+
 export const parser = {
   identity: (v: string | undefined) => v,
   number: (v: string | undefined) => v ? parseInt(v, 10) : 0,

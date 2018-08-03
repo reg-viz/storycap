@@ -24,6 +24,7 @@ export interface CLIOptions {
 export interface ScreenshotOptions {
   namespace?: string;
   delay: number;
+  waitFor: string;
   viewport: Viewport | Viewport[];
   knobs: Knobs;
 }
@@ -31,6 +32,7 @@ export interface ScreenshotOptions {
 export interface PartialScreenshotOptions {
   namespace?: string;
   delay?: number;
+  waitFor?: string;
   viewport?: Partial<Viewport> | Partial<Viewport>[];
   knobs?: Knobs;
 }

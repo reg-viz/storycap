@@ -1,7 +1,7 @@
 import addons from '@storybook/addons';
 import imagesLoaded = require('imagesloaded');
 import { EventTypes } from '../../core/constants';
-import { sleep } from '../../core/utils';
+import { sleep, getWaitForFn, nextIdle } from '../../core/utils';
 import { mergeScreenshotOptions } from '../../screenshot-options';
 import { hoc } from './hoc';
 import { PartialScreenshotOptions } from '../../models/options';
@@ -9,7 +9,7 @@ import { Story } from '../../models/story';
 import { VueStory } from './models';
 
 const withScreenshot = (options: PartialScreenshotOptions = {}) => {
-  const { delay, viewport, knobs, namespace } = mergeScreenshotOptions(options);
+  const { delay, waitFor, viewport, knobs, namespace } = mergeScreenshotOptions(options);
   const channel = addons.getChannel();
 
   return (getStory: (story: Story) => VueStory, ctx: Story | undefined) => {
@@ -33,6 +33,8 @@ const withScreenshot = (options: PartialScreenshotOptions = {}) => {
           emit(EventTypes.COMPONENT_MOUNT);
           imagesLoaded(this.$el, async () => {
             await sleep(delay);
+            await getWaitForFn(waitFor)();
+            await nextIdle();
             emit(EventTypes.COMPONENT_READY);
           });
         },
