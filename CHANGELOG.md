@@ -21,6 +21,15 @@
 [#53]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues/53
 [#54]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/54
 [#55]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/55
+[#73]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/73
+
+## 1.3.0
+
+> 2018-08-05
+
+### New features
+
+- Full control the screenshot timing ([#73][#73]), Thanks [@Quramy](https://github.com/Quramy) !!
 
 ## 1.2.1
 
