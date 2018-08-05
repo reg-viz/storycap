@@ -31,5 +31,6 @@ export const defaultScreenshotOptions: ScreenshotOptions = {
     isLandscape: false
   },
   knobs: {},
-  filePattern: null
+  filePattern: null,
+  waitFor: ''
 };

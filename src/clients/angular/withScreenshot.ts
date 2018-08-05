@@ -1,7 +1,7 @@
 import addons from '@storybook/addons';
 import imagesLoaded from 'imagesloaded';
 import { EventTypes } from '../../core/constants';
-import { sleep } from '../../core/utils';
+import { getWaitForFn, nextIdle, sleep } from '../../core/utils';
 import { PartialScreenshotOptions } from '../../models/options';
 import { Story } from '../../models/story';
 import { mergeScreenshotOptions } from '../../screenshot-options';
@@ -42,7 +42,7 @@ export const withScreenshot = (options: PartialScreenshotOptions = {}) => {
           if (super.ngAfterViewInit) {
             super.ngAfterViewInit();
           }
-          const { delay } = opts;
+          const { delay, waitFor } = opts;
           emit(EventTypes.COMPONENT_MOUNT, getContext(this));
           // FIXME:
           // The "[ng-version]" selector means "Angular application root element".
@@ -55,6 +55,8 @@ export const withScreenshot = (options: PartialScreenshotOptions = {}) => {
           }
           imagesLoaded(node, async () => {
             await sleep(delay);
+            await getWaitForFn(waitFor)();
+            await nextIdle();
             emit(EventTypes.COMPONENT_READY, getContext(this));
           });
         }

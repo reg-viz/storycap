@@ -2,7 +2,7 @@ import imagesLoaded from 'imagesloaded';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { EventTypes } from '../../../core/constants';
-import { sleep } from '../../../core/utils';
+import { getWaitForFn, nextIdle, sleep } from '../../../core/utils';
 import { Knobs } from '../../../models/knobs';
 import { Story } from '../../../models/story';
 import { Channel } from '../../../models/storybook';
@@ -14,6 +14,7 @@ export interface Props extends React.Props<{}> {
   delay: number;
   viewport: Viewport | Viewport[];
   knobs: Knobs;
+  waitFor?: string;
   namespace?: string;
 }
 
@@ -26,13 +27,15 @@ export class ScreenshotWrapper extends React.Component<Props> {
   }
 
   public componentDidMount() {
-    const { delay } = this.props;
+    const { delay, waitFor } = this.props;
     const node = ReactDOM.findDOMNode(this.component as HTMLSpanElement) as HTMLElement;
 
     this.emit(EventTypes.COMPONENT_MOUNT);
 
     imagesLoaded(node, async () => {
       await sleep(delay);
+      await getWaitForFn(waitFor)();
+      await nextIdle();
       this.emit(EventTypes.COMPONENT_READY);
     });
   }

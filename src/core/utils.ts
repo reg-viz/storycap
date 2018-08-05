@@ -4,10 +4,35 @@ import { Knobs, StoredKnobs } from '../models/knobs';
 import { StorybookEnv } from '../models/storybook';
 import { Viewport } from '../models/viewport';
 
+type AdaptedWindow = typeof window & {
+  [key: string]: Function;
+  requestIdleCallback(cb: Function, opt: { timeout: number }): void;
+};
+
 const DEFAULT_FILE_PATTERN = '{kind}-{story}-{knobs}_{ns}-{vp}';
 
 // tslint:disable-next-line: no-string-based-set-timeout
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export const getWaitForFn = (waitFor: string | undefined): () => Promise<void> => {
+  // tslint:disable-next-line: strict-boolean-expressions
+  if (waitFor && typeof (<AdaptedWindow>window)[waitFor] === 'function') {
+    return <() => Promise<void>>(<AdaptedWindow>window)[waitFor];
+  }
+
+  return () => Promise.resolve();
+};
+
+export const nextIdle = () => {
+  return new Promise((resolve) => {
+    const ricFn = (<AdaptedWindow>window).requestIdleCallback;
+    // tslint:disable-next-line: strict-boolean-expressions
+    if (ricFn) {
+      ricFn(resolve, { timeout: 10000 });
+    }
+    resolve();
+  });
+};
 
 export const parser = {
   identity: (v: string | undefined) => v,
