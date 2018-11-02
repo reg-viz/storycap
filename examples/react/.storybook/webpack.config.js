@@ -1,7 +1,7 @@
-const genDefaultConfig = require('@storybook/react/dist/server/config/defaults/webpack.config.js');
+const { createDefaultWebpackConfig } = require('@storybook/core/dist/server/config/webpack.config.default.js');
 
 module.exports = (baseConfig, env) => {
-  const config = genDefaultConfig(baseConfig, env);
+  const config = createDefaultWebpackConfig(baseConfig, env);
 
   config.module.rules.push({
     test: /\.tsx?$/,

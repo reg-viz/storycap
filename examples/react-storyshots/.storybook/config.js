@@ -10,6 +10,6 @@ addDecorator(
 );
 
 // initialize
-const req = require.context('../src', true, /\.stories\.js/);
-
-configure(() => req.keys().forEach(req), module);
+configure(() => {
+  require('../src/App.stories.js');
+}, module);

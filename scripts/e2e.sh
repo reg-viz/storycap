@@ -4,6 +4,7 @@ run() {
   pushd $1
   rm -rf __screenshots__
   yarn --pure-lockfile
+  unset NODE_PATH  # prevent default config include paths from confusing TypeScript
   yarn screenshot
   if [ "$?" -ne 0 ]; then
     echo "An error occurred ... 😢"
