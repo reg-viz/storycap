@@ -22,6 +22,16 @@
 [#54]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/54
 [#55]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/55
 [#73]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/73
+[#73]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/73
+[#84]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/84
+
+## 1.3.1
+
+> 2018-11-08
+
+### Bugfix
+
+- Use the height that has been set in the viewport config for the screenshot ([#84][#84]). Thanks [@meghna](https://github.com/meghna)!
 
 ## 1.3.0
 
