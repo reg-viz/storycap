@@ -56,10 +56,7 @@ export class Page extends EventEmitter {
   public async screenshot(story: StoredStory) {
     const { cwd, outputDir, injectFiles } = this.options;
 
-    await this.page.setViewport({
-      ...story.viewport,
-      height: 1
-    });
+    await this.page.setViewport(story.viewport);
 
     await Promise.all([
       this.waitComponentReady(),

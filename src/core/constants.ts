@@ -24,7 +24,7 @@ export const defaultScreenshotOptions: ScreenshotOptions = {
   delay: 0,
   viewport: {
     width: 1024,
-    height: 768,
+    height: 1,
     deviceScaleFactor: 1,
     isMobile: false,
     hasTouch: false,
