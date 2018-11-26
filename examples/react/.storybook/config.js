@@ -10,8 +10,9 @@ addDecorator(
 );
 
 // Initialize
-const req = require.context('../src', true, /\.stories\.tsx/);
-
 configure(() => {
-  req.keys().forEach((filename) => req(filename));
+  require('../src/Button.stories.tsx');
+  require('../src/Container.stories.tsx');
+  require('../src/Heading.stories.tsx');
+  require('../src/Tag.stories.tsx');
 }, module);

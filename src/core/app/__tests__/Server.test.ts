@@ -33,7 +33,16 @@ describe('Server', () => {
     await Promise.all([
       server.start(),
       new Promise((resolve) => {
-        proc.stderr.emit('data', new Buffer('Storybook started on => http://localhost:3030'));
+        proc.stderr.emit('data', new Buffer(`
+╭──────────────────────────────────────────────────╮
+│                                                  │
+│   Storybook 4.x.y started                        │
+│                                                  │
+│   Local:            http://localhost:3030/       │
+│   On your network:  http://XX.YY.ZZ.WWW:3030/    │
+│                                                  │
+╰──────────────────────────────────────────────────╯
+`.trim()));
         resolve();
       })
     ]);
@@ -41,6 +50,7 @@ describe('Server', () => {
     expect(calls).toHaveLength(1);
     expect(calls[0].command).toBe('start-storybook');
     expect(calls[0].args).toEqual([
+      '--ci',
       '-p',
       opts.port.toString(),
       '-c',
@@ -49,7 +59,7 @@ describe('Server', () => {
       opts.host
     ]);
     expect(calls[0].options).toEqual({ cwd: opts.cwd });
-    expect(server.getURL()).toBe('http://localhost:3030');
+    expect(server.getURL()).toBe('http://localhost:3030/');
 
     // stop
     expect(proc.killed).toBe(false);

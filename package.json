@@ -69,7 +69,8 @@
     "tslint-config-prettier": "1.14.0",
     "tslint-microsoft-contrib": "5.1.0",
     "tslint-react": "3.6.0",
-    "typescript": "2.9.2"
+    "typescript": "2.9.2",
+    "vue-loader": "15.4.2"
   },
   "dependencies": {
     "@types/imagesloaded": "^4.1.1",

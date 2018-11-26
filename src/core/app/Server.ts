@@ -32,7 +32,7 @@ export class Server {
   }
 
   private static optionsToCommandArgs(options: CLIOptions) {
-    const args = ['-p', options.port.toString(), '-c', options.configDir];
+    const args = ['--ci', '-p', options.port.toString(), '-c', options.configDir];
 
     if (options.host !== '' && options.host != null) {
       args.push('-h', options.host);
@@ -47,7 +47,7 @@ export class Server {
 
   private static matchServerURL(buffer: string | Buffer) {
     const str = buffer.toString().trim();
-    const m = str.match(/Storybook started on => (https?:\/\/.+)/);
+    const m = str.match(/started(?:.|\n)+Local:\s+(https?:\/\/\S+)/);
 
     if (m == null) {
       return null;
