@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 
 // load the default config generator.
-const genDefaultConfig = require('@storybook/vue/dist/server/config/defaults/webpack.config.js');
+const { createDefaultWebpackConfig } = require('@storybook/core/dist/server/config/webpack.config.default.js');
 
 // Export a function. Accept the base config as the only param.
 module.exports = (storybookBaseConfig, configType) => {
@@ -9,7 +9,7 @@ module.exports = (storybookBaseConfig, configType) => {
   // You can change the configuration based on that.
   // 'PRODUCTION' is used when building the static version of storybook.
 
-  const config = genDefaultConfig(storybookBaseConfig, configType);
+  const config = createDefaultWebpackConfig(storybookBaseConfig, configType);
 
   // Make whatever fine-grained changes you need
   config.plugins.push(
