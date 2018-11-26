@@ -24,6 +24,21 @@
 [#73]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/73
 [#73]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/73
 [#84]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/84
+[#91]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/91
+[#93]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/93
+[#94]: https://github.com/tsuyoshiwada/storybook-chrome-screenshot/pull/94
+
+## 1.4.0
+
+> 2018-11-26
+
+### New features
+
+- Upgrade storybook to v4. ([#91][#91], [#94][#94])
+
+### Bugfix
+
+- Fixes to accommodate storybook version upgrade ([#93][#93]). Thanks [@jtbandes](https://github.com/jtbandes)!
 
 ## 1.3.1
 
@@ -255,7 +270,7 @@ First major release :tada:
 
 ### New features
 
-- Add support for `addDecorator()`. ([#3][#3])  
+- Add support for `addDecorator()`. ([#3][#3])
   Thanks for [@gcazaciuc](https://github.com/gcazaciuc).
 
 ## 0.3.0
@@ -273,7 +288,7 @@ First major release :tada:
 
 ### New features
 
-- Add `--browser-timeout` CLI Options. ([#1][#1])  
+- Add `--browser-timeout` CLI Options. ([#1][#1])
   Thanks for [@gcazaciuc](https://github.com/gcazaciuc).
 
 ### Bugfix
