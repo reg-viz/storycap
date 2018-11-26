@@ -1188,10 +1188,10 @@
   resolved "https://registry.yarnpkg.com/@types/sanitize-filename/-/sanitize-filename-1.1.28.tgz#baa18f5ce4330fcbb3ea7b62f65550963d9aaa07"
   integrity sha1-uqGPXOQzD8uz6nti9lVQlj2aqgc=
 
-"@types/storybook__react@^3.0.8":
-  version "3.0.8"
-  resolved "https://registry.yarnpkg.com/@types/storybook__react/-/storybook__react-3.0.8.tgz#58deb593361b7d5e6a6eca09bc7889b613980925"
-  integrity sha512-RrIL+m84ocoYT/D2ksYAzpC+DYHTtfgTLyrzmvCdhL/zsrXc0kgKHq0VVjiS80rnvhzlQPCWFDglEP/c/H/gAg==
+"@types/storybook__react@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@types/storybook__react/-/storybook__react-4.0.0.tgz#52cc452fbab599568d595075a90142ef4a1233f6"
+  integrity sha512-Iq3RX953fqZRwWN3jywm8pUx1/Atev+x/9tF7/2CNA+Ii55sGSJJRWMRthUKQXTa3zOexcvfksfVYdUaIZY91w==
   dependencies:
     "@types/react" "*"
     "@types/webpack-env" "*"

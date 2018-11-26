@@ -82,7 +82,7 @@
     "@types/puppeteer": "^1.5.1",
     "@types/query-string": "^6.1.0",
     "@types/sanitize-filename": "^1.1.28",
-    "@types/storybook__react": "^3.0.8",
+    "@types/storybook__react": "^4.0.0",
     "babel-polyfill": "^6.26.0",
     "chalk": "^2.4.1",
     "commander": "^2.16.0",
