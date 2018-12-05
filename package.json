@@ -87,7 +87,7 @@
     "chalk": "^2.4.1",
     "commander": "^2.16.0",
     "imagesloaded": "^4.1.4",
-    "is-ci": "^1.1.0",
+    "is-ci": "^2.0.0",
     "lodash": "^4.17.10",
     "log-symbols": "^2.2.0",
     "mkdirp": "^0.5.1",
