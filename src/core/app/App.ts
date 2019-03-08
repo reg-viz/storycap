@@ -47,14 +47,15 @@ export class App {
     this.terminal.log('CLI Options', inspect(this.options));
 
     if (!fs.existsSync(cmd)) {
-      this.terminal.error(`Storybook does not exists. First, let's setup a Storybook!
+      this.terminal.error(`Storybook does not exist. First, let's setup a Storybook!
         See: https://storybook.js.org/basics/quick-start-guide/`);
 
       return;
     }
 
-    if (!fs.existsSync(path.resolve(cwd, configDir, 'config.js'))) {
-      this.terminal.error(`"${configDir}/config.js" does not exists.`);
+    if (!_.some(['config.js', 'config.ts'], (filename) =>
+          fs.existsSync(path.resolve(cwd, configDir, filename)))) {
+      this.terminal.error(`"${configDir}/config.js" does not exist.`);
 
       return;
     }
