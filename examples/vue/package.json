@@ -2,9 +2,8 @@
   "private": true,
   "name": "storybook-chrome-screenshot-with-vue",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
     "corebuild": "cd ../../ && npm run build",
-    "storybook": "start-storybook -p 9008 -s public",
+    "storybook": "start-storybook -p 9008",
     "screenshot": "node ../../lib/cli.js -p 9008 -c .storybook",
     "postinstall": "rm -rf node_modules/@storybook/addons",
     "prestorybook": "npm run corebuild",
@@ -16,7 +15,6 @@
   },
   "devDependencies": {
     "@babel/core": "7.1.2",
-    "@babel/preset-env": "7.1.0",
     "@storybook/addon-actions": "^4.0.0",
     "@storybook/addon-centered": "^4.0.0",
     "@storybook/addon-knobs": "^4.0.0",
@@ -27,14 +25,8 @@
     "@storybook/vue": "^4.0.0",
     "babel-loader": "8.0.4",
     "babel-preset-vue": "^2.0.2",
-    "cross-env": "^5.1.4",
     "css-loader": "^0.28.11",
-    "file-loader": "^1.1.11",
-    "vue-hot-reload-api": "^2.3.0",
     "vue-loader": "^14.2.2",
-    "vue-style-loader": "^4.1.0",
-    "vue-template-compiler": "^2.5.16",
-    "webpack": "3.11.0",
-    "webpack-dev-server": "^3.1.1"
+    "vue-template-compiler": "^2.5.16"
   }
 }
