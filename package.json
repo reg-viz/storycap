@@ -1,6 +1,6 @@
 {
-  "name": "storybook-chrome-screenshot",
-  "version": "1.4.0",
+  "name": "storycap",
+  "version": "2.0.0-alpha",
   "description": "A Storybook addon, Save the screenshot image of your stories! via puppeteer.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -22,14 +22,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tsuyoshiwada/storybook-chrome-screenshot.git"
+    "url": "git+https://github.com/reg-viz/storybook-chrome-screenshot.git"
   },
   "author": "tsuyoshiwada",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tsuyoshiwada/storybook-chrome-screenshot/issues"
+    "url": "https://github.com/reg-viz/storybook-chrome-screenshot/issues"
   },
-  "homepage": "https://github.com/tsuyoshiwada/storybook-chrome-screenshot#readme",
+  "homepage": "https://github.com/reg-viz/storybook-chrome-screenshot#readme",
   "files": [
     "lib",
     "CHANGELOG.md",
