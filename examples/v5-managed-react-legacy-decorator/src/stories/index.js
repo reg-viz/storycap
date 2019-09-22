@@ -5,14 +5,14 @@ import { action } from '@storybook/addon-actions';
 import { linkTo } from '@storybook/addon-links';
 
 import { Button, Welcome } from '@storybook/react/demo';
+import { withScreenshot } from 'storycap';
 
 storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
 storiesOf('Welcome_override', module)
-.add('to Storybook', () => <Welcome showApp={linkTo('Button')} />, {
-  screenshot: {
-    viewport: 'iPhone 6',
-  },
-});
+.addDecorator(withScreenshot({
+  viewport: 'iPhone 6',
+ }))
+.add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
 
 storiesOf('Button', module)
   .add('with text', () => <Button onClick={action('clicked')}>Hello Button</Button>)
@@ -25,8 +25,5 @@ storiesOf('Button', module)
   ));
 
 storiesOf('Button_to_be_skipped', module)
-  .add('with text', () => <Button onClick={action('clicked')}>Hello Button</Button>, {
-    screenshot: {
-      skip: true,
-    },
-  })
+.addDecorator(withScreenshot({ skip: true }))
+  .add('with text', () => <Button onClick={action('clicked')}>Hello Button</Button>)

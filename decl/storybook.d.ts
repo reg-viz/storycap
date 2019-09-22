@@ -21,6 +21,20 @@ declare module "@storybook/addons" {
     getChannel(): Channel;
   }
 
+  interface MakeDecorator {
+    (options: {
+      name: string;
+      parameterName: string;
+      skipIfNoParametersOrOptions: boolean;
+      allowDeprecatedUsage: boolean;
+      wrapper: (getStory: any, context: any, args: { parameters: any, options: any }) => any;
+    }): Function;
+  }
+
+  // Note:
+  // Storybook v4 does not export makeDecorator function.
+  export const makeDecorator: MakeDecorator | undefined;
+
   const addons: Addons;
   export default addons;
 }
