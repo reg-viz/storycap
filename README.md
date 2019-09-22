@@ -1,4 +1,4 @@
-# Storybook Chrome Screenshot Addon
+# Storycap
 
 [storybook]: https://github.com/storybooks/storybook
 [puppeteer]: https://github.com/GoogleChrome/puppeteer
@@ -299,31 +299,38 @@ console.log(getScreenshotOptions());
 ```
 
 ## Command Line Options
+<!-- inject:clihelp -->
+```txt
+usage: storycap [options] storybook_url
 
-```bash
-$ $(npm bin)/storybook-chrome-screenshot --help
+Options:
+  --help                       Show help                                                                       [boolean]
+  --version                    Show version number                                                             [boolean]
+  --outDir, -o                 Output directory.                                   [string] [default: "__screenshots__"]
+  --parallel, -p               Number of browsers to screenshot.                                   [number] [default: 4]
+  --flat, -f                   Flatten output filename.                                       [boolean] [default: false]
+  --include, -i                Including stories name rule.                                        [array] [default: []]
+  --exclude, -e                Excluding stories name rule.                                        [array] [default: []]
+  --viewport, -V               Default viewport.                                           [string] [default: "800x600"]
+  --disableCssAnimation        Disable CSS animation and transition.                           [boolean] [default: true]
+  --silent                                                                                    [boolean] [default: false]
+  --verbose                                                                                   [boolean] [default: false]
+  --serverCmd                  Command line to launch Storybook server.                           [string] [default: ""]
+  --serverTimeout              Timeout [msec] for starting Storybook server.                   [number] [default: 20000]
+  --captureTimeout             Timeout [msec] for capture a story.                              [number] [default: 5000]
+  --captureMaxRetryCount       Number of count to retry to capture.                                [number] [default: 3]
+  --metricsWatchRetryCount     Number of count to retry until browser metrics stable.           [number] [default: 1000]
+  --viewportDelay              Delay time [msec] between changing viewport and capturing.        [number] [default: 300]
+  --reloadAfterChangeViewport  Whether to reload after viewport changed.                      [boolean] [default: false]
 
-  Usage: storybook-chrome-screenshot [options]
+Examples:
+  storycap http://localshot:9009
+  storycap http://localshot:9009 -i "some-kind/a-story"
+  storycap http://example.com/your-storybook -e "**/default" -V iPad
+  storycap --serverCmd "start-storybook -p 3000" http://localshot:3000
 
-
-  Options:
-
-    -V, --version                    output the version number
-    -p, --port [number]              Storybook server port. (default: 9001)
-    -h, --host [string]              Storybook server host. (default: localhost)
-    -s, --static-dir <dir-names>     Directory where to load static files from.
-    -c, --config-dir [dir-name]      Directory where to load Storybook configurations from. (default: .storybook)
-    -o, --output-dir [dir-name]      Directory where screenshot images are saved. (default: __screenshots__)
-    --parallel [number]              Number of Page Instances of Puppeteer to be activated when shooting screenshots. (default: 4)
-    --filter-kind [regexp]           Filter of kind with RegExp. (example: "Button$")
-    --filter-story [regexp]          Filter of story with RegExp. (example: "^with\s.+$")
-    --inject-files <file-names>      Path to the JavaScript file to be injected into frame. (default: )
-    --browser-timeout [number]       Timeout milliseconds when Puppeteer opens Storybook. (default: 30000)
-    --puppeteer-launch-config [json] JSON string of launch config for Puppeteer. (default: {"args":["--no-sandbox","--disable-setuid-sandbox", "--disable-dev-shm-usage"]})
-    --silent                         Suppress standard output.
-    --debug                          Enable debug mode.
-    -h, --help                       output usage information
 ```
+<!-- endinject -->
 
 ## Tips
 
