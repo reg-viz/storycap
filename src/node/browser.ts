@@ -5,11 +5,11 @@ import querystring from "querystring";
 import { launch, Browser as PuppeteerBrowser, Page, Viewport, Metrics } from "puppeteer";
 
 import { ExposedWindow, MainOptions, RunMode } from "./types";
-import { ScreenShotOptions, ScreenShotOptionsForApp } from "../client/types";
+import { ScreenshotOptions, ScreenshotOptionsForApp, StrictScreenshotOptions } from "../client/types";
 import { ScreenshotTimeoutError, InvalidCurrentStoryStateError, NoStoriesError } from "./errors";
 import { Story, V5Story } from "../types";
 import { flattenStories, sleep } from "../util";
-import { defaultScreenshotOptions } from "../client/default-screenshot-options";
+import { createBaseScreenshotOptions, mergeScreenshotOptions } from "./screenshot-options-helper";
 const dd = require("puppeteer/DeviceDescriptors") as { name: string; viewport: Viewport }[];
 
 function url2StoryKey(url: string) {
@@ -208,7 +208,7 @@ $doc.body.appendChild($style);
     this.page.exposeFunction("getCurrentStoryKey", (url: string) => url2StoryKey(url));
   }
 
-  private async handleOnCapture(opt: ScreenShotOptionsForApp) {
+  private async handleOnCapture(opt: ScreenshotOptionsForApp) {
     if (!this.currentStory) {
       this.emitter.emit("error", new InvalidCurrentStoryStateError());
       return;
@@ -233,10 +233,10 @@ $doc.body.appendChild($style);
   }
 
   private waitScreenShotOption() {
-    return new Promise<ScreenShotOptions | undefined>((resolve, reject) => {
+    return new Promise<ScreenshotOptions | undefined>((resolve, reject) => {
       // eslint-disable-next-line prefer-const
       let id: NodeJS.Timer;
-      const cb = (opt?: ScreenShotOptions) => {
+      const cb = (opt?: ScreenshotOptions) => {
         resolve(opt);
         this.emitter.removeAllListeners();
         clearTimeout(id);
@@ -265,7 +265,7 @@ $doc.body.appendChild($style);
     });
   }
 
-  private async setViewport(opt: ScreenShotOptions) {
+  private async setViewport(opt: StrictScreenshotOptions) {
     if (!this.currentStory) {
       throw new InvalidCurrentStoryStateError();
     }
@@ -322,26 +322,30 @@ $doc.body.appendChild($style);
 
   async screenshot() {
     this.processStartTime = Date.now();
-    let opt: ScreenShotOptions | undefined = { ...defaultScreenshotOptions, viewport: this.opt.defaultViewport };
+    const baseScreenshotOptions = createBaseScreenshotOptions(this.opt);
+    let emittedScreenshotOptions: ScreenshotOptions | undefined;
     if (this.mode === "managed") {
-      opt = await this.waitScreenShotOption();
+      emittedScreenshotOptions = await this.waitScreenShotOption();
       if (!this.currentStory) {
         throw new InvalidCurrentStoryStateError();
       }
-      if (!opt || opt.skip) {
+      if (!emittedScreenshotOptions || emittedScreenshotOptions.skip) {
         const elapsedTime = Date.now() - this.processStartTime;
         return { ...this.currentStory, buffer: null, elapsedTime };
-      } else if (!opt.viewport) {
-        opt.viewport = this.opt.defaultViewport;
+      } else if (!emittedScreenshotOptions.viewport) {
+        emittedScreenshotOptions.viewport = this.opt.defaultViewport;
       }
+    } else {
+      emittedScreenshotOptions = {};
     }
-    const succeeded = await this.setViewport(opt);
+    const mergedScreenshotOptions = mergeScreenshotOptions(baseScreenshotOptions, emittedScreenshotOptions);
+    const succeeded = await this.setViewport(mergedScreenshotOptions);
     if (!succeeded) return { ...this.currentStory, buffer: null, elapsedTime: 0 };
     await this.waitBrowserMetricsStable();
     await this.page.evaluate(
       () => new Promise(res => (window as ExposedWindow).requestIdleCallback(() => res(), { timeout: 300 })),
     );
-    const buffer = await this.page.screenshot({ fullPage: opt ? opt.fullPage : true });
+    const buffer = await this.page.screenshot({ fullPage: emittedScreenshotOptions.fullPage });
     const elapsedTime = Date.now() - this.processStartTime;
     return { ...this.currentStory, buffer, elapsedTime };
   }

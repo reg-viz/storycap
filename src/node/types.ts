@@ -1,15 +1,15 @@
 import { API, StoryKind } from "@storybook/addons";
-import { ScreenShotOptions } from "../client/types";
+import { ScreenshotOptions } from "../client/types";
 import { Logger } from "./logger";
 
 export type ExposedWindow = typeof window & {
   __STORYBOOK_CLIENT_API__: API;
   stories?: StoryKind[];
-  emitCatpture(opt: ScreenShotOptions): void;
+  emitCatpture(opt: ScreenshotOptions): void;
   waitFor?: () => Promise<any>;
   requestIdleCallback(cb: Function, opt?: { timeout: number }): void;
   getCurrentStoryKey: (url: string) => Promise<string | undefined>;
-  optionStore?: { [storyKey: string]: (Partial<ScreenShotOptions>)[] };
+  optionStore?: { [storyKey: string]: (Partial<ScreenshotOptions>)[] };
 };
 
 export type RunMode = "simple" | "managed";

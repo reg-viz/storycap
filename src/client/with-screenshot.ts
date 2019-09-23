@@ -1,12 +1,12 @@
 import { withScreenshot as ReactWithScreenshot } from "./react/withScreenshot";
 
 import { noopDecorator } from "./noop";
-import { ScreenShotOptions } from "./types";
+import { ScreenshotOptions } from "./types";
 
 const getStorybookEnv = () => <string>(<any>window).STORYBOOK_ENV;
 
 export interface WithScreenshot {
-  <T = Function>(options?: Partial<ScreenShotOptions>): T;
+  <T = Function>(options?: Partial<ScreenshotOptions>): T;
 }
 
 const storybookEnv = getStorybookEnv();

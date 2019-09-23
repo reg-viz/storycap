@@ -1,10 +1,10 @@
 import React from "react";
 import { StoryKind, makeDecorator } from "@storybook/addons";
 import { capture, stock } from "../capture";
-import { ScreenShotOptions } from "../types";
+import { ScreenshotOptions } from "../types";
 
 type Props = {
-  screenshotOptions?: Partial<ScreenShotOptions>;
+  screenshotOptions?: Partial<ScreenshotOptions>;
 };
 
 class ScreenshotWrapper extends React.Component<Props> {
@@ -38,7 +38,7 @@ const withScreenshotDecorator =
     },
   });
 
-function withScreenshotLegacy(opt: Partial<ScreenShotOptions> = {}) {
+function withScreenshotLegacy(opt: Partial<ScreenshotOptions> = {}) {
   return (storyFn: Function, ctx: StoryKind | undefined) => {
     const wrapperWithContext = (context: any) => {
       const props = {

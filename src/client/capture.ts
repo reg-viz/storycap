@@ -1,5 +1,5 @@
 import { ExposedWindow } from "../node/types";
-import { ScreenShotOptions } from "./types";
+import { ScreenshotOptions } from "./types";
 import imagesloaded from "imagesloaded";
 import { sleep } from "../util";
 import { defaultScreenshotOptions } from "./default-screenshot-options";
@@ -11,7 +11,7 @@ function waitImages(enabled: boolean, selector = "body") {
   return new Promise<void>(res => imagesloaded(elm, () => res()));
 }
 
-function waitUserFunction(waitFor: string | (() => Promise<any>), win: ExposedWindow) {
+function waitUserFunction(waitFor: undefined | null | string | (() => Promise<any>), win: ExposedWindow) {
   if (!waitFor) return Promise.resolve();
   if (typeof waitFor === "string") {
     if (!win.waitFor || typeof win.waitFor !== "function") return Promise.resolve();
@@ -27,14 +27,14 @@ function waitNextIdle(win: ExposedWindow) {
   return new Promise(res => win.requestIdleCallback(() => res(), { timeout: 3000 }));
 }
 
-function pushOptions(win: ExposedWindow, storyKey: string | undefined, opt: Partial<ScreenShotOptions>) {
+function pushOptions(win: ExposedWindow, storyKey: string | undefined, opt: Partial<ScreenshotOptions>) {
   if (!storyKey) return;
   if (!win.optionStore) win.optionStore = {};
   if (!win.optionStore[storyKey]) win.optionStore[storyKey] = [];
   win.optionStore[storyKey].push(opt);
 }
 
-function consumeOptions(win: ExposedWindow, storyKey: string | undefined): Partial<ScreenShotOptions>[] | null {
+function consumeOptions(win: ExposedWindow, storyKey: string | undefined): Partial<ScreenshotOptions>[] | null {
   if (!storyKey) return null;
   if (!win.optionStore) return null;
   if (!win.optionStore[storyKey]) return null;
@@ -50,7 +50,7 @@ function withExpoesdWindow(cb: (win: ExposedWindow) => any) {
   return cb(win);
 }
 
-export function stock(opt: Partial<ScreenShotOptions> = {}) {
+export function stock(opt: Partial<ScreenshotOptions> = {}) {
   withExpoesdWindow(win => {
     win.getCurrentStoryKey(location.href).then(storyKey => pushOptions(win, storyKey, opt));
   });
@@ -63,12 +63,12 @@ export function capture() {
       const options = consumeOptions(win, storyKey);
       if (!options) return;
       const scOpt = options.reduce(
-        (acc: ScreenShotOptions, opt: Partial<ScreenShotOptions>) => ({ ...acc, ...opt }),
+        (acc: ScreenshotOptions, opt: ScreenshotOptions) => ({ ...acc, ...opt }),
         defaultScreenshotOptions,
       );
       if (scOpt.skip) win.emitCatpture(scOpt);
       Promise.resolve()
-        .then(() => waitImages(scOpt.waitImages))
+        .then(() => waitImages(!!scOpt.waitImages))
         .then(() => sleep(scOpt.delay))
         .then(() => waitUserFunction(scOpt.waitFor, win))
         .then(() => waitNextIdle(win))
