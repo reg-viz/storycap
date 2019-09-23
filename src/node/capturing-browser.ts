@@ -26,6 +26,7 @@ function url2StoryKey(url: string) {
 
 export class CapturingBrowser extends StoryPreviewBrowser {
   failedStories: (Story & { count: number })[] = [];
+  private currentStoryRetryCount = 0;
   private viewport?: Viewport;
   private emitter: EventEmitter;
   private processStartTime = 0;
@@ -115,15 +116,14 @@ $doc.body.appendChild($style);
           reject(new InvalidCurrentStoryStateError());
           return;
         }
-        if (this.currentStory.count < this.opt.captureMaxRetryCount) {
+        if (this.currentStoryRetryCount < this.opt.captureMaxRetryCount) {
           this.opt.logger.warn(
             `Capture timeout exceeded in ${this.opt.captureTimeout +
               ""} msec. Retry to screenshot this story after this sequence.`,
             this.currentStory.kind,
             this.currentStory.story,
-            this.currentStory.count + 1,
           );
-          this.failedStories.push({ ...this.currentStory, count: this.currentStory.count + 1 });
+          this.failedStories.push({ ...this.currentStory, count: this.currentStoryRetryCount + 1 });
           resolve();
           return;
         }
@@ -188,7 +188,8 @@ $doc.body.appendChild($style);
     }
   }
 
-  async screenshot() {
+  async screenshot(retryCount: number) {
+    this.currentStoryRetryCount = retryCount;
     this.processStartTime = Date.now();
     const baseScreenshotOptions = createBaseScreenshotOptions(this.opt);
     let emittedScreenshotOptions: ScreenshotOptions | undefined;

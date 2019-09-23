@@ -3,7 +3,7 @@ import { Story } from "../story-types";
 import { Logger } from "../logger";
 
 export abstract class StoryPreviewBrowser extends BaseBrowser {
-  private _currentStory?: Story & { count: number };
+  private _currentStory?: Story;
 
   constructor(protected opt: BaseBrowserOptions, protected readonly idx: number, protected readonly logger: Logger) {
     super(opt);
@@ -17,7 +17,7 @@ export abstract class StoryPreviewBrowser extends BaseBrowser {
     return this._currentStory;
   }
 
-  async setCurrentStory(s: Story & { count: number }) {
+  async setCurrentStory(s: Story) {
     this._currentStory = s;
     this.debug("Set story", s.kind, s.story);
     const data = this.createPostmessageData(s);
@@ -26,7 +26,7 @@ export abstract class StoryPreviewBrowser extends BaseBrowser {
 
   private createPostmessageData(story: Story) {
     // REMARKS
-    // zisue uses storybook post message channel, which is Storybook internal API.
+    // This uses storybook post message channel, which is Storybook internal API.
     switch (story.version) {
       case "v4":
         return {

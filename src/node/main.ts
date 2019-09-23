@@ -52,7 +52,7 @@ export async function main(opt: MainOptions) {
     const tasks = stories.map(s => {
       return async (capturingBrowser: CapturingBrowser) => {
         await capturingBrowser.setCurrentStory(s);
-        const { buffer, elapsedTime } = await capturingBrowser.screenshot();
+        const { buffer, elapsedTime } = await capturingBrowser.screenshot(s.count);
         if (buffer) {
           const path = await fileSystem.save(s.kind, s.story, buffer);
           opt.logger.log(`Screenshot stored: ${opt.logger.color.magenta(path)} in ${elapsedTime + "" || "--"} msec.`);
