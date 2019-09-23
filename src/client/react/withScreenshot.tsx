@@ -23,18 +23,20 @@ class ScreenshotWrapper extends React.Component<Props> {
 
 // NOTE:
 // `makeDecorator` is only available with @storybook/addons@^5.0.0 .
-const withScreenshotDecorator = makeDecorator && makeDecorator({
-  name: "withScreenshot",
-  parameterName: "screenshot",
-  skipIfNoParametersOrOptions: false,
-  allowDeprecatedUsage: true,
-  wrapper: (getStory, context, { parameters, options }) => {
-    const props = {
-      screenshotOptions: parameters || options,
-    };
-    return <ScreenshotWrapper {...props}>{getStory(context)}</ScreenshotWrapper>;
-  },
-});
+const withScreenshotDecorator =
+  makeDecorator &&
+  makeDecorator({
+    name: "withScreenshot",
+    parameterName: "screenshot",
+    skipIfNoParametersOrOptions: false,
+    allowDeprecatedUsage: true,
+    wrapper: (getStory, context, { parameters, options }) => {
+      const props = {
+        screenshotOptions: parameters || options,
+      };
+      return <ScreenshotWrapper {...props}>{getStory(context)}</ScreenshotWrapper>;
+    },
+  });
 
 function withScreenshotLegacy(opt: Partial<ScreenShotOptions> = {}) {
   return (storyFn: Function, ctx: StoryKind | undefined) => {

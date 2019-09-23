@@ -95,7 +95,9 @@ export class StorybookBrowser extends Browser {
   async getStories() {
     this.opt.logger.debug("Wait for stories definition.");
     await this.openPage(this.opt.storybookUrl);
-    const registered: boolean | undefined = await this.page.evaluate(() => (window as any).__STORYCAP_MANAGED_MODE_REGISTERED__);
+    const registered: boolean | undefined = await this.page.evaluate(
+      () => (window as any).__STORYCAP_MANAGED_MODE_REGISTERED__,
+    );
     let stories: Story[] | null = null;
     let oldStories: StoryKind[] | null = null;
     if (registered) {
