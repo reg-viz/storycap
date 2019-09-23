@@ -24,7 +24,7 @@ jobs:
       - run: yarn format:check
       - run: yarn lint
       - run: bash e2e.sh
-      - run: yarn regression
+#     - run: yarn regression
 
   deploy:
     docker:
