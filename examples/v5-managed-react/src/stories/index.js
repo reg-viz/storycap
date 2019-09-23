@@ -25,8 +25,9 @@ storiesOf('Button', module)
   ));
 
 storiesOf('Button_to_be_skipped', module)
-  .add('with text', () => <Button onClick={action('clicked')}>Hello Button</Button>, {
+  .addParameters({
     screenshot: {
       skip: true,
     },
   })
+  .add('with text', () => <Button onClick={action('clicked')}>Hello Button</Button>)
