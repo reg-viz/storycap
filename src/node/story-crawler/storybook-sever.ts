@@ -1,7 +1,7 @@
 import * as cp from "child_process";
 import waitOn = require("wait-on");
-import { MainOptions } from "./types";
 import { StorybookServerTimeoutError, InvalidUrlError } from "./errors";
+import { Logger } from "./logger";
 
 function waitServer(url: string, timeout: number) {
   if (!url.startsWith("http")) {
@@ -21,30 +21,36 @@ function waitServer(url: string, timeout: number) {
   });
 }
 
+export interface StorybookServerOptions {
+  storybookUrl: string;
+  serverCmd?: string;
+  serverTimeout: number;
+}
+
 export class StorybookServer {
   private proc?: cp.ChildProcess;
-  constructor(private opt: MainOptions) {}
+  constructor(private opt: StorybookServerOptions, private logger: Logger) {}
 
   async launchIfNeeded() {
-    this.opt.logger.log(`Wait for connecting storybook server ${this.opt.logger.color.green(this.opt.storybookUrl)}.`);
+    this.logger.log(`Wait for connecting storybook server ${this.logger.color.green(this.opt.storybookUrl)}.`);
     if (this.opt.serverCmd) {
       const [cmd, ...args] = this.opt.serverCmd.split(/\s+/);
-      const stdio = this.opt.logger.level === "verbose" ? [0, 1, 2] : [];
+      const stdio = this.logger.level === "verbose" ? [0, 1, 2] : [];
       this.proc = cp.spawn(cmd, args, { stdio });
-      this.opt.logger.debug("Server process created", this.proc.pid);
+      this.logger.debug("Server process created", this.proc.pid);
     }
     await waitServer(this.opt.storybookUrl, this.opt.serverTimeout);
     if (this.opt.serverCmd) {
-      this.opt.logger.debug("Storybook server started");
+      this.logger.debug("Storybook server started");
     } else {
-      this.opt.logger.debug("Found Storybook server");
+      this.logger.debug("Found Storybook server");
     }
   }
 
   async shutdown() {
     if (!this.proc) return;
     try {
-      this.opt.logger.debug("Shutdown storybook server", this.proc.pid);
+      this.logger.debug("Shutdown storybook server", this.proc.pid);
       this.proc.kill("SIGINT");
     } catch (e) {
       // nothing todo

@@ -1,10 +1,8 @@
-import { API, StoryKind } from "@storybook/addons";
 import { ScreenshotOptions } from "../client/types";
 import { Logger } from "./logger";
+import { StorybookServerOptions } from "./story-crawler";
 
 export type ExposedWindow = typeof window & {
-  __STORYBOOK_CLIENT_API__: API;
-  stories?: StoryKind[];
   emitCatpture(opt: ScreenshotOptions): void;
   waitFor?: () => Promise<any>;
   requestIdleCallback(cb: Function, opt?: { timeout: number }): void;
@@ -16,9 +14,7 @@ export type RunMode = "simple" | "managed";
 
 export interface MainOptions {
   showBrowser: boolean;
-  storybookUrl: string;
-  serverCmd: string;
-  serverTimeout: number;
+  serverOptions: StorybookServerOptions;
   captureTimeout: number;
   captureMaxRetryCount: number;
   defaultViewport: string;

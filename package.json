@@ -78,6 +78,7 @@
     "@types/node": "^12.6.8",
     "@types/puppeteer": "^1.19.0",
     "@types/rimraf": "^2.0.2",
+    "@types/wait-on": "^3.2.0",
     "@types/yargs": "^13.0.1",
     "chalk": "^2.4.1",
     "imagesloaded": "^4.1.4",

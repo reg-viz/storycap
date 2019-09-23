@@ -79,15 +79,17 @@ function createOptions(): MainOptions {
   } = setting.argv;
 
   const opt = {
-    storybookUrl,
+    serverOptions: {
+      storybookUrl,
+      serverCmd,
+      serverTimeout,
+    },
     outDir,
     flat,
     include,
     exclude,
     defaultViewport: viewport,
     parallel,
-    serverCmd,
-    serverTimeout,
     captureTimeout,
     captureMaxRetryCount,
     metricsWatchRetryCount,

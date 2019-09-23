@@ -1,5 +1,4 @@
-import { StoryKind } from "@storybook/addons";
-import { Story, V4Story } from "../types";
+import { Story } from "../types";
 import minimatch = require("minimatch");
 
 export type Task<T, S> = (runner: S) => Promise<T>;
@@ -8,18 +7,6 @@ export function sleep(time: number = 0) {
   return new Promise(res => {
     setTimeout(() => res(), time);
   });
-}
-
-export function flattenStories(stories: StoryKind[]) {
-  return stories.reduce(
-    (acc, storyKind) => [
-      ...acc,
-      ...storyKind.stories.map(story => {
-        return { id: undefined, kind: storyKind.kind, story, version: "v4" } as V4Story;
-      }),
-    ],
-    [] as Story[],
-  );
 }
 
 export function filterStories(flatStories: Story[], include: string[], exclude: string[]): Story[] {
