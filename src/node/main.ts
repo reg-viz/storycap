@@ -1,6 +1,6 @@
-import { StorybookServer, StoriesBrowser } from "./story-crawler";
+import { StorybookServer, StoriesBrowser, execParalell } from "./story-crawler";
 import { CapturingBrowser } from "./capturing-browser";
-import { execParalell, filterStories } from "../util";
+import { filterStories } from "../util";
 import { Story } from "../types";
 import { MainOptions, RunMode } from "./types";
 import { FileSystem } from "./file";
@@ -47,8 +47,9 @@ export async function main(opt: MainOptions) {
     opt.logger.warn("There is no matched story. Check your include/exclude options.");
   }
 
+  const browsers = await bootCapturingBrowser(opt, mode);
+
   while (stories.length > 0) {
-    const browsers = await bootCapturingBrowser(opt, mode);
     const tasks = stories.map(s => {
       return async (capturingBrowser: CapturingBrowser) => {
         await capturingBrowser.setCurrentStory(s);
@@ -62,9 +63,10 @@ export async function main(opt: MainOptions) {
 
     await execParalell(tasks, browsers);
     if (opt.showBrowser) break;
-    await browsers.map(b => b.close());
     stories = browsers.reduce((acc, b) => [...acc, ...b.failedStories], [] as (Story & { count: number })[]);
   }
 
-  if (!opt.showBrowser) storybookServer.shutdown();
+  if (opt.showBrowser) return;
+  await Promise.all(browsers.map(b => b.close()));
+  storybookServer.shutdown();
 }
