@@ -16,7 +16,7 @@
     "clihelp": "node scripts/cli-help.js",
     "prepare": "yarn clean && yarn build && yarn clihelp",
     "jest": "jest",
-    "e2e": "sh e2e.sh",
+    "e2e": "bash e2e.sh",
     "test": "npm run jest && npm run e2e",
     "regression": "reg-suit run"
   },
