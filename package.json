@@ -67,12 +67,11 @@
     "reg-notify-github-plugin": "^0.7.21",
     "reg-publish-s3-plugin": "^0.7.22",
     "reg-suit": "^0.8.1",
-    "typescript": "~3.5.3",
+    "typescript": "^3.6.3",
     "typescript-eslint-language-service": "^1.3.0"
   },
   "dependencies": {
     "@types/chalk": "^2.2.0",
-    "@types/imagesloaded": "^4.1.1",
     "@types/minimatch": "^3.0.3",
     "@types/mkdirp": "^0.5.2",
     "@types/node": "^12.6.8",
