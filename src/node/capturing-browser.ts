@@ -1,15 +1,15 @@
-import { StoryKind } from "@storybook/addons";
 import { EventEmitter } from "events";
 import { parse } from "url";
 import querystring from "querystring";
-import { launch, Browser as PuppeteerBrowser, Page, Viewport, Metrics } from "puppeteer";
+import { Viewport } from "puppeteer";
+import { StoryPreviewBrowser, MetricsWatcher } from "./story-crawler";
 
 import { ExposedWindow, MainOptions, RunMode } from "./types";
 import { ScreenshotOptions, ScreenshotOptionsForApp, StrictScreenshotOptions } from "../client/types";
-import { ScreenshotTimeoutError, InvalidCurrentStoryStateError, NoStoriesError } from "./errors";
-import { Story, V5Story } from "../types";
-import { flattenStories, sleep } from "../util";
+import { ScreenshotTimeoutError, InvalidCurrentStoryStateError } from "./errors";
+import { Story } from "../types";
 import { createBaseScreenshotOptions, mergeScreenshotOptions } from "./screenshot-options-helper";
+import { sleep } from "../util";
 const dd = require("puppeteer/DeviceDescriptors") as { name: string; viewport: Viewport }[];
 
 function url2StoryKey(url: string) {
@@ -24,160 +24,27 @@ function url2StoryKey(url: string) {
   }
 }
 
-class MetricsWatcher {
-  private length = 3;
-  private previous: Metrics[] = [];
-
-  constructor(private page: Page, private count: number) {}
-
-  async waitForStable() {
-    for (let i = this.count; i > 0; --i) {
-      if (await this.check()) return i;
-      await sleep(20);
-    }
-    return 0;
-  }
-
-  private async check() {
-    const current = await this.page.metrics();
-    if (this.previous.length < this.length) return this.next(current);
-    if (this.diff("Nodes")) return this.next(current);
-    if (this.diff("RecalcStyleCount")) return this.next(current);
-    if (this.diff("LayoutCount")) return this.next(current);
-    return true;
-  }
-
-  private diff(k: keyof Metrics) {
-    for (let i = 1; i < this.previous.length; ++i) {
-      if (this.previous[i][k] !== this.previous[0][k]) return true;
-    }
-    return false;
-  }
-
-  private next(m: Metrics) {
-    this.previous.push(m);
-    this.previous = this.previous.slice(-this.length);
-    return false;
-  }
-}
-
-export class Browser {
-  private browser!: PuppeteerBrowser;
-  protected page!: Page;
-
-  constructor(protected opt: MainOptions) {}
-
-  async boot() {
-    this.browser = await launch({
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-      headless: !this.opt.showBrowser,
-    });
-    this.page = await this.browser.newPage();
-    return this;
-  }
-
-  protected async openPage(url: string) {
-    await this.page.goto(url);
-  }
-
-  async close() {
-    try {
-      await this.page.close();
-      await sleep(50);
-      await this.browser.close();
-    } catch (e) {
-      // nothing to do
-    }
-  }
-}
-
-export class StorybookBrowser extends Browser {
-  async getStories() {
-    this.opt.logger.debug("Wait for stories definition.");
-    await this.openPage(this.opt.storybookUrl);
-    const registered: boolean | undefined = await this.page.evaluate(
-      () => (window as any).__STORYCAP_MANAGED_MODE_REGISTERED__,
-    );
-    let stories: Story[] | null = null;
-    let oldStories: StoryKind[] | null = null;
-    if (registered) {
-      const storiesObj = (await this.page
-        .waitFor(() => (window as ExposedWindow).stories)
-        .then(x => x.jsonValue())) as (StoryKind[] | { [id: string]: V5Story });
-      if (Array.isArray(storiesObj)) {
-        // for managed mode with storybook v4
-        oldStories = storiesObj;
-      } else {
-        // for managed mode with storybook v5
-        stories = Object.keys(storiesObj).map(id => {
-          return {
-            id,
-            kind: storiesObj[id].kind,
-            story: storiesObj[id].story,
-            version: "v5",
-          } as V5Story;
-        });
-      }
-    } else {
-      await this.page.goto(this.opt.storybookUrl + "/iframe.html?selectedKind=scszisui&selectedStory=scszisui");
-      await this.page.waitFor(() => (window as ExposedWindow).__STORYBOOK_CLIENT_API__);
-      const result = await this.page.evaluate(() => {
-        const win = window as ExposedWindow;
-        if (win.__STORYBOOK_CLIENT_API__.raw) {
-          // for simple mode with storybook v5
-          // .raw API exsits only if storybook v5
-          const stories = win.__STORYBOOK_CLIENT_API__
-            .raw()
-            .map(_ => ({ id: _.id, kind: _.kind, story: _.name, version: "v5" } as V5Story));
-          return { stories, oldStories: null };
-        } else {
-          // for simple mode with storybook v4
-          const oldStories = win.__STORYBOOK_CLIENT_API__
-            .getStorybook()
-            .map(({ kind, stories }) => ({ kind, stories: stories.map(s => s.name) }));
-          return { stories: null, oldStories };
-        }
-      });
-      stories = result.stories;
-      oldStories = result.oldStories;
-    }
-    if (oldStories) {
-      stories = flattenStories(oldStories);
-    }
-    if (!stories) {
-      throw new NoStoriesError();
-    }
-    this.opt.logger.debug(stories);
-    this.opt.logger.log(`Found ${this.opt.logger.color.green(stories.length + "")} stories.`);
-    return { stories, managed: registered };
-  }
-}
-
-export class PreviewBrowser extends Browser {
-  failedStories: (Story & { count: number })[] = [];
+export class CapturingBrowser extends StoryPreviewBrowser {
+  private currentStoryRetryCount = 0;
   private viewport?: Viewport;
   private emitter: EventEmitter;
-  private currentStory?: Story & { count: number };
-  private processStartTime = 0;
   private processedStories: { [key: string]: Story } = {};
 
-  constructor(mainOptions: MainOptions, private mode: RunMode, private idx: number) {
-    super(mainOptions);
+  constructor(protected opt: MainOptions, private mode: RunMode, idx: number) {
+    super(opt, idx, opt.logger);
     this.emitter = new EventEmitter();
     this.emitter.on("error", e => {
       throw e;
     });
   }
 
-  private debug(...args: any[]) {
-    this.opt.logger.debug.apply(this.opt.logger, [`[cid: ${this.idx}]`, ...args]);
-  }
-
   async boot() {
     await super.boot();
     await this.expose();
     await this.addStyles();
-    await this.openPage(this.opt.storybookUrl + "/iframe.html?selectedKind=scszisui&selectedStory=scszisui");
+    await this.openPage(
+      this.opt.serverOptions.storybookUrl + "/iframe.html?selectedKind=scszisui&selectedStory=scszisui",
+    );
     await this.addStyles();
     return this;
   }
@@ -247,15 +114,13 @@ $doc.body.appendChild($style);
           reject(new InvalidCurrentStoryStateError());
           return;
         }
-        if (this.currentStory.count < this.opt.captureMaxRetryCount) {
+        if (this.currentStoryRetryCount < this.opt.captureMaxRetryCount) {
           this.opt.logger.warn(
             `Capture timeout exceeded in ${this.opt.captureTimeout +
               ""} msec. Retry to screenshot this story after this sequence.`,
             this.currentStory.kind,
             this.currentStory.story,
-            this.currentStory.count + 1,
           );
-          this.failedStories.push({ ...this.currentStory, count: this.currentStory.count + 1 });
           resolve();
           return;
         }
@@ -320,8 +185,8 @@ $doc.body.appendChild($style);
     }
   }
 
-  async screenshot() {
-    this.processStartTime = Date.now();
+  async screenshot(retryCount: number) {
+    this.currentStoryRetryCount = retryCount;
     const baseScreenshotOptions = createBaseScreenshotOptions(this.opt);
     let emittedScreenshotOptions: ScreenshotOptions | undefined;
     if (this.mode === "managed") {
@@ -330,8 +195,7 @@ $doc.body.appendChild($style);
         throw new InvalidCurrentStoryStateError();
       }
       if (!emittedScreenshotOptions || emittedScreenshotOptions.skip) {
-        const elapsedTime = Date.now() - this.processStartTime;
-        return { ...this.currentStory, buffer: null, elapsedTime };
+        return { buffer: null, succeeded: !!emittedScreenshotOptions };
       } else if (!emittedScreenshotOptions.viewport) {
         emittedScreenshotOptions.viewport = this.opt.defaultViewport;
       }
@@ -339,55 +203,13 @@ $doc.body.appendChild($style);
       emittedScreenshotOptions = {};
     }
     const mergedScreenshotOptions = mergeScreenshotOptions(baseScreenshotOptions, emittedScreenshotOptions);
-    const succeeded = await this.setViewport(mergedScreenshotOptions);
-    if (!succeeded) return { ...this.currentStory, buffer: null, elapsedTime: 0 };
+    const changed = await this.setViewport(mergedScreenshotOptions);
+    if (!changed) return { buffer: null, succeeded: true };
     await this.waitBrowserMetricsStable();
     await this.page.evaluate(
-      () => new Promise(res => (window as ExposedWindow).requestIdleCallback(() => res(), { timeout: 300 })),
+      () => new Promise(res => (window as ExposedWindow).requestIdleCallback(() => res(), { timeout: 3000 })),
     );
     const buffer = await this.page.screenshot({ fullPage: emittedScreenshotOptions.fullPage });
-    const elapsedTime = Date.now() - this.processStartTime;
-    return { ...this.currentStory, buffer, elapsedTime };
-  }
-
-  async setCurrentStory(s: Story & { count: number }) {
-    this.currentStory = s;
-    this.debug("Set story", s.kind, s.story);
-    const data = this.createPostmessageData(s);
-    await this.page.evaluate((d: typeof data) => window.postMessage(JSON.stringify(d), "*"), data);
-  }
-
-  private createPostmessageData(story: Story) {
-    // REMARKS
-    // zisue uses storybook post message channel, which is Storybook internal API.
-    switch (story.version) {
-      case "v4":
-        return {
-          key: "storybook-channel",
-          event: {
-            type: "setCurrentStory",
-            args: [
-              {
-                kind: story.kind,
-                story: story.story,
-              },
-            ],
-            from: "storycap",
-          },
-        };
-      case "v5":
-        return {
-          key: "storybook-channel",
-          event: {
-            type: "setCurrentStory",
-            args: [
-              {
-                storyId: story.id,
-              },
-            ],
-            from: "storycap",
-          },
-        };
-    }
+    return { buffer, succeeded: true };
   }
 }

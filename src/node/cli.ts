@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { time } from "./story-crawler";
 import { main } from "./main";
 import { MainOptions } from "./types";
 import yargs from "yargs";
@@ -79,15 +80,17 @@ function createOptions(): MainOptions {
   } = setting.argv;
 
   const opt = {
-    storybookUrl,
+    serverOptions: {
+      storybookUrl,
+      serverCmd,
+      serverTimeout,
+    },
     outDir,
     flat,
     include,
     exclude,
     defaultViewport: viewport,
     parallel,
-    serverCmd,
-    serverTimeout,
     captureTimeout,
     captureMaxRetryCount,
     metricsWatchRetryCount,
@@ -100,24 +103,22 @@ function createOptions(): MainOptions {
   return opt;
 }
 
-const start = Date.now();
 const opt = createOptions();
 const { logger, ...rest } = opt;
 
 logger.debug("Option:", rest);
 
-main(opt)
-  .then(() => {
-    const duration = Date.now() - start;
+time(main(opt))
+  .then(([_, duration]) => {
     logger.log(`Screenshot was ended successfully in ${opt.logger.color.green(duration + " msec")}.`);
     process.exit(0);
   })
-  .catch(err => {
-    if (err instanceof Error) {
-      logger.error(err.message);
-      logger.errorStack(err.stack);
+  .catch(error => {
+    if (error instanceof Error) {
+      logger.error(error.message);
+      logger.errorStack(error.stack);
     } else {
-      logger.error(err);
+      logger.error(error);
     }
     process.exit(1);
   });

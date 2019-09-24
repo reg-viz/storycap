@@ -1,10 +1,11 @@
-import addoons from "@storybook/addons";
-import { ExposedWindow } from "../node/types";
+type Addons = {
+  register(name: string, cb: Function): void;
+};
+
+const addoons = require("@storybook/addons").default as Addons;
 
 (window as any).__STORYCAP_MANAGED_MODE_REGISTERED__ = true;
 
 addoons.register("storycap", () => {
-  addoons.getChannel().once("setStories", e => {
-    (window as ExposedWindow).stories = e.stories;
-  });
+  // nothing to do
 });
