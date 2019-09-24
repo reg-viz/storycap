@@ -38,7 +38,7 @@ export interface QueueController<R> {
 }
 
 export type QueueOptions<R, T, S> = {
-  initialRequests?: R[];
+  initialRequests?: R[] | IterableIterator<R>;
   allowEmpty?: boolean;
   createTask(request: R, controller: QueueController<R>): Task<T, S>;
 };
@@ -61,7 +61,9 @@ export class Queue<R, T, S> {
     this.createTask = createTask;
     this.allowEmpty = !!allowEmpty;
     if (initialRequests) {
-      initialRequests.forEach(req => this.push(req));
+      for (const req of initialRequests) {
+        this.push(req);
+      }
     }
   }
 
@@ -123,7 +125,7 @@ export interface ExecutionService<R, T> extends QueueController<R> {
 
 export function createExecutionService<R, T, S>(
   workers: S[],
-  initialRequests: R[],
+  initialRequests: R[] | IterableIterator<R>,
   createTask: (request: R, context: QueueController<R>) => Task<T, S>,
   options: CreateExecutionServiceOptions = {},
 ): ExecutionService<R, T> {

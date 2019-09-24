@@ -25,11 +25,9 @@ function url2StoryKey(url: string) {
 }
 
 export class CapturingBrowser extends StoryPreviewBrowser {
-  failedStories: (Story & { count: number })[] = [];
   private currentStoryRetryCount = 0;
   private viewport?: Viewport;
   private emitter: EventEmitter;
-  private processStartTime = 0;
   private processedStories: { [key: string]: Story } = {};
 
   constructor(protected opt: MainOptions, private mode: RunMode, idx: number) {
@@ -123,7 +121,6 @@ $doc.body.appendChild($style);
             this.currentStory.kind,
             this.currentStory.story,
           );
-          this.failedStories.push({ ...this.currentStory, count: this.currentStoryRetryCount + 1 });
           resolve();
           return;
         }
@@ -190,7 +187,6 @@ $doc.body.appendChild($style);
 
   async screenshot(retryCount: number) {
     this.currentStoryRetryCount = retryCount;
-    this.processStartTime = Date.now();
     const baseScreenshotOptions = createBaseScreenshotOptions(this.opt);
     let emittedScreenshotOptions: ScreenshotOptions | undefined;
     if (this.mode === "managed") {
@@ -199,8 +195,7 @@ $doc.body.appendChild($style);
         throw new InvalidCurrentStoryStateError();
       }
       if (!emittedScreenshotOptions || emittedScreenshotOptions.skip) {
-        const elapsedTime = Date.now() - this.processStartTime;
-        return { ...this.currentStory, buffer: null, elapsedTime, success: !!emittedScreenshotOptions };
+        return { buffer: null, succeeded: !!emittedScreenshotOptions };
       } else if (!emittedScreenshotOptions.viewport) {
         emittedScreenshotOptions.viewport = this.opt.defaultViewport;
       }
@@ -208,14 +203,13 @@ $doc.body.appendChild($style);
       emittedScreenshotOptions = {};
     }
     const mergedScreenshotOptions = mergeScreenshotOptions(baseScreenshotOptions, emittedScreenshotOptions);
-    const succeeded = await this.setViewport(mergedScreenshotOptions);
-    if (!succeeded) return { ...this.currentStory, buffer: null, elapsedTime: 0, success: false };
+    const changed = await this.setViewport(mergedScreenshotOptions);
+    if (!changed) return { buffer: null, succeeded: true };
     await this.waitBrowserMetricsStable();
     await this.page.evaluate(
       () => new Promise(res => (window as ExposedWindow).requestIdleCallback(() => res(), { timeout: 3000 })),
     );
     const buffer = await this.page.screenshot({ fullPage: emittedScreenshotOptions.fullPage });
-    const elapsedTime = Date.now() - this.processStartTime;
-    return { ...this.currentStory, buffer, elapsedTime, success: true };
+    return { buffer, succeeded: true };
   }
 }
