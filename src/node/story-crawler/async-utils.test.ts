@@ -1,59 +1,103 @@
-import { runParallel, sleep, createQueueService, Queue, Task } from "./async-utils";
+import { runParallel, sleep, createExecutionService, Queue, Task } from "./async-utils";
 
-const createRunner = (runnerName: string) => ({
-  async run(taskId: string, time: number = 0) {
+const createWorker = (workerName: string | number) => ({
+  async process(taskId: string, time: number = 0) {
     await sleep(time);
-    return `${runnerName}_${taskId}`;
+    return `${workerName}_${taskId}`;
   },
 });
 
 describe(runParallel, () => {
-  it("shuld run 1 task", async () => {
-    async function* tasks(): AsyncGenerator<Task<string, ReturnType<typeof createRunner>>, void> {
-      yield async runner => await runner.run("t0");
-    }
+  it("should return empty when task generator yield nothing", async () => {
+    async function* tasks(): AsyncGenerator<Task<string, ReturnType<typeof createWorker>>, void> {}
 
-    const result = await runParallel(tasks, [createRunner("r0")]);
-    expect(result).toEqual(["r0_t0"]);
+    const result = await runParallel(tasks, [createWorker("w0")]);
+    expect(result).toEqual([]);
   });
 
-  it("shuld run tasks with runners", async () => {
-    async function* tasks(): AsyncGenerator<Task<string, ReturnType<typeof createRunner>>, void> {
-      yield async runner => await runner.run("t0");
-      yield async runner => await runner.run("t1", 10);
-      yield async runner => await runner.run("t2");
+  it("should run 1 task with 1 worker", async () => {
+    async function* tasks(): AsyncGenerator<Task<string, ReturnType<typeof createWorker>>, void> {
+      yield async worker => await worker.process("t0");
     }
 
-    const result = await runParallel(tasks, [createRunner("r0"), createRunner("r1")]);
-    expect(result).toEqual(["r0_t0", "r0_t2", "r1_t1"]);
+    const result = await runParallel(tasks, [createWorker("w0")]);
+    expect(result).toEqual(["w0_t0"]);
+  });
+
+  it("should run multiple tasks with multiple workers in parallel", async () => {
+    async function* tasks(): AsyncGenerator<Task<string, ReturnType<typeof createWorker>>, void> {
+      for (let i = 0; i < 10; i++) {
+        yield async worker => await worker.process(`t${i}`, 20);
+      }
+    }
+
+    const start = Date.now();
+    const result = await runParallel(tasks, [...new Array(4).keys()].map(createWorker));
+    const end = Date.now();
+    expect(result.length).toEqual(10);
+    expect(end - start < 200 / 2).toBeTruthy();
   });
 });
 
 describe(Queue, () => {
-  it("shuld be used with runParallel", done => {
-    const queue = new Queue<string, string, ReturnType<typeof createRunner>>({
+  it("should be closed automatically when allowEmpty is not set", done => {
+    const queue = new Queue<string, string, ReturnType<typeof createWorker>>({
+      allowEmpty: false,
       createTask(req) {
-        return async runner => runner.run(req);
+        return async worker => worker.process(req);
       },
     });
     queue.push("t0");
-    runParallel(queue.tasks.bind(queue), [createRunner("r0")]).then(result => {
-      expect(result).toEqual(["r0_t0", "r0_t1"]);
+    queue.push("t1");
+    runParallel(queue.tasks.bind(queue), [createWorker("w0")]).then(result => {
+      expect(result).toEqual(["w0_t0", "w0_t1"]);
       done();
     });
-    sleep(10).then(() => queue.push("t1"));
-    sleep(20).then(() => queue.disconnect());
+  });
+
+  it("should be shutdown when close is called if tasks are remaining", done => {
+    const queue = new Queue<string, string, ReturnType<typeof createWorker>>({
+      allowEmpty: false,
+      createTask(req) {
+        return async worker => worker.process(req, 10);
+      },
+    });
+    queue.push("t0");
+    queue.push("t1");
+    sleep(5).then(() => queue.close());
+    runParallel(queue.tasks.bind(queue), [createWorker("w0")]).then(result => {
+      expect(result).toEqual(["w0_t0"]);
+      done();
+    });
+  });
+
+  it("should be closed manually when allowEmpty is set", done => {
+    const queue = new Queue<string, string, ReturnType<typeof createWorker>>({
+      allowEmpty: true,
+      createTask(req) {
+        return async worker => worker.process(req);
+      },
+    });
+    queue.push("t0");
+    runParallel(queue.tasks.bind(queue), [createWorker("w0")]).then(result => {
+      expect(result).toEqual(["w0_t0", "w0_t1"]);
+      done();
+    });
+    sleep(1).then(() => queue.push("t1"));
+    sleep(2).then(() => queue.close());
   });
 });
 
-describe(createQueueService, () => {
-  it("should create runnable object", done => {
-    const { queue, run } = createQueueService([createRunner("r0")], ["t0"], req => runner => runner.run(req));
-    run().then(result => {
-      expect(result).toEqual(["r0_t0", "r0_t1"]);
+describe(createExecutionService, () => {
+  it("should create executable object", done => {
+    const service = createExecutionService([createWorker("w0")], ["t0"], req => worker => worker.process(req), {
+      allowEmpty: true,
+    });
+    service.execute().then(result => {
+      expect(result).toEqual(["w0_t0", "w0_t1"]);
       done();
     });
-    sleep(10).then(() => queue.push("t1"));
-    sleep(20).then(() => queue.disconnect());
+    sleep(1).then(() => service.push("t1"));
+    sleep(2).then(() => service.close());
   });
 });

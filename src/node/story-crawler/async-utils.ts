@@ -1,49 +1,25 @@
-export function sleep(time: number = 0) {
-  return new Promise(res => {
-    setTimeout(() => res(), time);
-  });
+export async function sleep(time: number = 0): Promise<void> {
+  await Promise.resolve();
+  if (time <= 0) return;
+  return new Promise(res => setTimeout(() => res(), time));
 }
 
-export type Task<T, S> = (runner: S) => Promise<T>;
+export type Task<T, S> = (worker: S) => Promise<T>;
 
-export function execParalell<T, S>(tasks: Task<T, S>[], runners: S[]) {
-  const copied = tasks.slice();
-  const results = <T[]>[];
-  const p = runners.length;
-  if (!p) throw new Error("No runners");
-  return Promise.all(
-    new Array(p).fill("").map(
-      (_, i) =>
-        new Promise((res, rej) => {
-          function next(): Promise<number | void> {
-            const t = copied.shift();
-            return t == null
-              ? Promise.resolve(res())
-              : t(runners[i])
-                  .then(r => results.push(r))
-                  .then(next)
-                  .catch(rej);
-          }
-          return next();
-        }),
-    ),
-  ).then(() => results);
-}
-
-export async function runParallel<T, S>(tasks: () => AsyncGenerator<Task<T, S>, void>, runners: S[]) {
+export async function runParallel<T, S>(tasks: () => AsyncGenerator<Task<T, S>, void>, workers: S[]) {
   const results: T[] = [];
-  const p = runners.length;
-  if (!p) throw new Error("No runners");
+  const p = workers.length;
+  if (!p) throw new Error("No workers");
   const generator = tasks();
   await Promise.all(
     [...new Array(p).keys()].map(
       i =>
         new Promise((res, rej) => {
-          async function next(): Promise<number | void> {
+          async function next(): Promise<void> {
             const { done, value: task } = await generator.next();
             if (done || !task) return res();
             try {
-              results.push(await task(runners[i]));
+              results.push(await task(workers[i]));
               return await next();
             } catch (error) {
               rej(error);
@@ -56,28 +32,36 @@ export async function runParallel<T, S>(tasks: () => AsyncGenerator<Task<T, S>, 
   return results;
 }
 
-export interface QueueCreateTaskContext<R> {
+export interface QueueController<R> {
   push(request: R): void;
+  close(): void;
 }
 
-export interface QueueOptions<R, T, S> {
+export type QueueOptions<R, T, S> = {
   initialRequests?: R[];
-  createTask(request: R, context: QueueCreateTaskContext<R>): Task<T, S>;
-}
+  allowEmpty?: boolean;
+  createTask(request: R, controller: QueueController<R>): Task<T, S>;
+};
+
+const cancelationToken = Symbol("cancel");
 
 type Resolver<R> = {
   resolve: (req: R) => void;
-  reject: (v: any) => void;
+  cancel: () => void;
 };
 
 export class Queue<R, T, S> {
-  private futureRequests: Promise<R>[] = [];
-  private resolvers: Resolver<R>[] = [];
   private tobeContinued = true;
+  private readonly futureRequests: Promise<R>[] = [];
+  private readonly resolvers: Resolver<R>[] = [];
+  private readonly allowEmpty: boolean;
+  private readonly createTask: (request: R, controller: QueueController<R>) => Task<T, S>;
 
-  constructor(private opt: QueueOptions<R, T, S>) {
-    if (opt.initialRequests) {
-      opt.initialRequests.forEach(req => this.push(req));
+  constructor({ initialRequests, createTask, allowEmpty }: QueueOptions<R, T, S>) {
+    this.createTask = createTask;
+    this.allowEmpty = !!allowEmpty;
+    if (initialRequests) {
+      initialRequests.forEach(req => this.push(req));
     }
   }
 
@@ -90,32 +74,38 @@ export class Queue<R, T, S> {
     }
   }
 
-  disconnect() {
+  close() {
     this.tobeContinued = false;
-    this.resolvers.forEach(({ reject }) => reject("cancel"));
+    this.resolvers.forEach(({ cancel }) => cancel());
   }
 
-  private createTask(req: R) {
-    return this.opt.createTask(req, {
+  publishController(): QueueController<R> {
+    return {
       push: this.push.bind(this),
-    });
+      close: async () => {
+        await Promise.resolve();
+        this.close();
+      },
+    };
   }
 
   async *tasks(): AsyncGenerator<Task<T, S>, void> {
-    while (this.tobeContinued) {
-      if (this.futureRequests.length === 0) {
+    const controller = this.publishController();
+    while (this.tobeContinued && (this.allowEmpty || this.futureRequests.length)) {
+      if (this.allowEmpty && this.futureRequests.length === 0) {
         this.futureRequests.push(
           new Promise<R>((resolve, reject) => {
-            this.resolvers.push({ resolve, reject });
+            const cancel = () => reject(cancelationToken);
+            this.resolvers.push({ resolve, cancel });
           }),
         );
       }
       const futureRequest = this.futureRequests.shift() as Promise<R>;
       try {
         const req = await futureRequest;
-        yield this.createTask(req);
+        yield this.createTask(req, controller);
       } catch (reason) {
-        if (reason !== "cancel") {
+        if (reason !== cancelationToken) {
           throw reason;
         }
       }
@@ -123,19 +113,29 @@ export class Queue<R, T, S> {
   }
 }
 
-export function createQueueService<R, T, S>(
-  runners: S[],
+export type CreateExecutionServiceOptions = {
+  allowEmpty?: boolean;
+};
+
+export interface ExecutionService<R, T> extends QueueController<R> {
+  execute(): Promise<T[]>;
+}
+
+export function createExecutionService<R, T, S>(
+  workers: S[],
   initialRequests: R[],
-  createTask: (request: R, context: QueueCreateTaskContext<R>) => Task<T, S>,
-) {
+  createTask: (request: R, context: QueueController<R>) => Task<T, S>,
+  options: CreateExecutionServiceOptions = {},
+): ExecutionService<R, T> {
   const queue = new Queue<R, T, S>({
     initialRequests,
     createTask,
+    allowEmpty: !!options.allowEmpty,
   });
   return {
-    run() {
-      return runParallel(queue.tasks.bind(queue), runners);
+    execute() {
+      return runParallel(queue.tasks.bind(queue), workers);
     },
-    queue,
+    ...queue.publishController(),
   };
 }

@@ -1,7 +1,6 @@
-import { StorybookServer, StoriesBrowser, execParalell } from "./story-crawler";
+import { StorybookServer, StoriesBrowser, createExecutionService } from "./story-crawler";
 import { CapturingBrowser } from "./capturing-browser";
 import { filterStories } from "../util";
-import { Story } from "../types";
 import { MainOptions, RunMode } from "./types";
 import { FileSystem } from "./file";
 
@@ -41,7 +40,7 @@ export async function main(opt: MainOptions) {
   opt.logger.log(`storycap runs with ${mode} mode`);
   storiesBrowser.close();
 
-  let stories = filterStories(allStories, opt.include, opt.exclude).map(s => ({ ...s, count: 0 }));
+  const stories = filterStories(allStories, opt.include, opt.exclude).map(s => ({ ...s, count: 0 }));
 
   if (stories.length === 0) {
     opt.logger.warn("There is no matched story. Check your include/exclude options.");
@@ -49,22 +48,32 @@ export async function main(opt: MainOptions) {
 
   const browsers = await bootCapturingBrowser(opt, mode);
 
-  while (stories.length > 0) {
-    const tasks = stories.map(s => {
-      return async (capturingBrowser: CapturingBrowser) => {
-        await capturingBrowser.setCurrentStory(s);
-        const { buffer, elapsedTime } = await capturingBrowser.screenshot(s.count);
-        if (buffer) {
-          const path = await fileSystem.save(s.kind, s.story, buffer);
-          opt.logger.log(`Screenshot stored: ${opt.logger.color.magenta(path)} in ${elapsedTime + "" || "--"} msec.`);
-        }
-      };
-    });
+  const processedStoriesMap = new Set<string>();
+  stories.forEach(s => processedStoriesMap.add(s.kind + s.story));
 
-    await execParalell(tasks, browsers);
-    if (opt.showBrowser) break;
-    stories = browsers.reduce((acc, b) => [...acc, ...b.failedStories], [] as (Story & { count: number })[]);
-  }
+  const service = createExecutionService(
+    browsers,
+    stories,
+    (s, queue) => async capturingBrowser => {
+      capturingBrowser.setCurrentStory(s);
+      const { buffer, elapsedTime, success } = await capturingBrowser.screenshot(s.count);
+      if (!success) {
+        queue.push({ ...s, count: s.count + 1 });
+        return;
+      }
+      if (buffer) {
+        const path = await fileSystem.save(s.kind, s.story, buffer);
+        opt.logger.log(`Screenshot stored: ${opt.logger.color.magenta(path)} in ${elapsedTime + "" || "--"} msec.`);
+      }
+      processedStoriesMap.delete(s.kind + s.story);
+      if (processedStoriesMap.size === 0) queue.close();
+    },
+    {
+      allowEmpty: true,
+    },
+  );
+
+  await service.execute();
 
   if (opt.showBrowser) return;
   await Promise.all(browsers.map(b => b.close()));

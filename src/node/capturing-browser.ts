@@ -200,7 +200,7 @@ $doc.body.appendChild($style);
       }
       if (!emittedScreenshotOptions || emittedScreenshotOptions.skip) {
         const elapsedTime = Date.now() - this.processStartTime;
-        return { ...this.currentStory, buffer: null, elapsedTime };
+        return { ...this.currentStory, buffer: null, elapsedTime, success: !!emittedScreenshotOptions };
       } else if (!emittedScreenshotOptions.viewport) {
         emittedScreenshotOptions.viewport = this.opt.defaultViewport;
       }
@@ -209,13 +209,13 @@ $doc.body.appendChild($style);
     }
     const mergedScreenshotOptions = mergeScreenshotOptions(baseScreenshotOptions, emittedScreenshotOptions);
     const succeeded = await this.setViewport(mergedScreenshotOptions);
-    if (!succeeded) return { ...this.currentStory, buffer: null, elapsedTime: 0 };
+    if (!succeeded) return { ...this.currentStory, buffer: null, elapsedTime: 0, success: false };
     await this.waitBrowserMetricsStable();
     await this.page.evaluate(
       () => new Promise(res => (window as ExposedWindow).requestIdleCallback(() => res(), { timeout: 3000 })),
     );
     const buffer = await this.page.screenshot({ fullPage: emittedScreenshotOptions.fullPage });
     const elapsedTime = Date.now() - this.processStartTime;
-    return { ...this.currentStory, buffer, elapsedTime };
+    return { ...this.currentStory, buffer, elapsedTime, success: true };
   }
 }
