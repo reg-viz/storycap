@@ -97,7 +97,7 @@ function createOptions(): MainOptions {
     viewportDelay,
     reloadAfterChangeViewport,
     disableCssAnimation,
-    showBrowser: process.env["storycap_SHOW"] === "enabled",
+    showBrowser: process.env["STORYCAP_SHOW"] === "enabled",
     logger: new Logger(verbose ? "verbose" : silent ? "silent" : "normal"),
   } as MainOptions;
   return opt;

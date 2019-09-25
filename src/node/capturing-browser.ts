@@ -77,19 +77,26 @@ $doc.body.appendChild($style);
   }
 
   private async expose() {
-    this.page.exposeFunction("emitCatpture", (opt: any) => this.handleOnCapture(opt));
+    this.page.exposeFunction("emitCatpture", (opt: any, clientStoryKey: string) =>
+      this.handleOnCapture(opt, clientStoryKey),
+    );
     this.page.exposeFunction("getCurrentStoryKey", (url: string) => url2StoryKey(url));
     this.page.exposeFunction("getCurrentVariantKey", () => this.currentVariantKey);
   }
 
-  private async handleOnCapture(opt: ScreenshotOptionsForApp) {
+  private async handleOnCapture(opt: ScreenshotOptionsForApp, clientStoryKey: string) {
     if (!this.currentStory) {
       this.emitter.emit("error", new InvalidCurrentStoryStateError());
+      return;
+    }
+    if (this.currentStory.id !== clientStoryKey) {
+      this.debug("This options was sent from previous story", this.currentStory.id, clientStoryKey);
       return;
     }
     if (this.processedStories.has(this.currentRequestId)) {
       this.debug(
         "This story was already processed:",
+        this.currentRequestId,
         this.currentStory.kind,
         this.currentStory.story,
         this.currentVariantKey,
@@ -100,14 +107,16 @@ $doc.body.appendChild($style);
     this.processedStories.add(this.currentRequestId);
     this.debug(
       "Start to process to screenshot story:",
+      this.currentRequestId,
       this.currentStory.kind,
       this.currentStory.story,
+      this.currentVariantKey,
       JSON.stringify(opt),
     );
     this.emitter.emit("screenshotOptions", opt);
   }
 
-  private waitScreenShotOption() {
+  private async waitScreenShotOption() {
     return new Promise<ScreenshotOptions | undefined>((resolve, reject) => {
       // eslint-disable-next-line prefer-const
       let id: NodeJS.Timer;

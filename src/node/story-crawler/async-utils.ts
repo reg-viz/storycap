@@ -51,14 +51,16 @@ type Resolver<R> = {
 };
 
 export class Queue<R, T, S> {
+  private requestIdCounter = 0;
   private tobeContinued = true;
   private readonly futureRequests: Promise<R>[] = [];
   private readonly resolvers: Resolver<R>[] = [];
+  private readonly requestingIds = new Set<string>();
   private readonly allowEmpty: boolean;
-  private readonly createTask: (request: R, controller: QueueController<R>) => Task<T, S>;
+  private readonly createDelegationTask: (request: R, controller: QueueController<R>) => Task<T, S>;
 
   constructor({ initialRequests, createTask, allowEmpty }: QueueOptions<R, T, S>) {
-    this.createTask = createTask;
+    this.createDelegationTask = createTask;
     this.allowEmpty = !!allowEmpty;
     if (initialRequests) {
       for (const req of initialRequests) {
@@ -91,10 +93,28 @@ export class Queue<R, T, S> {
     };
   }
 
+  private generateId() {
+    return `request_${++this.requestIdCounter}`;
+  }
+
+  private createTask(req: R, controller: QueueController<R>) {
+    const delegate = this.createDelegationTask(req, controller);
+    const rid = this.generateId();
+    this.requestingIds.add(rid);
+    return async (worker: S) => {
+      const result = await delegate(worker);
+      this.requestingIds.delete(rid);
+      if (!this.allowEmpty && this.requestingIds.size === 0 && this.futureRequests.length === 0) {
+        this.close();
+      }
+      return result;
+    };
+  }
+
   async *tasks(): AsyncGenerator<Task<T, S>, void> {
     const controller = this.publishController();
-    while (this.tobeContinued && (this.allowEmpty || this.futureRequests.length)) {
-      if (this.allowEmpty && this.futureRequests.length === 0) {
+    while (this.tobeContinued && (this.allowEmpty || this.futureRequests.length || this.requestingIds.size)) {
+      if (this.futureRequests.length === 0) {
         this.futureRequests.push(
           new Promise<R>((resolve, reject) => {
             const cancel = () => reject(cancelationToken);

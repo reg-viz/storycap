@@ -4,7 +4,7 @@ import { StorybookServerOptions } from "./story-crawler";
 import { VariantKey } from "../types";
 
 export type ExposedWindow = typeof window & {
-  emitCatpture(opt: ScreenshotOptions): void;
+  emitCatpture(opt: ScreenshotOptions, clientStoryKey: string): void;
   waitFor?: () => Promise<any>;
   requestIdleCallback(cb: Function, opt?: { timeout: number }): void;
   getCurrentStoryKey: (url: string) => Promise<string | undefined>;

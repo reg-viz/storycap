@@ -1,4 +1,4 @@
-import { Story } from "../types";
+import { Story } from "../node/story-crawler";
 import minimatch = require("minimatch");
 
 export function sleep(time: number = 0) {

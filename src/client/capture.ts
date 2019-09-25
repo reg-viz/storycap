@@ -70,13 +70,13 @@ export function capture() {
         ),
         vk,
       );
-      if (scOpt.skip) win.emitCatpture(scOpt);
+      if (scOpt.skip) win.emitCatpture(scOpt, storyKey);
       Promise.resolve()
         .then(() => waitImages(!!scOpt.waitImages))
         .then(() => sleep(scOpt.delay))
         .then(() => waitUserFunction(scOpt.waitFor, win))
         .then(() => waitNextIdle(win))
-        .then(() => win.emitCatpture(scOpt));
+        .then(() => win.emitCatpture(scOpt, storyKey));
     });
   });
 }
