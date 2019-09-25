@@ -7,8 +7,12 @@ import { StoryPreviewBrowser, MetricsWatcher } from "./story-crawler";
 import { ExposedWindow, MainOptions, RunMode } from "./types";
 import { ScreenshotOptions, ScreenshotOptionsForApp, StrictScreenshotOptions } from "../client/types";
 import { ScreenshotTimeoutError, InvalidCurrentStoryStateError } from "./errors";
-import { Story } from "../types";
-import { createBaseScreenshotOptions, mergeScreenshotOptions } from "./screenshot-options-helper";
+import { VariantKey } from "../types";
+import {
+  createBaseScreenshotOptions,
+  mergeScreenshotOptions,
+  extractAdditionalVariantKeys,
+} from "../util/screenshot-options-helper";
 import { sleep } from "../util";
 const dd = require("puppeteer/DeviceDescriptors") as { name: string; viewport: Viewport }[];
 
@@ -28,7 +32,9 @@ export class CapturingBrowser extends StoryPreviewBrowser {
   private currentStoryRetryCount = 0;
   private viewport?: Viewport;
   private emitter: EventEmitter;
-  private processedStories: { [key: string]: Story } = {};
+  private readonly processedStories = new Set<string>();
+  private currentRequestId!: string;
+  private currentVariantKey: VariantKey = { isDefault: true, keys: [] };
 
   constructor(protected opt: MainOptions, private mode: RunMode, idx: number) {
     super(opt, idx, opt.logger);
@@ -73,6 +79,7 @@ $doc.body.appendChild($style);
   private async expose() {
     this.page.exposeFunction("emitCatpture", (opt: any) => this.handleOnCapture(opt));
     this.page.exposeFunction("getCurrentStoryKey", (url: string) => url2StoryKey(url));
+    this.page.exposeFunction("getCurrentVariantKey", () => this.currentVariantKey);
   }
 
   private async handleOnCapture(opt: ScreenshotOptionsForApp) {
@@ -80,16 +87,17 @@ $doc.body.appendChild($style);
       this.emitter.emit("error", new InvalidCurrentStoryStateError());
       return;
     }
-    if (this.processedStories[this.currentStory.kind + this.currentStory.story]) {
+    if (this.processedStories.has(this.currentRequestId)) {
       this.debug(
         "This story was already processed:",
         this.currentStory.kind,
         this.currentStory.story,
+        this.currentVariantKey,
         JSON.stringify(opt),
       );
       return;
     }
-    this.processedStories[this.currentStory.kind + this.currentStory.story] = this.currentStory;
+    this.processedStories.add(this.currentRequestId);
     this.debug(
       "Start to process to screenshot story:",
       this.currentStory.kind,
@@ -163,7 +171,7 @@ $doc.body.appendChild($style);
       await this.page.setViewport(nextViewport);
       this.viewport = nextViewport;
       if (this.opt.reloadAfterChangeViewport) {
-        delete this.processedStories[this.currentStory.kind + this.currentStory.story];
+        this.processedStories.delete(this.currentRequestId);
         await Promise.all([this.page.reload(), this.waitScreenShotOption()]);
       } else {
         await sleep(this.opt.viewportDelay);
@@ -185,7 +193,9 @@ $doc.body.appendChild($style);
     }
   }
 
-  async screenshot(retryCount: number) {
+  async screenshot(requestId: string, variantKey: VariantKey, retryCount: number) {
+    this.currentRequestId = requestId;
+    this.currentVariantKey = variantKey;
     this.currentStoryRetryCount = retryCount;
     const baseScreenshotOptions = createBaseScreenshotOptions(this.opt);
     let emittedScreenshotOptions: ScreenshotOptions | undefined;
@@ -195,7 +205,7 @@ $doc.body.appendChild($style);
         throw new InvalidCurrentStoryStateError();
       }
       if (!emittedScreenshotOptions || emittedScreenshotOptions.skip) {
-        return { buffer: null, succeeded: !!emittedScreenshotOptions };
+        return { buffer: null, succeeded: !!emittedScreenshotOptions, variantKeysToPush: [] };
       } else if (!emittedScreenshotOptions.viewport) {
         emittedScreenshotOptions.viewport = this.opt.defaultViewport;
       }
@@ -204,12 +214,15 @@ $doc.body.appendChild($style);
     }
     const mergedScreenshotOptions = mergeScreenshotOptions(baseScreenshotOptions, emittedScreenshotOptions);
     const changed = await this.setViewport(mergedScreenshotOptions);
-    if (!changed) return { buffer: null, succeeded: true };
+    if (!changed) return { buffer: null, succeeded: true, variantKeysToPush: [] };
     await this.waitBrowserMetricsStable();
     await this.page.evaluate(
       () => new Promise(res => (window as ExposedWindow).requestIdleCallback(() => res(), { timeout: 3000 })),
     );
+    const variantKeysToPush = this.currentVariantKey.isDefault
+      ? extractAdditionalVariantKeys(mergedScreenshotOptions)
+      : [];
     const buffer = await this.page.screenshot({ fullPage: emittedScreenshotOptions.fullPage });
-    return { buffer, succeeded: true };
+    return { buffer, succeeded: true, variantKeysToPush };
   }
 }

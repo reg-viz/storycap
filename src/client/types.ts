@@ -20,9 +20,21 @@ export interface ScreenshotOptionFragments {
   skip?: boolean;
 }
 
-export interface ScreenshotOptions extends ScreenshotOptionFragments {}
+export interface ScreenshotOptionFragmentsForVariant extends ScreenshotOptionFragments {
+  followWith?: string[];
+}
 
-export interface StrictScreenshotOptions extends $Strict<ScreenshotOptionFragments> {}
+export interface ScreenshotOptions extends ScreenshotOptionFragments {
+  variants?: {
+    [key: string]: ScreenshotOptionFragmentsForVariant;
+  };
+}
+
+export interface StrictScreenshotOptions extends $Strict<ScreenshotOptionFragments> {
+  variants: {
+    [key: string]: $Strict<ScreenshotOptionFragmentsForVariant>;
+  };
+}
 
 export type ScreenshotOptionsForApp = StrictScreenshotOptions & {
   url: string;

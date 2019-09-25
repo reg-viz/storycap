@@ -3,6 +3,7 @@ import { CapturingBrowser } from "./capturing-browser";
 import { filterStories } from "../util";
 import { MainOptions, RunMode } from "./types";
 import { FileSystem } from "./file";
+import { VariantKey } from "../types";
 
 async function detectRunMode(storiesBrowser: StoriesBrowser, opt: MainOptions) {
   await storiesBrowser.page.goto(opt.serverOptions.storybookUrl);
@@ -51,21 +52,43 @@ export async function main(opt: MainOptions) {
 
   const workers = await bootCapturingBrowsers(opt, mode);
 
-  const remainingRequestMap = new Map<string, { story: Story; count: number }>();
-  stories.forEach(s => remainingRequestMap.set(s.kind + s.story, { story: s, count: 0 }));
+  const toRequestId = ({ kind, story }: Story, variantKey?: VariantKey) => {
+    const base = encodeURIComponent(`${kind}/${story}`);
+    if (variantKey && variantKey.keys.length) {
+      return `${base}?keys=${encodeURIComponent(variantKey.keys.join(","))}`;
+    } else {
+      return base;
+    }
+  };
+  const remainingRequestMap = new Map<string, { rid: string; story: Story; variantKey: VariantKey; count: number }>();
+  stories.forEach(s =>
+    remainingRequestMap.set(toRequestId(s), {
+      rid: toRequestId(s),
+      story: s,
+      variantKey: { isDefault: true, keys: [] },
+      count: 0,
+    }),
+  );
 
   const service = createExecutionService(
     workers,
     remainingRequestMap.values(),
-    ({ story, count }, queue) => async storyWorker => {
+    ({ rid, story, variantKey, count }, queue) => async storyWorker => {
       storyWorker.setCurrentStory(story);
-      const [{ buffer, succeeded }, elapsedTime] = await time(storyWorker.screenshot(count));
-      if (!succeeded) return queue.push({ story, count: count + 1 });
+      const [{ buffer, succeeded, variantKeysToPush }, elapsedTime] = await time(
+        storyWorker.screenshot(rid, variantKey, count),
+      );
+      if (!succeeded) return queue.push({ rid: toRequestId(story, variantKey), story, variantKey, count: count + 1 });
       if (buffer) {
-        const path = await fileSystem.save(story.kind, story.story, buffer);
+        const path = await fileSystem.save(story.kind, story.story, variantKey, buffer);
         opt.logger.log(`Screenshot stored: ${opt.logger.color.magenta(path)} in ${elapsedTime} msec.`);
       }
-      remainingRequestMap.delete(story.kind + story.story);
+      remainingRequestMap.delete(rid);
+      variantKeysToPush.forEach(variantKey => {
+        const request = { rid: toRequestId(story, variantKey), story, variantKey, count: 0 };
+        queue.push(request);
+        remainingRequestMap.set(request.rid, request);
+      });
       if (remainingRequestMap.size === 0) queue.close();
     },
     {

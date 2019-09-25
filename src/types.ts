@@ -15,3 +15,8 @@ export type V5Story = {
 };
 
 export type Story = V4Story | V5Story;
+
+export type VariantKey = {
+  isDefault: boolean;
+  keys: string[];
+};
