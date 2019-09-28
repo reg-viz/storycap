@@ -6,6 +6,9 @@ import { linkTo } from '@storybook/addon-links';
 
 import { Button, Welcome } from '@storybook/react/demo';
 
+import MyButton from '../MyButton';
+import MyInputText from '../MyInputText';
+
 storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
 storiesOf('Welcome_override', module)
 .add('to Storybook', () => <Welcome showApp={linkTo('Button')} />, {
@@ -36,3 +39,21 @@ storiesOf('Button_to_be_skipped', module)
     },
   })
   .add('with text', () => <Button onClick={action('clicked')}>Hello Button</Button>)
+
+storiesOf('MyInputText', module)
+  .add('default', () => <MyInputText />, {
+    screenshot: {
+      focus: 'input[type="text"]',
+    },
+  });
+
+storiesOf('MyButton', module)
+  .add('default', () => <MyButton />, {
+    screenshot: {
+      variants: {
+        hover: {
+          hover: '.my-button',
+        },
+      },
+    },
+  });
