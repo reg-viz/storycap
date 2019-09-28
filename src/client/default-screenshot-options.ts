@@ -5,4 +5,6 @@ export const defaultScreenshotOptions = {
   fullPage: true,
   skip: false,
   variants: {},
+  hover: "",
+  focus: "",
 } as const;

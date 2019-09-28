@@ -62,6 +62,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
 *, *::before, *::after {
   transition: none !important;
   animation: none !important;
+  caret-color: transparentt !important;
 }
         `,
       });
@@ -189,6 +190,29 @@ $doc.body.appendChild($style);
     return true;
   }
 
+  private async warnIfTargetElementNotFound(selector: string) {
+    const targetElement = await this.page.$(selector);
+    if (this.currentStory && !targetElement) {
+      this.logger.warn(
+        `No matched element for "${this.logger.color.yellow(selector)}" in story "${this.currentStory.id}".`,
+      );
+    }
+  }
+
+  private async setHover(screenshotOptions: StrictScreenshotOptions) {
+    if (!screenshotOptions.hover) return;
+    await this.warnIfTargetElementNotFound(screenshotOptions.hover);
+    await this.page.hover(screenshotOptions.hover);
+    return;
+  }
+
+  private async setFocus(screenshotOptions: StrictScreenshotOptions) {
+    if (!screenshotOptions.focus) return;
+    await this.warnIfTargetElementNotFound(screenshotOptions.focus);
+    await this.page.focus(screenshotOptions.focus);
+    return;
+  }
+
   private async waitBrowserMetricsStable() {
     const mw = new MetricsWatcher(this.page, this.opt.metricsWatchRetryCount);
     const count = await mw.waitForStable();
@@ -224,6 +248,8 @@ $doc.body.appendChild($style);
     const mergedScreenshotOptions = mergeScreenshotOptions(baseScreenshotOptions, emittedScreenshotOptions);
     const changed = await this.setViewport(mergedScreenshotOptions);
     if (!changed) return { buffer: null, succeeded: true, variantKeysToPush: [] };
+    await this.setHover(mergedScreenshotOptions);
+    await this.setFocus(mergedScreenshotOptions);
     await this.waitBrowserMetricsStable();
     await this.page.evaluate(
       () => new Promise(res => (window as ExposedWindow).requestIdleCallback(() => res(), { timeout: 3000 })),

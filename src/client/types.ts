@@ -17,6 +17,8 @@ export interface ScreenshotOptionFragments {
   waitFor?: string | (() => Promise<any>);
   viewport?: Viewport | string;
   fullPage?: boolean;
+  hover?: string;
+  focus?: string;
   skip?: boolean;
 }
 
