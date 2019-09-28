@@ -4,5 +4,5 @@ export const defaultScreenshotOptions = {
   waitFor: "",
   fullPage: true,
   skip: false,
-  additions: {},
+  variants: {},
 } as const;

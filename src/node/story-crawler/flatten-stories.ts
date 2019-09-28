@@ -5,7 +5,7 @@ export function flattenStories(stories: StoryKind[]) {
     (acc, storyKind) => [
       ...acc,
       ...storyKind.stories.map(story => {
-        return { id: undefined, kind: storyKind.kind, story, version: "v4" } as V4Story;
+        return { id: `${storyKind.kind}/${story}`, kind: storyKind.kind, story, version: "v4" } as V4Story;
       }),
     ],
     [] as Story[],

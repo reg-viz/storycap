@@ -11,6 +11,11 @@ storiesOf('Welcome_override', module)
 .add('to Storybook', () => <Welcome showApp={linkTo('Button')} />, {
   screenshot: {
     viewport: 'iPhone 6',
+    variants: {
+      xs: {
+        viewport: 'iPhone 5',
+      },
+    },
   },
 });
 

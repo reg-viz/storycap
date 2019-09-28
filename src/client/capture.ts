@@ -3,6 +3,7 @@ import { ScreenshotOptions } from "./types";
 import imagesloaded from "imagesloaded";
 import { sleep } from "../util";
 import { defaultScreenshotOptions } from "./default-screenshot-options";
+import { mergeScreenshotOptions, pickupFromVariantKey } from "../util/screenshot-options-helper";
 
 function waitImages(enabled: boolean, selector = "body") {
   if (!enabled) return Promise.resolve();
@@ -58,21 +59,24 @@ export function stock(opt: Partial<ScreenshotOptions> = {}) {
 
 export function capture() {
   withExpoesdWindow(win => {
-    win.getCurrentStoryKey(location.href).then(storyKey => {
+    Promise.all([win.getCurrentStoryKey(location.href), win.getCurrentVariantKey()]).then(([storyKey, vk]) => {
       if (!storyKey) return;
       const options = consumeOptions(win, storyKey);
       if (!options) return;
-      const scOpt = options.reduce(
-        (acc: ScreenshotOptions, opt: ScreenshotOptions) => ({ ...acc, ...opt }),
-        defaultScreenshotOptions,
+      const scOpt = pickupFromVariantKey(
+        options.reduce(
+          (acc: ScreenshotOptions, opt: ScreenshotOptions) => mergeScreenshotOptions(acc, opt),
+          defaultScreenshotOptions,
+        ),
+        vk,
       );
-      if (scOpt.skip) win.emitCatpture(scOpt);
+      if (scOpt.skip) win.emitCatpture(scOpt, storyKey);
       Promise.resolve()
         .then(() => waitImages(!!scOpt.waitImages))
         .then(() => sleep(scOpt.delay))
         .then(() => waitUserFunction(scOpt.waitFor, win))
         .then(() => waitNextIdle(win))
-        .then(() => win.emitCatpture(scOpt));
+        .then(() => win.emitCatpture(scOpt, storyKey));
     });
   });
 }

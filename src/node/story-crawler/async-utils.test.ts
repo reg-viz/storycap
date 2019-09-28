@@ -44,15 +44,15 @@ describe(Queue, () => {
     const queue = new Queue<string, string, ReturnType<typeof createWorker>>({
       allowEmpty: false,
       createTask(req) {
-        return async worker => worker.process(req);
+        return async worker => worker.process(req, 10);
       },
     });
     queue.push("t0");
-    queue.push("t1");
     runParallel(queue.tasks.bind(queue), [createWorker("w0")]).then(result => {
       expect(result).toEqual(["w0_t0", "w0_t1"]);
       done();
     });
+    sleep(5).then(() => queue.push("t1"));
   });
 
   it("should be shutdown when close is called if tasks are remaining", done => {

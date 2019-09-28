@@ -1,7 +1,7 @@
 export type StorybookVersion = "v4" | "v5";
 
 export type V4Story = {
-  id: undefined;
+  id: string;
   kind: string;
   story: string;
   version: "v4";
