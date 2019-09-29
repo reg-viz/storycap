@@ -25,15 +25,18 @@ export interface ScreenshotOptionFragmentsForVariant extends ScreenshotOptionFra
 }
 
 export interface ScreenshotOptions extends ScreenshotOptionFragments {
+  viewports?: string[] | { [key: string]: string | Viewport };
   variants?: {
     [key: string]: ScreenshotOptionFragmentsForVariant;
   };
+  defaultVariantSuffix?: string;
 }
 
 export interface StrictScreenshotOptions extends $Strict<ScreenshotOptionFragments> {
   variants: {
     [key: string]: $Strict<ScreenshotOptionFragmentsForVariant>;
   };
+  defaultVariantSuffix: string;
 }
 
 export type ScreenshotOptionsForApp = StrictScreenshotOptions & {

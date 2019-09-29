@@ -17,7 +17,7 @@ function createOptions(): MainOptions {
     .option("flat", { boolean: true, alias: "f", default: false, description: "Flatten output filename." })
     .option("include", { array: true, alias: "i", default: [], description: "Including stories name rule." })
     .option("exclude", { array: true, alias: "e", default: [], description: "Excluding stories name rule." })
-    .option("viewport", { string: true, alias: "V", default: "800x600", description: "Default viewport." })
+    .option("viewport", { array: true, alias: "V", default: ["800x600"], description: "Viewport." })
     .option("disableCssAnimation", {
       boolean: true,
       default: true,
@@ -49,6 +49,7 @@ function createOptions(): MainOptions {
       description: "Whether to reload after viewport changed.",
     })
     .example("storycap http://localshot:9009", "")
+    .example("storycap http://localshot:9009 -V 1024x768 -V 320x568", "")
     .example('storycap http://localshot:9009 -i "some-kind/a-story"', "")
     .example('storycap http://example.com/your-storybook -e "**/default" -V iPad', "")
     .example('storycap --serverCmd "start-storybook -p 3000" http://localshot:3000', "");
@@ -89,7 +90,7 @@ function createOptions(): MainOptions {
     flat,
     include,
     exclude,
-    defaultViewport: viewport,
+    viewports: viewport,
     parallel,
     captureTimeout,
     captureMaxRetryCount,
