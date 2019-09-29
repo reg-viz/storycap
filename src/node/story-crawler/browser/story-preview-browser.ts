@@ -1,6 +1,21 @@
 import { BaseBrowser, BaseBrowserOptions } from "./base-browser";
 import { Story } from "../story-types";
 import { Logger } from "../logger";
+import { sleep } from "../async-utils";
+
+const dummyV4Story: Story = {
+  version: "v4",
+  id: "__dummy__/__dummy__",
+  kind: "__dummy__",
+  story: "__dummy__",
+};
+
+const dummyV5Story: Story = {
+  version: "v5",
+  id: "__dummy__--__dummy__",
+  kind: "__dummy__",
+  story: "__dummy__",
+};
 
 export abstract class StoryPreviewBrowser extends BaseBrowser {
   private _currentStory?: Story;
@@ -17,9 +32,23 @@ export abstract class StoryPreviewBrowser extends BaseBrowser {
     return this._currentStory;
   }
 
-  async setCurrentStory(s: Story) {
+  async setCurrentStory(s: Story, opt: { forceRerender?: boolean } = {}) {
+    if (this._currentStory && this._currentStory.id === s.id && !!opt.forceRerender) {
+      if (s.version === "v4") {
+        await this.page.evaluate(
+          (d: any) => window.postMessage(JSON.stringify(d), "*"),
+          this.createPostmessageData(dummyV4Story),
+        );
+      } else {
+        await this.page.evaluate(
+          (d: any) => window.postMessage(JSON.stringify(d), "*"),
+          this.createPostmessageData(dummyV5Story),
+        );
+      }
+      await sleep(50);
+    }
     this._currentStory = s;
-    this.debug("Set story", s.kind, s.story);
+    this.debug("Set story", s.id);
     const data = this.createPostmessageData(s);
     await this.page.evaluate((d: typeof data) => window.postMessage(JSON.stringify(d), "*"), data);
   }
