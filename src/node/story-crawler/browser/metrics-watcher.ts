@@ -8,11 +8,11 @@ export class MetricsWatcher {
   constructor(private page: Page, private count: number) {}
 
   async waitForStable() {
-    for (let i = this.count; i > 0; --i) {
+    for (let i = 0; i < this.count; ++i) {
       if (await this.check()) return i;
       await sleep(20);
     }
-    return 0;
+    return this.count;
   }
 
   private async check() {
