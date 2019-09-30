@@ -1,4 +1,77 @@
-import { pickupFromVariantKey } from "./screenshot-options-helper";
+import { expandViewportsOption, pickupFromVariantKey } from "./screenshot-options-helper";
+
+describe(expandViewportsOption, () => {
+  it("should expand viewport and variants from viewports", () => {
+    expect(
+      expandViewportsOption({
+        viewports: ["iPad"],
+      }),
+    ).toEqual({
+      viewport: "iPad",
+      variants: {},
+    });
+
+    expect(
+      expandViewportsOption({
+        viewports: ["iPad", "iPhone6"],
+      }),
+    ).toEqual({
+      viewport: "iPad",
+      variants: {
+        iPhone6: {
+          viewport: "iPhone6",
+        },
+      },
+      defaultVariantSuffix: "iPad",
+    });
+
+    expect(
+      expandViewportsOption({
+        viewports: {
+          hoge: {
+            width: 1000,
+            height: 1000,
+          },
+        },
+      }),
+    ).toEqual({
+      viewport: {
+        width: 1000,
+        height: 1000,
+      },
+      variants: {},
+    });
+
+    expect(
+      expandViewportsOption({
+        viewports: {
+          hoge: {
+            width: 1000,
+            height: 1000,
+          },
+          bar: {
+            width: 500,
+            height: 500,
+          },
+        },
+      }),
+    ).toEqual({
+      viewport: {
+        width: 1000,
+        height: 1000,
+      },
+      variants: {
+        bar: {
+          viewport: {
+            width: 500,
+            height: 500,
+          },
+        },
+      },
+      defaultVariantSuffix: "hoge",
+    });
+  });
+});
 
 describe(pickupFromVariantKey, () => {
   it("should pass through with default variant", () => {

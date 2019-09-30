@@ -12,7 +12,7 @@ storiesOf('Welcome_override', module)
   screenshot: {
     viewport: 'iPhone 6',
     variants: {
-      xs: {
+      XSMALL: {
         viewport: 'iPhone 5',
       },
     },

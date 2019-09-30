@@ -1,12 +1,53 @@
 import { StrictScreenshotOptions, ScreenshotOptions, ScreenshotOptionFragments } from "../client/types";
-import { defaultScreenshotOptions } from "../client/default-screenshot-options";
 import { VariantKey } from "../types";
 
-export function createBaseScreenshotOptions({ defaultViewport }: { defaultViewport: string }): StrictScreenshotOptions {
-  return {
-    ...defaultScreenshotOptions,
-    viewport: defaultViewport,
-  };
+export const defaultScreenshotOptions = {
+  delay: 0,
+  waitImages: true,
+  waitFor: "",
+  fullPage: true,
+  skip: false,
+  variants: {},
+} as const;
+
+export function expandViewportsOption(options: ScreenshotOptions) {
+  if (!options.viewports) return options;
+  const { viewports } = options;
+  const ret = { ...options };
+  delete ret.viewports;
+
+  const viewportNames = Array.isArray(viewports) ? viewports : Object.keys(viewports);
+  if (!viewportNames.length) return options;
+
+  const getVp = (vpName: string) => (Array.isArray(viewports) ? vpName : viewports[vpName]);
+
+  const variants = { ...options.variants } || {};
+  viewportNames.slice(1).forEach(vpName => (variants[vpName] = { viewport: getVp(vpName) }));
+  ret.viewport = getVp(viewportNames[0]);
+  ret.variants = variants;
+
+  if (viewportNames.length > 1) {
+    ret.defaultVariantSuffix = viewportNames[0] as string;
+  }
+
+  return ret;
+}
+
+export function createBaseScreenshotOptions({ viewports }: { viewports: string[] }): StrictScreenshotOptions {
+  if (viewports.length > 1) {
+    return {
+      ...defaultScreenshotOptions,
+      viewport: viewports[0],
+      variants: viewports.slice(1).reduce((acc, vp) => ({ ...acc, [vp]: { viewport: vp } }), {}),
+      defaultVariantSuffix: viewports[0],
+    };
+  } else {
+    return {
+      ...defaultScreenshotOptions,
+      viewport: viewports[0],
+      defaultVariantSuffix: "",
+    };
+  }
 }
 
 export function mergeScreenshotOptions<T extends ScreenshotOptions>(base: T, fragment: ScreenshotOptions): T {

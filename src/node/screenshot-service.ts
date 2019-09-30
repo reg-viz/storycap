@@ -36,12 +36,14 @@ export function createScreenshotService({ fileSystem, logger, stories, workers }
     workers,
     stories.map(story => createRequest({ story })),
     ({ rid, story, variantKey, count }, { push }) => async worker => {
-      await worker.setCurrentStory(story);
+      await worker.setCurrentStory(story, { forceRerender: true });
       const [result, elapsedTime] = await time(worker.screenshot(rid, variantKey, count));
-      const { succeeded, buffer, variantKeysToPush } = result;
+      const { succeeded, buffer, variantKeysToPush, defaultVariantSuffix } = result;
       if (!succeeded) return push(createRequest({ story, variantKey, count: count + 1 }));
       if (buffer) {
-        const path = await fileSystem.save(story.kind, story.story, variantKey, buffer);
+        const vkForSave =
+          variantKey.isDefault && defaultVariantSuffix ? { ...variantKey, keys: [defaultVariantSuffix] } : variantKey;
+        const path = await fileSystem.save(story.kind, story.story, vkForSave, buffer);
         logger.log(`Screenshot stored: ${logger.color.magenta(path)} in ${elapsedTime} msec.`);
       }
       variantKeysToPush.forEach(variantKey => push(createRequest({ story, variantKey })));
