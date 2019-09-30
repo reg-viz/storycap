@@ -88,7 +88,7 @@ $doc.body.appendChild($style);
     this.page.exposeFunction('getBaseScreenshotOptions', () => this.baseScreenshotOptions);
     this.page.exposeFunction('getCurrentStoryKey', (url: string) => url2StoryKey(url));
     this.page.exposeFunction('getCurrentVariantKey', () => this.currentVariantKey);
-    this.page.exposeFunction('waitBrowserMetricsStable', () => this.waitBrowserMetricsStable());
+    this.page.exposeFunction('waitBrowserMetricsStable', () => this.waitBrowserMetricsStable('preEmit'));
   }
 
   private async resetIfTouched() {
@@ -231,10 +231,10 @@ $doc.body.appendChild($style);
     return;
   }
 
-  private async waitBrowserMetricsStable() {
+  private async waitBrowserMetricsStable(phase: 'preEmit' | 'postEmit') {
     const mw = new MetricsWatcher(this.page, this.opt.metricsWatchRetryCount);
     const checkCountUntillStable = await mw.waitForStable();
-    this.debug(`Browser metrics got stable in ${checkCountUntillStable} times checks.`);
+    this.debug(`[${phase}] Browser metrics got stable in ${checkCountUntillStable} times checks.`);
     if (checkCountUntillStable >= this.opt.metricsWatchRetryCount) {
       this.opt.logger.warn(
         `Metrics is not stable while ${this.opt.metricsWatchRetryCount} times. ${this.opt.logger.color.yellow(
@@ -269,7 +269,7 @@ $doc.body.appendChild($style);
     if (!changed) return { buffer: null, succeeded: true, variantKeysToPush: [], defaultVariantSuffix: '' };
     await this.setHover(mergedScreenshotOptions);
     await this.setFocus(mergedScreenshotOptions);
-    await this.waitBrowserMetricsStable();
+    await this.waitBrowserMetricsStable('postEmit');
     await this.page.evaluate(
       () => new Promise(res => (window as ExposedWindow).requestIdleCallback(() => res(), { timeout: 3000 })),
     );

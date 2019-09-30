@@ -54,13 +54,10 @@
   ],
   "devDependencies": {
     "@types/jest": "^24.0.18",
-    "@types/react": "^16.4.9",
     "@typescript-eslint/eslint-plugin": "^2.3.0",
     "@typescript-eslint/parser": "^2.3.0",
     "copy-dir": "^1.1.0",
     "cpy": "^7.3.0",
-    "enzyme": "^3.10.0",
-    "enzyme-adapter-react-16": "^1.14.0",
     "eslint": "^6.0.0",
     "eslint-config-prettier": "^6.0.0",
     "husky": "^3.0.2",
@@ -68,8 +65,6 @@
     "minimist": "^1.2.0",
     "prettier": "^1.18.2",
     "pretty-quick": "^1.11.1",
-    "react": "^16.4.2",
-    "react-dom": "^16.9.0",
     "reg-keygen-git-hash-plugin": "^0.7.16",
     "reg-notify-github-plugin": "^0.7.21",
     "reg-publish-s3-plugin": "^0.7.22",
@@ -80,7 +75,6 @@
   },
   "dependencies": {
     "@types/chalk": "^2.2.0",
-    "@types/enzyme": "^3.10.3",
     "@types/minimatch": "^3.0.3",
     "@types/mkdirp": "^0.5.2",
     "@types/node": "^12.6.8",
@@ -98,9 +92,6 @@
     "yargs": "^14.0.0"
   },
   "jest": {
-    "setupFiles": [
-      "<rootDir>/jest/setupTests.ts"
-    ],
     "moduleFileExtensions": [
       "ts",
       "tsx",
