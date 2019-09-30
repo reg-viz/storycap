@@ -1,9 +1,15 @@
 import { StoryKind, makeDecorator } from '@storybook/addons';
 
 import { ScreenshotOptions } from './types';
-import { prepareCapture } from './capture';
+import { triggerScreenshot } from './trigger-screenshot';
 
 export interface WithScreenshot {
+  /**
+   *
+   * @deprecated
+   * You can use `addParameters` instead of call decorator as a function with Storybook v5 or later.
+   *
+   */
   <T = Function>(options?: Partial<ScreenshotOptions>): T;
 }
 
@@ -18,16 +24,15 @@ const withScreenshotDecorator =
     allowDeprecatedUsage: true,
     wrapper: (getStory, context, { parameters, options }) => {
       const screenshotOptions = parameters || options;
-      prepareCapture(screenshotOptions);
+      triggerScreenshot(screenshotOptions);
       return getStory(context);
     },
   });
 
-function withScreenshotLegacy(opt: Partial<ScreenshotOptions> = {}) {
+function withScreenshotLegacy(screenshotOptions: ScreenshotOptions = {}) {
   return (storyFn: Function, ctx: StoryKind | undefined) => {
     const wrapperWithContext = (context: any) => {
-      const screenshotOptions = opt;
-      prepareCapture(screenshotOptions);
+      triggerScreenshot(screenshotOptions);
       return storyFn(context);
     };
 

@@ -78,7 +78,7 @@ function capture() {
   });
 }
 
-export function prepareCapture(screenshotOptions: ScreenshotOptions) {
+export function triggerScreenshot(screenshotOptions: ScreenshotOptions) {
   stock(screenshotOptions);
-  setTimeout(capture);
+  Promise.resolve().then(capture);
 }
