@@ -1,2 +1,2 @@
-export * from "./capture";
-export { withScreenshot } from "./with-screenshot";
+export * from './capture';
+export { withScreenshot } from './with-screenshot';

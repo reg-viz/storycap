@@ -1,14 +1,14 @@
-import { StrictScreenshotOptions, ScreenshotOptions, ScreenshotOptionFragments } from "../client/types";
-import { VariantKey } from "../types";
+import { StrictScreenshotOptions, ScreenshotOptions, ScreenshotOptionFragments } from '../client/types';
+import { VariantKey } from '../types';
 
 export const defaultScreenshotOptions = {
   delay: 0,
   waitImages: true,
-  waitFor: "",
+  waitFor: '',
   fullPage: true,
   skip: false,
-  focus: "",
-  hover: "",
+  focus: '',
+  hover: '',
   variants: {},
 } as const;
 
@@ -47,20 +47,20 @@ export function createBaseScreenshotOptions({ viewports }: { viewports: string[]
     return {
       ...defaultScreenshotOptions,
       viewport: viewports[0],
-      defaultVariantSuffix: "",
+      defaultVariantSuffix: '',
     };
   }
 }
 
 export function mergeScreenshotOptions<T extends ScreenshotOptions>(base: T, fragment: ScreenshotOptions): T {
   const ret = Object.assign({}, base, fragment) as T;
-  if (!base.viewport || typeof base.viewport === "string") {
+  if (!base.viewport || typeof base.viewport === 'string') {
     if (fragment.viewport) {
       ret.viewport = fragment.viewport;
     }
   } else {
     if (!fragment.viewport) {
-    } else if (typeof fragment.viewport === "object") {
+    } else if (typeof fragment.viewport === 'object') {
       ret.viewport = {
         ...base.viewport,
         ...fragment.viewport,

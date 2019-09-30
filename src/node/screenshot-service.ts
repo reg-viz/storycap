@@ -1,9 +1,9 @@
-import { Story, createExecutionService } from "./story-crawler";
-import { CapturingBrowser } from "./capturing-browser";
-import { FileSystem } from "./file";
-import { Logger } from "./logger";
-import { VariantKey } from "../types";
-import { time } from "./story-crawler/timer";
+import { Story, createExecutionService } from './story-crawler';
+import { CapturingBrowser } from './capturing-browser';
+import { FileSystem } from './file';
+import { Logger } from './logger';
+import { VariantKey } from '../types';
+import { time } from './story-crawler/timer';
 
 function createRequest({
   story,
@@ -17,7 +17,7 @@ function createRequest({
   let rid;
   const base = encodeURIComponent(story.id);
   if (variantKey && variantKey.keys.length) {
-    rid = `${base}?keys=${encodeURIComponent(variantKey.keys.join(","))}`;
+    rid = `${base}?keys=${encodeURIComponent(variantKey.keys.join(','))}`;
   } else {
     rid = base;
   }

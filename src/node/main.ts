@@ -1,9 +1,9 @@
-import { StorybookServer, StoriesBrowser } from "./story-crawler";
-import { CapturingBrowser } from "./capturing-browser";
-import { filterStories } from "../util";
-import { MainOptions, RunMode } from "./types";
-import { FileSystem } from "./file";
-import { createScreenshotService } from "./screenshot-service";
+import { StorybookServer, StoriesBrowser } from './story-crawler';
+import { CapturingBrowser } from './capturing-browser';
+import { filterStories } from '../util';
+import { MainOptions, RunMode } from './types';
+import { FileSystem } from './file';
+import { createScreenshotService } from './screenshot-service';
 
 async function detectRunMode(storiesBrowser: StoriesBrowser, opt: MainOptions) {
   await storiesBrowser.page.goto(opt.serverOptions.storybookUrl);
@@ -11,7 +11,7 @@ async function detectRunMode(storiesBrowser: StoriesBrowser, opt: MainOptions) {
   const registered: boolean | undefined = await storiesBrowser.page.evaluate(
     () => (window as any).__STORYCAP_MANAGED_MODE_REGISTERED__,
   );
-  const mode: RunMode = registered ? "managed" : "simple";
+  const mode: RunMode = registered ? 'managed' : 'simple';
   opt.logger.log(`Storycap runs with ${mode} mode`);
   return mode;
 }
@@ -47,7 +47,7 @@ export async function main(opt: MainOptions) {
   const stories = filterStories(allStories, opt.include, opt.exclude);
 
   if (stories.length === 0) {
-    opt.logger.warn("There is no matched story. Check your include/exclude options.");
+    opt.logger.warn('There is no matched story. Check your include/exclude options.');
   }
 
   const workers = await bootCapturingBrowserAsWorkers(opt, mode);

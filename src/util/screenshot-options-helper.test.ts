@@ -1,28 +1,28 @@
-import { expandViewportsOption, pickupFromVariantKey } from "./screenshot-options-helper";
+import { expandViewportsOption, pickupFromVariantKey } from './screenshot-options-helper';
 
 describe(expandViewportsOption, () => {
-  it("should expand viewport and variants from viewports", () => {
+  it('should expand viewport and variants from viewports', () => {
     expect(
       expandViewportsOption({
-        viewports: ["iPad"],
+        viewports: ['iPad'],
       }),
     ).toEqual({
-      viewport: "iPad",
+      viewport: 'iPad',
       variants: {},
     });
 
     expect(
       expandViewportsOption({
-        viewports: ["iPad", "iPhone6"],
+        viewports: ['iPad', 'iPhone6'],
       }),
     ).toEqual({
-      viewport: "iPad",
+      viewport: 'iPad',
       variants: {
         iPhone6: {
-          viewport: "iPhone6",
+          viewport: 'iPhone6',
         },
       },
-      defaultVariantSuffix: "iPad",
+      defaultVariantSuffix: 'iPad',
     });
 
     expect(
@@ -68,13 +68,13 @@ describe(expandViewportsOption, () => {
           },
         },
       },
-      defaultVariantSuffix: "hoge",
+      defaultVariantSuffix: 'hoge',
     });
   });
 });
 
 describe(pickupFromVariantKey, () => {
-  it("should pass through with default variant", () => {
+  it('should pass through with default variant', () => {
     expect(
       pickupFromVariantKey(
         {
@@ -95,23 +95,23 @@ describe(pickupFromVariantKey, () => {
     });
   });
 
-  it("should create merged options with variant", () => {
+  it('should create merged options with variant', () => {
     expect(
       pickupFromVariantKey(
         {
           delay: 10,
-          viewport: "iPhone 6",
+          viewport: 'iPhone 6',
           variants: {
             k1: {
               delay: 100,
             },
           },
         },
-        { isDefault: false, keys: ["k1"] },
+        { isDefault: false, keys: ['k1'] },
       ),
     ).toEqual({
       delay: 100,
-      viewport: "iPhone 6",
+      viewport: 'iPhone 6',
     });
   });
 });

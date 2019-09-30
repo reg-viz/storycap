@@ -1,5 +1,5 @@
 export class ScreenshotTimeoutError extends Error {
-  name = "ScreenshotTimeoutError";
+  name = 'ScreenshotTimeoutError';
 
   constructor(msec: number, target: { kind?: string; story?: string }) {
     super();
@@ -8,10 +8,10 @@ export class ScreenshotTimeoutError extends Error {
 }
 
 export class InvalidCurrentStoryStateError extends Error {
-  name = "InvalidCurrentStoryStateError";
+  name = 'InvalidCurrentStoryStateError';
 
   constructor() {
     super();
-    this.message = "Fail to screenshot. The current story is not set.";
+    this.message = 'Fail to screenshot. The current story is not set.';
   }
 }

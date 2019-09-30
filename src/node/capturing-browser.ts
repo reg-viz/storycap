@@ -1,24 +1,24 @@
-import { EventEmitter } from "events";
-import { parse } from "url";
-import querystring from "querystring";
-import { Viewport } from "puppeteer";
-import { StoryPreviewBrowser, MetricsWatcher } from "./story-crawler";
+import { EventEmitter } from 'events';
+import { parse } from 'url';
+import querystring from 'querystring';
+import { Viewport } from 'puppeteer';
+import { StoryPreviewBrowser, MetricsWatcher } from './story-crawler';
 
-import { ExposedWindow, MainOptions, RunMode } from "./types";
-import { ScreenshotOptions, ScreenshotOptionsForApp, StrictScreenshotOptions } from "../client/types";
-import { ScreenshotTimeoutError, InvalidCurrentStoryStateError } from "./errors";
-import { VariantKey } from "../types";
+import { ExposedWindow, MainOptions, RunMode } from './types';
+import { ScreenshotOptions, ScreenshotOptionsForApp, StrictScreenshotOptions } from '../client/types';
+import { ScreenshotTimeoutError, InvalidCurrentStoryStateError } from './errors';
+import { VariantKey } from '../types';
 import {
   createBaseScreenshotOptions,
   mergeScreenshotOptions,
   extractAdditionalVariantKeys,
   pickupFromVariantKey,
-} from "../util/screenshot-options-helper";
-import { sleep } from "../util";
-const dd = require("puppeteer/DeviceDescriptors") as { name: string; viewport: Viewport }[];
+} from '../util/screenshot-options-helper';
+import { sleep } from '../util';
+const dd = require('puppeteer/DeviceDescriptors') as { name: string; viewport: Viewport }[];
 
 function url2StoryKey(url: string) {
-  const q = parse(url).query || "";
+  const q = parse(url).query || '';
   const { id, selectedKind: kind, selectedStory: story } = querystring.parse(q);
   if (!id) {
     if (!kind || Array.isArray(kind) || !story || Array.isArray(story)) return;
@@ -41,7 +41,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
   constructor(protected opt: MainOptions, private mode: RunMode, idx: number) {
     super(opt, idx, opt.logger);
     this.emitter = new EventEmitter();
-    this.emitter.on("error", e => {
+    this.emitter.on('error', e => {
       throw e;
     });
     this.baseScreenshotOptions = createBaseScreenshotOptions(opt);
@@ -52,7 +52,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     await this.expose();
     await this.addStyles();
     await this.openPage(
-      this.opt.serverOptions.storybookUrl + "/iframe.html?selectedKind=scszisui&selectedStory=scszisui",
+      this.opt.serverOptions.storybookUrl + '/iframe.html?selectedKind=scszisui&selectedStory=scszisui',
     );
     await this.addStyles();
     return this;
@@ -81,26 +81,26 @@ $doc.body.appendChild($style);
   }
 
   private async expose() {
-    this.page.exposeFunction("emitCatpture", (opt: any, clientStoryKey: string) =>
+    this.page.exposeFunction('emitCatpture', (opt: any, clientStoryKey: string) =>
       this.handleOnCapture(opt, clientStoryKey),
     );
-    this.page.exposeFunction("getBaseScreenshotOptions", () => this.baseScreenshotOptions);
-    this.page.exposeFunction("getCurrentStoryKey", (url: string) => url2StoryKey(url));
-    this.page.exposeFunction("getCurrentVariantKey", () => this.currentVariantKey);
+    this.page.exposeFunction('getBaseScreenshotOptions', () => this.baseScreenshotOptions);
+    this.page.exposeFunction('getCurrentStoryKey', (url: string) => url2StoryKey(url));
+    this.page.exposeFunction('getCurrentVariantKey', () => this.currentVariantKey);
   }
 
   private async handleOnCapture(opt: ScreenshotOptionsForApp, clientStoryKey: string) {
     if (!this.currentStory) {
-      this.emitter.emit("error", new InvalidCurrentStoryStateError());
+      this.emitter.emit('error', new InvalidCurrentStoryStateError());
       return;
     }
     if (this.currentStory.id !== clientStoryKey) {
-      this.debug("This options was sent from previous story", this.currentStory.id, clientStoryKey);
+      this.debug('This options was sent from previous story', this.currentStory.id, clientStoryKey);
       return;
     }
     if (this.processedStories.has(this.currentRequestId)) {
       this.debug(
-        "This story was already processed:",
+        'This story was already processed:',
         this.currentRequestId,
         this.currentStory.kind,
         this.currentStory.story,
@@ -111,14 +111,14 @@ $doc.body.appendChild($style);
     }
     this.processedStories.add(this.currentRequestId);
     this.debug(
-      "Start to process to screenshot story:",
+      'Start to process to screenshot story:',
       this.currentRequestId,
       this.currentStory.kind,
       this.currentStory.story,
       this.currentVariantKey,
       JSON.stringify(opt),
     );
-    this.emitter.emit("screenshotOptions", opt);
+    this.emitter.emit('screenshotOptions', opt);
   }
 
   private async waitScreenShotOption() {
@@ -139,7 +139,7 @@ $doc.body.appendChild($style);
         if (this.currentStoryRetryCount < this.opt.captureMaxRetryCount) {
           this.opt.logger.warn(
             `Capture timeout exceeded in ${this.opt.captureTimeout +
-              ""} msec. Retry to screenshot this story after this sequence.`,
+              ''} msec. Retry to screenshot this story after this sequence.`,
             this.currentStory.kind,
             this.currentStory.story,
           );
@@ -148,7 +148,7 @@ $doc.body.appendChild($style);
         }
         reject(new ScreenshotTimeoutError(this.opt.captureTimeout, this.currentStory));
       }, this.opt.captureTimeout);
-      this.emitter.once("screenshotOptions", cb);
+      this.emitter.once('screenshotOptions', cb);
     });
   }
 
@@ -157,11 +157,11 @@ $doc.body.appendChild($style);
       throw new InvalidCurrentStoryStateError();
     }
     let nextViewport: Viewport;
-    if (typeof opt.viewport === "string") {
+    if (typeof opt.viewport === 'string') {
       if (opt.viewport.match(/^\d+$/)) {
         nextViewport = { width: +opt.viewport, height: 600 };
       } else if (opt.viewport.match(/^\d+x\d+$/)) {
-        const [w, h] = opt.viewport.split("x");
+        const [w, h] = opt.viewport.split('x');
         nextViewport = { width: +w, height: +h };
       } else {
         const hit = dd.find(d => d.name === opt.viewport);
@@ -181,7 +181,7 @@ $doc.body.appendChild($style);
       nextViewport = opt.viewport;
     }
     if (!this.viewport || JSON.stringify(this.viewport) !== JSON.stringify(nextViewport)) {
-      this.debug("Change viewport", JSON.stringify(nextViewport));
+      this.debug('Change viewport', JSON.stringify(nextViewport));
       await this.page.setViewport(nextViewport);
       this.viewport = nextViewport;
       if (this.opt.reloadAfterChangeViewport) {
@@ -235,23 +235,23 @@ $doc.body.appendChild($style);
     this.currentVariantKey = variantKey;
     this.currentStoryRetryCount = retryCount;
     let emittedScreenshotOptions: ScreenshotOptions | undefined;
-    if (this.mode === "managed") {
+    if (this.mode === 'managed') {
       emittedScreenshotOptions = await this.waitScreenShotOption();
       if (!this.currentStory) {
         throw new InvalidCurrentStoryStateError();
       }
       if (!emittedScreenshotOptions) {
-        return { buffer: null, succeeded: false, variantKeysToPush: [], defaultVariantSuffix: "" };
+        return { buffer: null, succeeded: false, variantKeysToPush: [], defaultVariantSuffix: '' };
       }
       if (emittedScreenshotOptions.skip) {
-        return { buffer: null, succeeded: true, variantKeysToPush: [], defaultVariantSuffix: "" };
+        return { buffer: null, succeeded: true, variantKeysToPush: [], defaultVariantSuffix: '' };
       }
     } else {
       emittedScreenshotOptions = pickupFromVariantKey(this.baseScreenshotOptions, this.currentVariantKey);
     }
     const mergedScreenshotOptions = mergeScreenshotOptions(this.baseScreenshotOptions, emittedScreenshotOptions);
     const changed = await this.setViewport(mergedScreenshotOptions);
-    if (!changed) return { buffer: null, succeeded: true, variantKeysToPush: [], defaultVariantSuffix: "" };
+    if (!changed) return { buffer: null, succeeded: true, variantKeysToPush: [], defaultVariantSuffix: '' };
     await this.setHover(mergedScreenshotOptions);
     await this.setFocus(mergedScreenshotOptions);
     await this.waitBrowserMetricsStable();

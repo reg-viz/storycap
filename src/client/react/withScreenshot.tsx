@@ -1,7 +1,7 @@
-import React from "react";
-import { StoryKind, makeDecorator } from "@storybook/addons";
-import { capture, stock } from "../capture";
-import { ScreenshotOptions } from "../types";
+import React from 'react';
+import { StoryKind, makeDecorator } from '@storybook/addons';
+import { capture, stock } from '../capture';
+import { ScreenshotOptions } from '../types';
 
 type Props = {
   screenshotOptions?: Partial<ScreenshotOptions>;
@@ -26,8 +26,8 @@ class ScreenshotWrapper extends React.Component<Props> {
 const withScreenshotDecorator =
   makeDecorator &&
   makeDecorator({
-    name: "withScreenshot",
-    parameterName: "screenshot",
+    name: 'withScreenshot',
+    parameterName: 'screenshot',
     skipIfNoParametersOrOptions: false,
     allowDeprecatedUsage: true,
     wrapper: (getStory, context, { parameters, options }) => {

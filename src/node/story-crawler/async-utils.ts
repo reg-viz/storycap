@@ -9,7 +9,7 @@ export type Task<T, S> = (worker: S) => Promise<T>;
 export async function runParallel<T, S>(tasks: () => AsyncGenerator<Task<T, S>, void>, workers: S[]) {
   const results: T[] = [];
   const p = workers.length;
-  if (!p) throw new Error("No workers");
+  if (!p) throw new Error('No workers');
   const generator = tasks();
   await Promise.all(
     [...new Array(p).keys()].map(
@@ -43,7 +43,7 @@ export type QueueOptions<R, T, S> = {
   createTask(request: R, controller: QueueController<R>): Task<T, S>;
 };
 
-const cancelationToken = Symbol("cancel");
+const cancelationToken = Symbol('cancel');
 
 type Resolver<R> = {
   resolve: (req: R) => void;

@@ -1,7 +1,7 @@
-import { withScreenshot as ReactWithScreenshot } from "./react/withScreenshot";
+import { withScreenshot as ReactWithScreenshot } from './react/withScreenshot';
 
-import { noopDecorator } from "./noop";
-import { ScreenshotOptions } from "./types";
+import { noopDecorator } from './noop';
+import { ScreenshotOptions } from './types';
 
 const getStorybookEnv = () => <string>(<any>window).STORYBOOK_ENV;
 
@@ -16,7 +16,7 @@ if (storybookEnv == null) {
   withScreenshot = <WithScreenshot>noopDecorator;
 } else {
   switch (storybookEnv) {
-    case "react":
+    case 'react':
       withScreenshot = <WithScreenshot>ReactWithScreenshot;
       break;
     default:

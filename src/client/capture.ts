@@ -1,10 +1,10 @@
-import { ExposedWindow } from "../node/types";
-import { ScreenshotOptions } from "./types";
-import imagesloaded from "imagesloaded";
-import { sleep } from "../util";
-import { mergeScreenshotOptions, pickupFromVariantKey, expandViewportsOption } from "../util/screenshot-options-helper";
+import { ExposedWindow } from '../node/types';
+import { ScreenshotOptions } from './types';
+import imagesloaded from 'imagesloaded';
+import { sleep } from '../util';
+import { mergeScreenshotOptions, pickupFromVariantKey, expandViewportsOption } from '../util/screenshot-options-helper';
 
-function waitImages(enabled: boolean, selector = "body") {
+function waitImages(enabled: boolean, selector = 'body') {
   if (!enabled) return Promise.resolve();
   const elm = document.querySelector(selector);
   if (!elm) return Promise.reject();
@@ -13,10 +13,10 @@ function waitImages(enabled: boolean, selector = "body") {
 
 function waitUserFunction(waitFor: undefined | null | string | (() => Promise<any>), win: ExposedWindow) {
   if (!waitFor) return Promise.resolve();
-  if (typeof waitFor === "string") {
-    if (!win.waitFor || typeof win.waitFor !== "function") return Promise.resolve();
+  if (typeof waitFor === 'string') {
+    if (!win.waitFor || typeof win.waitFor !== 'function') return Promise.resolve();
     return win.waitFor();
-  } else if (typeof waitFor === "function") {
+  } else if (typeof waitFor === 'function') {
     return waitFor();
   } else {
     return Promise.resolve();
@@ -44,7 +44,7 @@ function consumeOptions(win: ExposedWindow, storyKey: string | undefined): Parti
 }
 
 function withExpoesdWindow(cb: (win: ExposedWindow) => any) {
-  if (typeof "window" === "undefined") return;
+  if (typeof 'window' === 'undefined') return;
   const win = window as ExposedWindow;
   if (!win.emitCatpture) return;
   return cb(win);

@@ -1,5 +1,5 @@
 export class InvalidUrlError extends Error {
-  name = " InvalidUrlError";
+  name = ' InvalidUrlError';
 
   constructor(invalidUrl: string) {
     super();
@@ -8,7 +8,7 @@ export class InvalidUrlError extends Error {
 }
 
 export class StorybookServerTimeoutError extends Error {
-  name = "ScreenshotTimeoutError";
+  name = 'ScreenshotTimeoutError';
 
   constructor(msec: number) {
     super();
@@ -17,5 +17,5 @@ export class StorybookServerTimeoutError extends Error {
 }
 
 export class NoStoriesError extends Error {
-  name = "NoStoriesError";
+  name = 'NoStoriesError';
 }

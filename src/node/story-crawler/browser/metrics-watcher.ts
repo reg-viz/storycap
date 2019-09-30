@@ -1,5 +1,5 @@
-import { Page, Metrics } from "puppeteer";
-import { sleep } from "../async-utils";
+import { Page, Metrics } from 'puppeteer';
+import { sleep } from '../async-utils';
 
 export class MetricsWatcher {
   private length = 3;
@@ -18,9 +18,9 @@ export class MetricsWatcher {
   private async check() {
     const current = await this.page.metrics();
     if (this.previous.length < this.length) return this.next(current);
-    if (this.diff("Nodes")) return this.next(current);
-    if (this.diff("RecalcStyleCount")) return this.next(current);
-    if (this.diff("LayoutCount")) return this.next(current);
+    if (this.diff('Nodes')) return this.next(current);
+    if (this.diff('RecalcStyleCount')) return this.next(current);
+    if (this.diff('LayoutCount')) return this.next(current);
     return true;
   }
 
