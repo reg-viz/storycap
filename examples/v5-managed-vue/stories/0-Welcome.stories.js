@@ -4,6 +4,15 @@ import Welcome from './Welcome';
 
 export default {
   title: 'Welcome',
+  parameters: {
+    screenshot: {
+      variants: {
+        XSMALL: {
+          viewport: 'iPhone 5',
+        },
+      },
+    },
+  },
 };
 
 export const toStorybook = () => ({
