@@ -12,7 +12,7 @@
     "build": "tsc",
     "format": "prettier --write \"src/**/*\" \"scripts/**/*\" README.md",
     "format:check": "prettier --check \"src/**/*\" \"scripts/**/*\"",
-    "lint": "eslint \"src/**/*.ts\" \"src/**/*.tsx\"",
+    "lint": "eslint \"src/**/*.ts\"",
     "clihelp": "node scripts/cli-help.js",
     "prepare": "yarn clean && yarn build && yarn clihelp",
     "jest": "jest",
