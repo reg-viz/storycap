@@ -12,6 +12,7 @@ import {
   createBaseScreenshotOptions,
   mergeScreenshotOptions,
   extractAdditionalVariantKeys,
+  pickupFromVariantKey,
 } from "../util/screenshot-options-helper";
 import { sleep } from "../util";
 const dd = require("puppeteer/DeviceDescriptors") as { name: string; viewport: Viewport }[];
@@ -33,6 +34,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
   private viewport?: Viewport;
   private emitter: EventEmitter;
   private readonly processedStories = new Set<string>();
+  private baseScreenshotOptions: StrictScreenshotOptions;
   private currentRequestId!: string;
   private currentVariantKey: VariantKey = { isDefault: true, keys: [] };
 
@@ -42,6 +44,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     this.emitter.on("error", e => {
       throw e;
     });
+    this.baseScreenshotOptions = createBaseScreenshotOptions(opt);
   }
 
   async boot() {
@@ -81,6 +84,7 @@ $doc.body.appendChild($style);
     this.page.exposeFunction("emitCatpture", (opt: any, clientStoryKey: string) =>
       this.handleOnCapture(opt, clientStoryKey),
     );
+    this.page.exposeFunction("getBaseScreenshotOptions", () => this.baseScreenshotOptions);
     this.page.exposeFunction("getCurrentStoryKey", (url: string) => url2StoryKey(url));
     this.page.exposeFunction("getCurrentVariantKey", () => this.currentVariantKey);
   }
@@ -230,24 +234,24 @@ $doc.body.appendChild($style);
     this.currentRequestId = requestId;
     this.currentVariantKey = variantKey;
     this.currentStoryRetryCount = retryCount;
-    const baseScreenshotOptions = createBaseScreenshotOptions(this.opt);
     let emittedScreenshotOptions: ScreenshotOptions | undefined;
     if (this.mode === "managed") {
       emittedScreenshotOptions = await this.waitScreenShotOption();
       if (!this.currentStory) {
         throw new InvalidCurrentStoryStateError();
       }
-      if (!emittedScreenshotOptions || emittedScreenshotOptions.skip) {
-        return { buffer: null, succeeded: !!emittedScreenshotOptions, variantKeysToPush: [] };
-      } else if (!emittedScreenshotOptions.viewport) {
-        emittedScreenshotOptions.viewport = this.opt.defaultViewport;
+      if (!emittedScreenshotOptions) {
+        return { buffer: null, succeeded: false, variantKeysToPush: [], defaultVariantSuffix: "" };
+      }
+      if (emittedScreenshotOptions.skip) {
+        return { buffer: null, succeeded: true, variantKeysToPush: [], defaultVariantSuffix: "" };
       }
     } else {
-      emittedScreenshotOptions = {};
+      emittedScreenshotOptions = pickupFromVariantKey(this.baseScreenshotOptions, this.currentVariantKey);
     }
-    const mergedScreenshotOptions = mergeScreenshotOptions(baseScreenshotOptions, emittedScreenshotOptions);
+    const mergedScreenshotOptions = mergeScreenshotOptions(this.baseScreenshotOptions, emittedScreenshotOptions);
     const changed = await this.setViewport(mergedScreenshotOptions);
-    if (!changed) return { buffer: null, succeeded: true, variantKeysToPush: [] };
+    if (!changed) return { buffer: null, succeeded: true, variantKeysToPush: [], defaultVariantSuffix: "" };
     await this.setHover(mergedScreenshotOptions);
     await this.setFocus(mergedScreenshotOptions);
     await this.waitBrowserMetricsStable();
@@ -258,6 +262,11 @@ $doc.body.appendChild($style);
       ? extractAdditionalVariantKeys(mergedScreenshotOptions)
       : [];
     const buffer = await this.page.screenshot({ fullPage: emittedScreenshotOptions.fullPage });
-    return { buffer, succeeded: true, variantKeysToPush };
+    return {
+      buffer,
+      succeeded: true,
+      variantKeysToPush,
+      defaultVariantSuffix: emittedScreenshotOptions.defaultVariantSuffix,
+    };
   }
 }

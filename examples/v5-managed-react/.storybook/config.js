@@ -8,9 +8,17 @@ function loadStories() {
 addDecorator(withScreenshot);
 addParameters({
   screenshot: {
-    viewport: {
-      width: 1200,
-      height: 800,
+    viewports: {
+      LARGE: {
+        width: 1200,
+        height: 800,
+      },
+      SMALL: {
+        width: 375,
+        height: 667,
+        deviceScaleFactor: 2,
+        isMobile: true,
+      },
     },
   },
 });

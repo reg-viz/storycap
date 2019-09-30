@@ -80,7 +80,7 @@ Next, register Addon.
 
 ```javascript
 // Other addons...
-import 'storybook-chrome-screenshot/register';
+import "storybook-chrome-screenshot/register";
 ```
 
 ### Register initialization process
@@ -90,8 +90,8 @@ Add [initScreenshot](#initscreenshot) decorator. It has to be **before** the fir
 **Example: .storybook/config.js**
 
 ```javascript
-import { addDecorator } from '@storybook/react';
-import { initScreenshot } from 'storybook-chrome-screenshot';
+import { addDecorator } from "@storybook/react";
+import { initScreenshot } from "storybook-chrome-screenshot";
 
 addDecorator(initScreenshot());
 ```
@@ -103,12 +103,12 @@ Create a story with [withScreenshot](#withscreenshotoptions--).
 #### React
 
 ```javascript
-import React from 'react';
-import { storiesOf } from '@storybook/react';
-import { withScreenshot } from 'storybook-chrome-screenshot';
-import Button from './Button';
+import React from "react";
+import { storiesOf } from "@storybook/react";
+import { withScreenshot } from "storybook-chrome-screenshot";
+import Button from "./Button";
 
-storiesOf('Button', module).add('with text', withScreenshot()(() => <Button>Text</Button>));
+storiesOf("Button", module).add("with text", withScreenshot()(() => <Button>Text</Button>));
 ```
 
 #### Angular
@@ -116,18 +116,18 @@ storiesOf('Button', module).add('with text', withScreenshot()(() => <Button>Text
 This function works well even if you use Angular:
 
 ```javascript
-import { storiesOf } from '@storybook/angular';
-import { withScreenshot } from 'storybook-chrome-screenshot';
-import { MyButtonComponent } from '../src/app/my-button/my-button.component';
+import { storiesOf } from "@storybook/angular";
+import { withScreenshot } from "storybook-chrome-screenshot";
+import { MyButtonComponent } from "../src/app/my-button/my-button.component";
 
-storiesOf('Button', module).add(
-  'with custom label',
+storiesOf("Button", module).add(
+  "with custom label",
   withScreenshot()(() => ({
     component: MyButtonComponent,
     props: {
-      text: 'Text'
-    }
-  }))
+      text: "Text",
+    },
+  })),
 );
 ```
 
@@ -136,29 +136,29 @@ storiesOf('Button', module).add(
 Of course, Vue.js works the same way:
 
 ```javascript
-import { storiesOf } from '@storybook/vue';
-import { withScreenshot } from 'storybook-chrome-screenshot';
-import MyButton from './Button.vue';
+import { storiesOf } from "@storybook/vue";
+import { withScreenshot } from "storybook-chrome-screenshot";
+import MyButton from "./Button.vue";
 
-storiesOf('MyButton', module)
+storiesOf("MyButton", module)
   .add(
-    'pre-registered component',
+    "pre-registered component",
     withScreenshot()(() => ({
-      template: '<my-button :rounded="true">A Button with rounded edges</my-button>'
-    }))
+      template: '<my-button :rounded="true">A Button with rounded edges</my-button>',
+    })),
   )
   .add(
-    'template + component',
+    "template + component",
     withScreenshot()(() => ({
       components: { MyButton },
-      template: '<my-button>Button rendered in a template</my-button>'
-    }))
+      template: "<my-button>Button rendered in a template</my-button>",
+    })),
   )
   .add(
-    'render + component',
+    "render + component",
     withScreenshot()(() => ({
-      render: (h) => h(MyButton, { props: { color: 'pink' } }, ['renders component: MyButton'])
-    }))
+      render: h => h(MyButton, { props: { color: "pink" } }, ["renders component: MyButton"]),
+    })),
   );
 ```
 
@@ -187,17 +187,17 @@ $ npm run screenshot
 Or by using `addDecorator()`, it is possible to shotting all the decorated stories.
 
 ```javascript
-import { storiesOf } from '@storybook/react';
-import { withScreenshot } from 'storybook-chrome-screenshot';
+import { storiesOf } from "@storybook/react";
+import { withScreenshot } from "storybook-chrome-screenshot";
 
-storiesOf('Button', module)
+storiesOf("Button", module)
   .addDecorator(
     withScreenshot({
       /* ...options */
-    })
+    }),
   )
-  .add('with primary', () => <Button primary>Primary Button</Button>)
-  .add('with secondary', () => <Button secondary>Secondary Button</Button>);
+  .add("with primary", () => <Button primary>Primary Button</Button>)
+  .add("with secondary", () => <Button secondary>Secondary Button</Button>);
 ```
 
 ## API
@@ -211,8 +211,8 @@ This decorator has to be added to every story. Addon uses it to understand when 
 **Example: .storybook/config.js**
 
 ```javascript
-import { addDecorator } from '@storybook/react';
-import { initScreenshot } from 'storybook-chrome-screenshot';
+import { addDecorator } from "@storybook/react";
+import { initScreenshot } from "storybook-chrome-screenshot";
 
 addDecorator(initScreenshot());
 ```
@@ -276,14 +276,14 @@ It is useful for changing Viewport of all stories.
 **Example: .storybook/config.js**
 
 ```javascript
-import { setScreenshotOptions } from 'storybook-chrome-screenshot';
+import { setScreenshotOptions } from "storybook-chrome-screenshot";
 
 setScreenshotOptions({
   viewport: {
     width: 768,
     height: 400,
-    deviceScaleFactor: 2
-  }
+    deviceScaleFactor: 2,
+  },
 });
 ```
 
@@ -292,14 +292,16 @@ setScreenshotOptions({
 Get the current option used with [withScreenshot()](#withscreenshotoptions--).
 
 ```javascript
-import { getScreenshotOptions } from 'storybook-chrome-screenshot';
+import { getScreenshotOptions } from "storybook-chrome-screenshot";
 
 console.log(getScreenshotOptions());
 // => Current screenshot options...
 ```
 
 ## Command Line Options
+
 <!-- inject:clihelp -->
+
 ```txt
 usage: storycap [options] storybook_url
 
@@ -311,7 +313,7 @@ Options:
   --flat, -f                   Flatten output filename.                                       [boolean] [default: false]
   --include, -i                Including stories name rule.                                        [array] [default: []]
   --exclude, -e                Excluding stories name rule.                                        [array] [default: []]
-  --viewport, -V               Default viewport.                                           [string] [default: "800x600"]
+  --viewport, -V               Viewport.                                                  [array] [default: ["800x600"]]
   --disableCssAnimation        Disable CSS animation and transition.                           [boolean] [default: true]
   --silent                                                                                    [boolean] [default: false]
   --verbose                                                                                   [boolean] [default: false]
@@ -325,11 +327,13 @@ Options:
 
 Examples:
   storycap http://localshot:9009
+  storycap http://localshot:9009 -V 1024x768 -V 320x568
   storycap http://localshot:9009 -i "some-kind/a-story"
   storycap http://example.com/your-storybook -e "**/default" -V iPad
   storycap --serverCmd "start-storybook -p 3000" http://localshot:3000
 
 ```
+
 <!-- endinject -->
 
 ## Tips
@@ -342,9 +346,9 @@ You can create `./disable-animation.js` and disable CSS Animation with the next 
 
 ```javascript
 (() => {
-  const $iframe = document.getElementById('storybook-preview-iframe');
+  const $iframe = document.getElementById("storybook-preview-iframe");
   const $doc = $iframe.contentDocument;
-  const $style = $doc.createElement('style');
+  const $style = $doc.createElement("style");
 
   $style.innerHTML = `* {
     transition: none !important;
@@ -370,27 +374,27 @@ For example, the following setting makes the screenshot function wait for firing
 
 ```html
 <!-- ./storybook/preview-head.html -->
-<link rel="preload" href="/some-heavy-asset.woff" as="font" onload="this.setAttribute('loaded', 'loaded')">
+<link rel="preload" href="/some-heavy-asset.woff" as="font" onload="this.setAttribute('loaded', 'loaded')" />
 <script>
-function fontLoading() {
-  const loaded = () => !!document.querySelector('link[rel="preload"][loaded="loaded"]');
-  if (loaded()) return Promise.resolve();
-  return new Promise((resolve, reject) => {
-    const id = setInterval(() => {
-      if (!loaded()) return;
-      clearInterval(id);
-      resolve();
-    }, 50);
-  });
-}
+  function fontLoading() {
+    const loaded = () => !!document.querySelector('link[rel="preload"][loaded="loaded"]');
+    if (loaded()) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const id = setInterval(() => {
+        if (!loaded()) return;
+        clearInterval(id);
+        resolve();
+      }, 50);
+    });
+  }
 </script>
 ```
 
 ```javascript
-import { setScreenshotOptions } from 'storybook-chrome-screenshot';
+import { setScreenshotOptions } from "storybook-chrome-screenshot";
 
 setScreenshotOptions({
-  waitFor: 'fontLoading',
+  waitFor: "fontLoading",
 });
 ```
 

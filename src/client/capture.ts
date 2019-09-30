@@ -2,8 +2,7 @@ import { ExposedWindow } from "../node/types";
 import { ScreenshotOptions } from "./types";
 import imagesloaded from "imagesloaded";
 import { sleep } from "../util";
-import { defaultScreenshotOptions } from "./default-screenshot-options";
-import { mergeScreenshotOptions, pickupFromVariantKey } from "../util/screenshot-options-helper";
+import { mergeScreenshotOptions, pickupFromVariantKey, expandViewportsOption } from "../util/screenshot-options-helper";
 
 function waitImages(enabled: boolean, selector = "body") {
   if (!enabled) return Promise.resolve();
@@ -59,14 +58,18 @@ export function stock(opt: Partial<ScreenshotOptions> = {}) {
 
 export function capture() {
   withExpoesdWindow(win => {
-    Promise.all([win.getCurrentStoryKey(location.href), win.getCurrentVariantKey()]).then(([storyKey, vk]) => {
+    Promise.all([
+      win.getBaseScreenshotOptions(),
+      win.getCurrentStoryKey(location.href),
+      win.getCurrentVariantKey(),
+    ]).then(([baseScreenshotOptions, storyKey, vk]) => {
       if (!storyKey) return;
       const options = consumeOptions(win, storyKey);
       if (!options) return;
       const scOpt = pickupFromVariantKey(
         options.reduce(
-          (acc: ScreenshotOptions, opt: ScreenshotOptions) => mergeScreenshotOptions(acc, opt),
-          defaultScreenshotOptions,
+          (acc: ScreenshotOptions, opt: ScreenshotOptions) => mergeScreenshotOptions(acc, expandViewportsOption(opt)),
+          baseScreenshotOptions,
         ),
         vk,
       );

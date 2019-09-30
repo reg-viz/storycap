@@ -1,4 +1,4 @@
-import { ScreenshotOptions } from "../client/types";
+import { ScreenshotOptions, StrictScreenshotOptions } from "../client/types";
 import { Logger } from "./logger";
 import { StorybookServerOptions } from "./story-crawler";
 import { VariantKey } from "../types";
@@ -7,6 +7,7 @@ export type ExposedWindow = typeof window & {
   emitCatpture(opt: ScreenshotOptions, clientStoryKey: string): void;
   waitFor?: () => Promise<any>;
   requestIdleCallback(cb: Function, opt?: { timeout: number }): void;
+  getBaseScreenshotOptions: () => Promise<StrictScreenshotOptions>;
   getCurrentStoryKey: (url: string) => Promise<string | undefined>;
   getCurrentVariantKey: () => Promise<VariantKey>;
   optionStore?: { [storyKey: string]: (Partial<ScreenshotOptions>)[] };
@@ -19,7 +20,7 @@ export interface MainOptions {
   serverOptions: StorybookServerOptions;
   captureTimeout: number;
   captureMaxRetryCount: number;
-  defaultViewport: string;
+  viewports: string[];
   viewportDelay: number;
   reloadAfterChangeViewport: boolean;
   outDir: string;
