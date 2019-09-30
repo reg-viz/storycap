@@ -7,6 +7,8 @@ export const defaultScreenshotOptions = {
   waitFor: "",
   fullPage: true,
   skip: false,
+  focus: "",
+  hover: "",
   variants: {},
 } as const;
 

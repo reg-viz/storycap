@@ -12,3 +12,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.my-button {
+  height: 20px;
+  border: 1px solid #ddd;
+}
