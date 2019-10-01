@@ -1,4 +1,4 @@
-import { expandViewportsOption, pickupFromVariantKey, extractAdditionalVariantKeys } from './screenshot-options-helper';
+import { expandViewportsOption, pickupFromVariantKey, extractVariantKeys } from './screenshot-options-helper';
 
 describe(expandViewportsOption, () => {
   it('should expand viewport and variants from viewports', () => {
@@ -73,14 +73,14 @@ describe(expandViewportsOption, () => {
   });
 });
 
-describe(extractAdditionalVariantKeys, () => {
+describe(extractVariantKeys, () => {
   it('should return an empty array when options has no variants', () => {
-    expect(extractAdditionalVariantKeys({})).toEqual([null, []]);
+    expect(extractVariantKeys({})).toEqual([null, []]);
   });
 
   it('should extract variant keys from simple variants', () => {
     expect(
-      extractAdditionalVariantKeys({
+      extractVariantKeys({
         variants: {
           a: {},
         },
@@ -90,7 +90,7 @@ describe(extractAdditionalVariantKeys, () => {
 
   it('should extract variant keys expanding extension others', () => {
     expect(
-      extractAdditionalVariantKeys({
+      extractVariantKeys({
         variants: {
           a: {},
           b: {
@@ -114,7 +114,7 @@ describe(extractAdditionalVariantKeys, () => {
 
   it('should return keys with defaultVariantSuffix', () => {
     expect(
-      extractAdditionalVariantKeys({
+      extractVariantKeys({
         variants: {
           a: {
             extends: 'root',
@@ -127,7 +127,7 @@ describe(extractAdditionalVariantKeys, () => {
 
   it('should return invalid reason when target variant does not exist', () => {
     expect(
-      extractAdditionalVariantKeys({
+      extractVariantKeys({
         variants: {
           a: {},
           c: {
@@ -141,13 +141,13 @@ describe(extractAdditionalVariantKeys, () => {
         from: 'c',
         to: 'b',
       },
-      null,
+      [],
     ]);
   });
 
   it('should return invalid reason when circular reference', () => {
     expect(
-      extractAdditionalVariantKeys({
+      extractVariantKeys({
         variants: {
           a: {
             extends: 'c',
@@ -165,7 +165,7 @@ describe(extractAdditionalVariantKeys, () => {
         type: 'circular',
         refs: ['c', 'a', 'b', 'c'],
       },
-      null,
+      [],
     ]);
   });
 });

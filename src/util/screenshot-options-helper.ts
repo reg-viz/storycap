@@ -95,7 +95,7 @@ export type VariantKeyNotFound = {
 
 export type InvalidVariantKeysReference = CircularVariantRef | VariantKeyNotFound;
 
-export function extractAdditionalVariantKeys({
+export function extractVariantKeys({
   variants,
   defaultVariantSuffix,
 }: ScreenshotOptions): [InvalidVariantKeysReference | null, VariantKey[]] {
