@@ -23,7 +23,7 @@ export interface ScreenshotOptionFragments {
 }
 
 export interface ScreenshotOptionFragmentsForVariant extends ScreenshotOptionFragments {
-  followWith?: string[];
+  extends?: string | string[];
 }
 
 export interface ScreenshotOptions extends ScreenshotOptionFragments {
