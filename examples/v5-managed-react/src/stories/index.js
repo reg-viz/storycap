@@ -52,6 +52,7 @@ storiesOf('MyButton', module)
     screenshot: {
       variants: {
         hover: {
+          extends: ['LARGE', 'SMALL'],
           hover: '.my-button',
         },
       },

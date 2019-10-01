@@ -11,7 +11,7 @@ import { VariantKey } from '../types';
 import {
   createBaseScreenshotOptions,
   mergeScreenshotOptions,
-  extractAdditionalVariantKeys,
+  extractVariantKeys,
   pickupFromVariantKey,
 } from '../util/screenshot-options-helper';
 import { sleep } from '../util';
@@ -274,9 +274,21 @@ $doc.body.appendChild($style);
     await this.page.evaluate(
       () => new Promise(res => (window as ExposedWindow).requestIdleCallback(() => res(), { timeout: 3000 })),
     );
-    const variantKeysToPush = this.currentVariantKey.isDefault
-      ? extractAdditionalVariantKeys(mergedScreenshotOptions)
-      : [];
+    const [invalidReason, keys] = extractVariantKeys(mergedScreenshotOptions);
+    if (invalidReason) {
+      if (invalidReason.type === 'notFound') {
+        this.logger.warn(
+          `Invalid variants. The variant key '${invalidReason.to}' does not exist(story id: ${this.currentStory!.id}).`,
+        );
+      } else if (invalidReason.type === 'circular') {
+        this.logger.warn(
+          `Invalid variants. Reference ${invalidReason.refs.join(' -> ')} is circular(story id: ${
+            this.currentStory!.id
+          }).`,
+        );
+      }
+    }
+    const variantKeysToPush = this.currentVariantKey.isDefault ? keys : [];
     const buffer = await this.page.screenshot({ fullPage: emittedScreenshotOptions.fullPage });
     await this.resetIfTouched();
     return {

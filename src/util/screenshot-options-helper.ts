@@ -82,9 +82,63 @@ export function mergeScreenshotOptions<T extends ScreenshotOptions>(base: T, fra
   return ret;
 }
 
-export function extractAdditionalVariantKeys<T extends ScreenshotOptions>(options: T): VariantKey[] {
-  if (!options.variants) return [];
-  return Object.keys(options.variants).map(k => ({ isDefault: false, keys: [k] }));
+export type CircularVariantRef = {
+  type: 'circular';
+  refs: string[];
+};
+
+export type VariantKeyNotFound = {
+  type: 'notFound';
+  from: string;
+  to: string;
+};
+
+export type InvalidVariantKeysReference = CircularVariantRef | VariantKeyNotFound;
+
+export function extractVariantKeys({
+  variants,
+  defaultVariantSuffix,
+}: ScreenshotOptions): [InvalidVariantKeysReference | null, VariantKey[]] {
+  if (!variants) return [null, []];
+  let invalidReason: InvalidVariantKeysReference | undefined = undefined;
+  const ret = Object.keys(variants).reduce(
+    (acc, key) => {
+      const keysList: string[][] = [];
+      const getParentKeys = (currentKey: string, childrenKeys: string[] = []): boolean => {
+        if (defaultVariantSuffix && defaultVariantSuffix === currentKey) {
+          keysList.push([currentKey, ...childrenKeys]);
+          return true;
+        }
+        if (!variants[currentKey]) {
+          invalidReason = {
+            type: 'notFound',
+            from: childrenKeys[0],
+            to: currentKey,
+          };
+          return false;
+        }
+        if (childrenKeys.find(k => k === currentKey)) {
+          invalidReason = {
+            type: 'circular',
+            refs: [currentKey, ...childrenKeys],
+          };
+          return false;
+        }
+        const parent = variants![currentKey].extends;
+        const parentKeys = Array.isArray(parent) ? parent : typeof parent === 'string' ? [parent] : [];
+        if (!parentKeys.length) {
+          keysList.push([currentKey, ...childrenKeys]);
+          return true;
+        }
+        return parentKeys.every(pk => getParentKeys(pk, [currentKey, ...childrenKeys]));
+      };
+      getParentKeys(key);
+      return [...acc, ...keysList.map(keys => ({ isDefault: false, keys }))];
+    },
+    [] as VariantKey[],
+  );
+  if (!invalidReason) return [null, ret];
+  return [invalidReason, []];
 }
 
 export function pickupFromVariantKey(options: ScreenshotOptions, vk: VariantKey): ScreenshotOptions {
@@ -92,5 +146,8 @@ export function pickupFromVariantKey(options: ScreenshotOptions, vk: VariantKey)
   const base = Object.assign({}, options);
   const variants = base.variants || {};
   delete base.variants;
-  return vk.keys.reduce((acc: ScreenshotOptionFragments, key) => mergeScreenshotOptions(acc, variants[key]), base);
+  const offset = vk.keys[0] && vk.keys[0] === options.defaultVariantSuffix ? 1 : 0;
+  return vk.keys
+    .slice(offset)
+    .reduce((acc: ScreenshotOptionFragments, key) => mergeScreenshotOptions(acc, variants[key]), base);
 }
