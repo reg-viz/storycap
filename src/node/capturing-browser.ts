@@ -261,6 +261,7 @@ $doc.body.appendChild($style);
         return { buffer: null, succeeded: true, variantKeysToPush: [], defaultVariantSuffix: '' };
       }
     } else {
+      await sleep(this.opt.delay);
       emittedScreenshotOptions = pickupFromVariantKey(this.baseScreenshotOptions, this.currentVariantKey);
     }
     const mergedScreenshotOptions = mergeScreenshotOptions(this.baseScreenshotOptions, emittedScreenshotOptions);

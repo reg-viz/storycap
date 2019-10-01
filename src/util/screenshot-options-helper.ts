@@ -2,7 +2,6 @@ import { StrictScreenshotOptions, ScreenshotOptions, ScreenshotOptionFragments }
 import { VariantKey } from '../types';
 
 export const defaultScreenshotOptions = {
-  delay: 0,
   waitImages: true,
   waitFor: '',
   fullPage: true,
@@ -35,10 +34,17 @@ export function expandViewportsOption(options: ScreenshotOptions) {
   return ret;
 }
 
-export function createBaseScreenshotOptions({ viewports }: { viewports: string[] }): StrictScreenshotOptions {
+export function createBaseScreenshotOptions({
+  delay,
+  viewports,
+}: {
+  delay: number;
+  viewports: string[];
+}): StrictScreenshotOptions {
   if (viewports.length > 1) {
     return {
       ...defaultScreenshotOptions,
+      delay,
       viewport: viewports[0],
       variants: viewports.slice(1).reduce((acc, vp) => ({ ...acc, [vp]: { viewport: vp } }), {}),
       defaultVariantSuffix: viewports[0],
@@ -46,6 +52,7 @@ export function createBaseScreenshotOptions({ viewports }: { viewports: string[]
   } else {
     return {
       ...defaultScreenshotOptions,
+      delay,
       viewport: viewports[0],
       defaultVariantSuffix: '',
     };

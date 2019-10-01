@@ -21,6 +21,7 @@ export interface MainOptions {
   serverOptions: StorybookServerOptions;
   captureTimeout: number;
   captureMaxRetryCount: number;
+  delay: number;
   viewports: string[];
   viewportDelay: number;
   reloadAfterChangeViewport: boolean;

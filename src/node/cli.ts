@@ -17,6 +17,7 @@ function createOptions(): MainOptions {
     .option('flat', { boolean: true, alias: 'f', default: false, description: 'Flatten output filename.' })
     .option('include', { array: true, alias: 'i', default: [], description: 'Including stories name rule.' })
     .option('exclude', { array: true, alias: 'e', default: [], description: 'Excluding stories name rule.' })
+    .option('delay', { number: true, default: 0, description: 'Waiting time [msec] before screenshot for each story.' })
     .option('viewport', { array: true, alias: 'V', default: ['800x600'], description: 'Viewport.' })
     .option('disableCssAnimation', {
       boolean: true,
@@ -66,6 +67,7 @@ function createOptions(): MainOptions {
     flat,
     include,
     exclude,
+    delay,
     viewport,
     parallel,
     silent,
@@ -90,6 +92,7 @@ function createOptions(): MainOptions {
     flat,
     include,
     exclude,
+    delay,
     viewports: viewport,
     parallel,
     captureTimeout,
