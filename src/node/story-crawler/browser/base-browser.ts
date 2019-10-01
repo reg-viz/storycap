@@ -1,8 +1,8 @@
-import { launch, Browser as PuppeteerBrowser, Page } from 'puppeteer';
+import { launch, Browser as PuppeteerBrowser, Page, LaunchOptions } from 'puppeteer';
 import { sleep } from '../async-utils';
 
 export interface BaseBrowserOptions {
-  showBrowser?: boolean;
+  launchOptions?: LaunchOptions;
 }
 
 export class BaseBrowser {
@@ -12,10 +12,12 @@ export class BaseBrowser {
   constructor(protected opt: BaseBrowserOptions) {}
 
   async boot() {
-    this.browser = await launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      headless: !this.opt.showBrowser,
-    });
+    this.browser = await launch(
+      this.opt.launchOptions || {
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        headless: false,
+      },
+    );
     this._page = await this.browser.newPage();
     return this;
   }
