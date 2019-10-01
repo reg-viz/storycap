@@ -31,7 +31,7 @@ export async function main(opt: MainOptions) {
 
   const storiesBrowser = new StoriesBrowser(
     {
-      showBrowser: opt.showBrowser,
+      launchOptions: opt.launchOptions,
       storybookUrl: opt.serverOptions.storybookUrl,
     },
     opt.logger,
@@ -54,7 +54,7 @@ export async function main(opt: MainOptions) {
 
   await createScreenshotService({ workers, stories, fileSystem, logger: opt.logger }).execute();
 
-  if (opt.showBrowser) return;
+  if (!opt.launchOptions.headless) return;
 
   await Promise.all(workers.map(worker => worker.close()));
 

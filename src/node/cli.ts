@@ -49,6 +49,11 @@ function createOptions(): MainOptions {
       default: false,
       description: 'Whether to reload after viewport changed.',
     })
+    .option('puppeteerLaunchConfig', {
+      string: true,
+      default: '{ "args": ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"] }',
+      description: 'JSON string of launch config for Puppeteer.',
+    })
     .example('storycap http://localshot:9009', '')
     .example('storycap http://localshot:9009 -V 1024x768 -V 320x568', '')
     .example('storycap http://localshot:9009 -i "some-kind/a-story"', '')
@@ -80,7 +85,21 @@ function createOptions(): MainOptions {
     viewportDelay,
     reloadAfterChangeViewport,
     disableCssAnimation,
+    puppeteerLaunchConfig: puppeteerLaunchConfigString,
   } = setting.argv;
+
+  const logger = new Logger(verbose ? 'verbose' : silent ? 'silent' : 'normal');
+
+  let puppeteerLaunchConfig: string;
+  try {
+    puppeteerLaunchConfig = {
+      headless: process.env['STORYCAP_SHOW'] !== 'enabled',
+      ...JSON.parse(puppeteerLaunchConfigString),
+    };
+  } catch (error) {
+    logger.error(error);
+    throw error;
+  }
 
   const opt = {
     serverOptions: {
@@ -101,8 +120,8 @@ function createOptions(): MainOptions {
     viewportDelay,
     reloadAfterChangeViewport,
     disableCssAnimation,
-    showBrowser: process.env['STORYCAP_SHOW'] === 'enabled',
-    logger: new Logger(verbose ? 'verbose' : silent ? 'silent' : 'normal'),
+    launchOptions: puppeteerLaunchConfig,
+    logger,
   } as MainOptions;
   return opt;
 }

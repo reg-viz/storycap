@@ -17,7 +17,6 @@ export type ExposedWindow = typeof window & {
 export type RunMode = 'simple' | 'managed';
 
 export interface MainOptions {
-  showBrowser: boolean;
   serverOptions: StorybookServerOptions;
   captureTimeout: number;
   captureMaxRetryCount: number;
@@ -32,5 +31,6 @@ export interface MainOptions {
   disableCssAnimation: boolean;
   parallel: number;
   metricsWatchRetryCount: number;
+  launchOptions: any;
   logger: Logger;
 }
