@@ -37,6 +37,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
   private baseScreenshotOptions: StrictScreenshotOptions;
   private currentRequestId!: string;
   private currentVariantKey: VariantKey = { isDefault: true, keys: [] };
+  private touched = false;
 
   constructor(protected opt: MainOptions, private mode: RunMode, idx: number) {
     super(opt, idx, opt.logger);
@@ -87,9 +88,20 @@ $doc.body.appendChild($style);
     this.page.exposeFunction('getBaseScreenshotOptions', () => this.baseScreenshotOptions);
     this.page.exposeFunction('getCurrentStoryKey', (url: string) => url2StoryKey(url));
     this.page.exposeFunction('getCurrentVariantKey', () => this.currentVariantKey);
+    this.page.exposeFunction('waitBrowserMetricsStable', () => this.waitBrowserMetricsStable('preEmit'));
+  }
+
+  private async resetIfTouched() {
+    const story = this.currentStory;
+    if (!this.touched || !story) return;
+    this.debug('Reset story because page state got dirty in this request.', this.currentRequestId);
+    await this.setCurrentStory(story, { forceRerender: true });
+    this.touched = false;
+    return;
   }
 
   private async handleOnCapture(opt: ScreenshotOptionsForApp, clientStoryKey: string) {
+    if (this.touched) return;
     if (!this.currentStory) {
       this.emitter.emit('error', new InvalidCurrentStoryStateError());
       return;
@@ -207,6 +219,7 @@ $doc.body.appendChild($style);
     if (!screenshotOptions.hover) return;
     await this.warnIfTargetElementNotFound(screenshotOptions.hover);
     await this.page.hover(screenshotOptions.hover);
+    this.touched = true;
     return;
   }
 
@@ -214,14 +227,15 @@ $doc.body.appendChild($style);
     if (!screenshotOptions.focus) return;
     await this.warnIfTargetElementNotFound(screenshotOptions.focus);
     await this.page.focus(screenshotOptions.focus);
+    this.touched = true;
     return;
   }
 
-  private async waitBrowserMetricsStable() {
+  private async waitBrowserMetricsStable(phase: 'preEmit' | 'postEmit') {
     const mw = new MetricsWatcher(this.page, this.opt.metricsWatchRetryCount);
-    const count = await mw.waitForStable();
-    this.debug(`Retry to watch metrics ${this.opt.metricsWatchRetryCount - count} times.`);
-    if (count <= 0) {
+    const checkCountUntillStable = await mw.waitForStable();
+    this.debug(`[${phase}] Browser metrics got stable in ${checkCountUntillStable} times checks.`);
+    if (checkCountUntillStable >= this.opt.metricsWatchRetryCount) {
       this.opt.logger.warn(
         `Metrics is not stable while ${this.opt.metricsWatchRetryCount} times. ${this.opt.logger.color.yellow(
           JSON.stringify(this.currentStory),
@@ -250,11 +264,12 @@ $doc.body.appendChild($style);
       emittedScreenshotOptions = pickupFromVariantKey(this.baseScreenshotOptions, this.currentVariantKey);
     }
     const mergedScreenshotOptions = mergeScreenshotOptions(this.baseScreenshotOptions, emittedScreenshotOptions);
+    this.touched = false;
     const changed = await this.setViewport(mergedScreenshotOptions);
     if (!changed) return { buffer: null, succeeded: true, variantKeysToPush: [], defaultVariantSuffix: '' };
     await this.setHover(mergedScreenshotOptions);
     await this.setFocus(mergedScreenshotOptions);
-    await this.waitBrowserMetricsStable();
+    await this.waitBrowserMetricsStable('postEmit');
     await this.page.evaluate(
       () => new Promise(res => (window as ExposedWindow).requestIdleCallback(() => res(), { timeout: 3000 })),
     );
@@ -262,6 +277,7 @@ $doc.body.appendChild($style);
       ? extractAdditionalVariantKeys(mergedScreenshotOptions)
       : [];
     const buffer = await this.page.screenshot({ fullPage: emittedScreenshotOptions.fullPage });
+    await this.resetIfTouched();
     return {
       buffer,
       succeeded: true,

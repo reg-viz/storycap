@@ -34,7 +34,7 @@ function pushOptions(win: ExposedWindow, storyKey: string | undefined, opt: Part
   win.optionStore[storyKey].push(opt);
 }
 
-function consumeOptions(win: ExposedWindow, storyKey: string | undefined): Partial<ScreenshotOptions>[] | null {
+function consumeOptions(win: ExposedWindow, storyKey: string | undefined): ScreenshotOptions[] | null {
   if (!storyKey) return null;
   if (!win.optionStore) return null;
   if (!win.optionStore[storyKey]) return null;
@@ -50,36 +50,35 @@ function withExpoesdWindow(cb: (win: ExposedWindow) => any) {
   return cb(win);
 }
 
-export function stock(opt: Partial<ScreenshotOptions> = {}) {
-  withExpoesdWindow(win => {
-    win.getCurrentStoryKey(location.href).then(storyKey => pushOptions(win, storyKey, opt));
-  });
+function stock(opt: Partial<ScreenshotOptions> = {}) {
+  withExpoesdWindow(win => win.getCurrentStoryKey(location.href).then(storyKey => pushOptions(win, storyKey, opt)));
 }
 
-export function capture() {
-  withExpoesdWindow(win => {
-    Promise.all([
+function capture() {
+  withExpoesdWindow(async win => {
+    await win.waitBrowserMetricsStable();
+    const [baseScreenshotOptions, storyKey, variantKey] = await Promise.all([
       win.getBaseScreenshotOptions(),
       win.getCurrentStoryKey(location.href),
       win.getCurrentVariantKey(),
-    ]).then(([baseScreenshotOptions, storyKey, vk]) => {
-      if (!storyKey) return;
-      const options = consumeOptions(win, storyKey);
-      if (!options) return;
-      const scOpt = pickupFromVariantKey(
-        options.reduce(
-          (acc: ScreenshotOptions, opt: ScreenshotOptions) => mergeScreenshotOptions(acc, expandViewportsOption(opt)),
-          baseScreenshotOptions,
-        ),
-        vk,
-      );
-      if (scOpt.skip) win.emitCatpture(scOpt, storyKey);
-      Promise.resolve()
-        .then(() => waitImages(!!scOpt.waitImages))
-        .then(() => sleep(scOpt.delay))
-        .then(() => waitUserFunction(scOpt.waitFor, win))
-        .then(() => waitNextIdle(win))
-        .then(() => win.emitCatpture(scOpt, storyKey));
-    });
+    ]);
+    if (!storyKey) return;
+    const options = consumeOptions(win, storyKey);
+    if (!options) return;
+    const scOpt = pickupFromVariantKey(
+      options.reduce((acc, opt) => mergeScreenshotOptions(acc, expandViewportsOption(opt)), baseScreenshotOptions),
+      variantKey,
+    );
+    if (scOpt.skip) win.emitCatpture(scOpt, storyKey);
+    await waitImages(!!scOpt.waitImages);
+    await sleep(scOpt.delay);
+    await waitUserFunction(scOpt.waitFor, win);
+    await waitNextIdle(win);
+    await win.emitCatpture(scOpt, storyKey);
   });
+}
+
+export function triggerScreenshot(screenshotOptions: ScreenshotOptions) {
+  stock(screenshotOptions);
+  Promise.resolve().then(capture);
 }
