@@ -1,11 +1,11 @@
 {
   "name": "storycap",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "description": "A Storybook addon, Save the screenshot image of your stories! via puppeteer.",
   "main": "lib/client/index.js",
   "typings": "lib/client/index.d.ts",
   "bin": {
-    "storycap": "lib/cli.js"
+    "storycap": "lib/node/cli.js"
   },
   "scripts": {
     "clean": "rimraf lib",
