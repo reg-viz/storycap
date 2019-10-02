@@ -1,4 +1,4 @@
-import { StorybookServer, StoriesBrowser } from './story-crawler';
+import { StorybookServer, StoriesBrowser, sleep } from './story-crawler';
 import { CapturingBrowser } from './capturing-browser';
 import { filterStories } from '../util';
 import { MainOptions, RunMode } from './types';
@@ -7,7 +7,7 @@ import { createScreenshotService } from './screenshot-service';
 
 async function detectRunMode(storiesBrowser: StoriesBrowser, opt: MainOptions) {
   await storiesBrowser.page.goto(opt.serverOptions.storybookUrl);
-  await storiesBrowser.page.waitForNavigation();
+  await sleep(100);
   const registered: boolean | undefined = await storiesBrowser.page.evaluate(
     () => (window as any).__STORYCAP_MANAGED_MODE_REGISTERED__,
   );
