@@ -62,8 +62,6 @@ export async function main(opt: MainOptions) {
 
   await createScreenshotService({ workers, stories, fileSystem, logger: opt.logger }).execute();
 
-  if (!opt.launchOptions.headless) return;
-
   await Promise.all(workers.map(worker => worker.close()));
 
   storybookServer.shutdown();

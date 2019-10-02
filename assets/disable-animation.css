@@ -1,0 +1,10 @@
+*,
+*::before,
+*::after {
+  transition: none !important;
+  animation: none !important;
+}
+
+input {
+  caret-color: transparent !important;
+}

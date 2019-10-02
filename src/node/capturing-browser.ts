@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import path from 'path';
 import { parse } from 'url';
 import querystring from 'querystring';
 import { Viewport } from 'puppeteer';
@@ -53,29 +54,12 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     await this.openPage(
       this.opt.serverOptions.storybookUrl + '/iframe.html?selectedKind=scszisui&selectedStory=scszisui',
     );
-    await this.addStyles();
     return this;
   }
 
   private async addStyles() {
     if (this.opt.disableCssAnimation) {
-      await this.page.addStyleTag({
-        content: `
-*, *::before, *::after {
-  transition: none !important;
-  animation: none !important;
-  caret-color: transparentt !important;
-}
-        `,
-      });
-      await this.page.addScriptTag({
-        content: `
-const $doc = document;
-const $style = $doc.createElement('style');
-$style.innerHTML = "body *, body *::before, body *::after { transition: none !important; animation: none !important; caret-color: transparent !important; }";
-$doc.body.appendChild($style);
-        `,
-      });
+      await this.page.addStyleTag({ path: path.resolve(__dirname, '../../assets/disable-animation.css') });
     }
   }
 
@@ -290,6 +274,7 @@ $doc.body.appendChild($style);
     const variantKeysToPush = this.currentVariantKey.isDefault ? keys : [];
     const buffer = await this.page.screenshot({ fullPage: emittedScreenshotOptions.fullPage });
     await this.resetIfTouched();
+    await this.waitForDebugInput();
     return {
       buffer,
       succeeded: true,
