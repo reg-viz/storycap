@@ -1,8 +1,15 @@
 import { ExposedWindow } from '../node/types';
 import { ScreenshotOptions } from './types';
 import imagesloaded from 'imagesloaded';
-import { sleep } from '../util';
-import { mergeScreenshotOptions, pickupFromVariantKey, expandViewportsOption } from '../util/screenshot-options-helper';
+import {
+  mergeScreenshotOptions,
+  pickupFromVariantKey,
+  expandViewportsOption,
+} from '../shared/screenshot-options-helper';
+
+function waitForDelayTime(time: number = 0) {
+  return new Promise(res => setTimeout(res, time));
+}
 
 function waitImages(enabled: boolean, selector = 'body') {
   if (!enabled) return Promise.resolve();
@@ -71,7 +78,7 @@ function capture() {
     );
     if (scOpt.skip) win.emitCatpture(scOpt, storyKey);
     await waitImages(!!scOpt.waitImages);
-    await sleep(scOpt.delay);
+    await waitForDelayTime(scOpt.delay);
     await waitUserFunction(scOpt.waitFor, win);
     await waitNextIdle(win);
     await win.emitCatpture(scOpt, storyKey);

@@ -1,6 +1,6 @@
-import { StorybookServer, StoriesBrowser } from './story-crawler';
+import minimatch from 'minimatch';
+import { StorybookServer, StoriesBrowser, Story } from './story-crawler';
 import { CapturingBrowser } from './capturing-browser';
-import { filterStories } from '../util';
 import { MainOptions, RunMode } from './types';
 import { FileSystem } from './file';
 import { createScreenshotService } from './screenshot-service';
@@ -22,6 +22,13 @@ async function bootCapturingBrowserAsWorkers(opt: MainOptions, mode: RunMode) {
   );
   opt.logger.debug(`Started ${browsers.length} capture browsers`);
   return browsers;
+}
+
+function filterStories(flatStories: Story[], include: string[], exclude: string[]): Story[] {
+  const conbined = flatStories.map(s => ({ ...s, name: s.kind + '/' + s.story }));
+  const included = include.length ? conbined.filter(s => include.some(rule => minimatch(s.name, rule))) : conbined;
+  const excluded = exclude.length ? included.filter(s => !exclude.some(rule => minimatch(s.name, rule))) : included;
+  return excluded;
 }
 
 export async function main(opt: MainOptions) {
@@ -49,6 +56,7 @@ export async function main(opt: MainOptions) {
   if (stories.length === 0) {
     opt.logger.warn('There is no matched story. Check your include/exclude options.');
   }
+  opt.logger.log(`Found ${opt.logger.color.green(stories.length + '')} stories.`);
 
   const workers = await bootCapturingBrowserAsWorkers(opt, mode);
 

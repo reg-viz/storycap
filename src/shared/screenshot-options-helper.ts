@@ -1,7 +1,7 @@
 import { StrictScreenshotOptions, ScreenshotOptions, ScreenshotOptionFragments } from '../client/types';
 import { VariantKey } from '../types';
 
-export const defaultScreenshotOptions = {
+const defaultScreenshotOptions = {
   waitImages: true,
   waitFor: '',
   fullPage: true,

@@ -56,7 +56,6 @@ export class StoriesBrowser extends BaseBrowser {
       throw new NoStoriesError();
     }
     this.logger.debug(stories);
-    this.logger.log(`Found ${this.logger.color.green(stories.length + '')} stories.`);
     return stories;
   }
 }

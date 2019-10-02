@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 import { parse } from 'url';
 import querystring from 'querystring';
 import { Viewport } from 'puppeteer';
-import { StoryPreviewBrowser, MetricsWatcher } from './story-crawler';
+import { StoryPreviewBrowser, MetricsWatcher, sleep } from './story-crawler';
 
 import { ExposedWindow, MainOptions, RunMode } from './types';
 import { ScreenshotOptions, ScreenshotOptionsForApp, StrictScreenshotOptions } from '../client/types';
@@ -13,8 +13,7 @@ import {
   mergeScreenshotOptions,
   extractVariantKeys,
   pickupFromVariantKey,
-} from '../util/screenshot-options-helper';
-import { sleep } from '../util';
+} from '../shared/screenshot-options-helper';
 const dd = require('puppeteer/DeviceDescriptors') as { name: string; viewport: Viewport }[];
 
 function url2StoryKey(url: string) {
