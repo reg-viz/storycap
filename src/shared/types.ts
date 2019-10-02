@@ -44,3 +44,8 @@ export interface StrictScreenshotOptions extends $Strict<ScreenshotOptionFragmen
 export type ScreenshotOptionsForApp = StrictScreenshotOptions & {
   url: string;
 };
+
+export type VariantKey = {
+  isDefault: boolean;
+  keys: string[];
+};

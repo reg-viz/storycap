@@ -1,6 +1,6 @@
 import { StoryKind, makeDecorator } from '@storybook/addons';
 
-import { ScreenshotOptions } from './types';
+import { ScreenshotOptions } from '../shared/types';
 import { triggerScreenshot } from './trigger-screenshot';
 
 export interface WithScreenshot {

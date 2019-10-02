@@ -4,7 +4,7 @@ import { Story, createExecutionService } from './story-crawler';
 import { CapturingBrowser } from './capturing-browser';
 import { FileSystem } from './file';
 import { Logger } from './logger';
-import { VariantKey } from '../types';
+import { VariantKey } from '../shared/types';
 import { time } from './story-crawler/timer';
 
 function createRequest({

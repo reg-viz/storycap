@@ -1,7 +1,6 @@
-import { ScreenshotOptions, StrictScreenshotOptions } from '../client/types';
+import { VariantKey, ScreenshotOptions, StrictScreenshotOptions } from '../shared/types';
 import { Logger } from './logger';
 import { StorybookServerOptions } from './story-crawler';
-import { VariantKey } from '../types';
 
 export type ExposedWindow = typeof window & {
   emitCatpture(opt: ScreenshotOptions, clientStoryKey: string): void;

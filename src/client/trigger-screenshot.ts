@@ -1,5 +1,5 @@
 import { ExposedWindow } from '../node/types';
-import { ScreenshotOptions } from './types';
+import { ScreenshotOptions } from '../shared/types';
 import imagesloaded from 'imagesloaded';
 import {
   mergeScreenshotOptions,

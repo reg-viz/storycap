@@ -5,9 +5,8 @@ import { Viewport } from 'puppeteer';
 import { StoryPreviewBrowser, MetricsWatcher, sleep } from './story-crawler';
 
 import { ExposedWindow, MainOptions, RunMode } from './types';
-import { ScreenshotOptions, ScreenshotOptionsForApp, StrictScreenshotOptions } from '../client/types';
+import { VariantKey, ScreenshotOptions, ScreenshotOptionsForApp, StrictScreenshotOptions } from '../shared/types';
 import { ScreenshotTimeoutError, InvalidCurrentStoryStateError } from './errors';
-import { VariantKey } from '../types';
 import {
   createBaseScreenshotOptions,
   mergeScreenshotOptions,

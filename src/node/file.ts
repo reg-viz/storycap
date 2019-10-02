@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import * as mkdirp from 'mkdirp';
 import { MainOptions } from './types';
-import { VariantKey } from '../types';
+import { VariantKey } from '../shared/types';
 
 export class FileSystem {
   constructor(private opt: MainOptions) {}
