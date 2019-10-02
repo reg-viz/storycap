@@ -42,16 +42,17 @@ export function createScreenshotService({ fileSystem, logger, stories, workers }
       const [result, elapsedTime] = await time(worker.screenshot(rid, variantKey, count));
       const { succeeded, buffer, variantKeysToPush, defaultVariantSuffix } = result;
       if (!succeeded) return push(createRequest({ story, variantKey, count: count + 1 }));
+      variantKeysToPush.forEach(variantKey => push(createRequest({ story, variantKey })));
       if (buffer) {
         const vkForSave =
           variantKey.isDefault && defaultVariantSuffix ? { ...variantKey, keys: [defaultVariantSuffix] } : variantKey;
         const path = await fileSystem.save(story.kind, story.story, vkForSave, buffer);
         logger.log(`Screenshot stored: ${logger.color.magenta(path)} in ${elapsedTime} msec.`);
+        return true;
       }
-      variantKeysToPush.forEach(variantKey => push(createRequest({ story, variantKey })));
     },
   );
   return {
-    execute: () => service.execute(),
+    execute: () => service.execute().then(captured => captured.filter(c => !!c).length),
   };
 }

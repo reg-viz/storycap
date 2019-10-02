@@ -132,8 +132,12 @@ const { logger, ...rest } = opt;
 logger.debug('Option:', rest);
 
 time(main(opt))
-  .then(([_, duration]) => {
-    logger.log(`Screenshot was ended successfully in ${opt.logger.color.green(duration + ' msec')}.`);
+  .then(([numberOfCaptured, duration]) => {
+    logger.log(
+      `Screenshot was ended successfully in ${opt.logger.color.green(
+        duration + ' msec',
+      )} in capturing ${opt.logger.color.green(numberOfCaptured + '')} PNGs.`,
+    );
     process.exit(0);
   })
   .catch(error => {

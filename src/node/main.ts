@@ -60,9 +60,16 @@ export async function main(opt: MainOptions) {
 
   const workers = await bootCapturingBrowserAsWorkers(opt, mode);
 
-  await createScreenshotService({ workers, stories, fileSystem, logger: opt.logger }).execute();
+  const numberOfCaptured = await createScreenshotService({
+    workers,
+    stories,
+    fileSystem,
+    logger: opt.logger,
+  }).execute();
 
   await Promise.all(workers.map(worker => worker.close()));
 
   storybookServer.shutdown();
+
+  return numberOfCaptured;
 }
