@@ -1,5 +1,4 @@
-import { ExposedWindow } from '../node/types';
-import { ScreenshotOptions } from '../shared/types';
+import { ScreenshotOptions, Exposed } from '../shared/types';
 import imagesloaded from 'imagesloaded';
 import {
   mergeScreenshotOptions,
@@ -7,22 +6,35 @@ import {
   expandViewportsOption,
 } from '../shared/screenshot-options-helper';
 
+type Args<T> = T extends (...args: infer A) => any ? A : never;
+type Return<T> = T extends (...args: any) => infer R ? R : never;
+
+type ExposedFns = {
+  [P in keyof Exposed]: (...args: Args<Exposed[P]>) => Promise<Return<Exposed[P]>>;
+};
+
+type ExposedWindow = typeof window & {
+  requestIdleCallback(cb: Function, opt?: { timeout: number }): void;
+  optionStore?: { [storyKey: string]: ScreenshotOptions[] };
+} & ExposedFns;
+
 function waitForDelayTime(time: number = 0) {
   return new Promise(res => setTimeout(res, time));
 }
 
-function waitImages(enabled: boolean, selector = 'body') {
+function waitForImages(enabled: boolean, selector = 'body') {
   if (!enabled) return Promise.resolve();
   const elm = document.querySelector(selector);
   if (!elm) return Promise.reject();
   return new Promise<void>(res => imagesloaded(elm, () => res()));
 }
 
-function waitUserFunction(waitFor: undefined | null | string | (() => Promise<any>), win: ExposedWindow) {
+function waitUserFunction(waitFor: undefined | null | string | (() => Promise<any>)) {
   if (!waitFor) return Promise.resolve();
   if (typeof waitFor === 'string') {
-    if (!win.waitFor || typeof win.waitFor !== 'function') return Promise.resolve();
-    return win.waitFor();
+    const userDefinedFn = (window as any)[waitFor] as unknown;
+    if (typeof userDefinedFn !== 'function') return Promise.resolve();
+    return Promise.resolve().then(() => userDefinedFn());
   } else if (typeof waitFor === 'function') {
     return waitFor();
   } else {
@@ -30,7 +42,7 @@ function waitUserFunction(waitFor: undefined | null | string | (() => Promise<an
   }
 }
 
-function waitNextIdle(win: ExposedWindow) {
+function waitForNextIdle(win: ExposedWindow) {
   return new Promise(res => win.requestIdleCallback(() => res(), { timeout: 3000 }));
 }
 
@@ -77,10 +89,10 @@ function capture() {
       variantKey,
     );
     if (scOpt.skip) win.emitCatpture(scOpt, storyKey);
-    await waitImages(!!scOpt.waitImages);
+    await waitForImages(!!scOpt.waitImages);
     await waitForDelayTime(scOpt.delay);
-    await waitUserFunction(scOpt.waitFor, win);
-    await waitNextIdle(win);
+    await waitUserFunction(scOpt.waitFor);
+    await waitForNextIdle(win);
     await win.emitCatpture(scOpt, storyKey);
   });
 }

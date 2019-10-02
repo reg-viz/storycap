@@ -4,8 +4,8 @@ import querystring from 'querystring';
 import { Viewport } from 'puppeteer';
 import { StoryPreviewBrowser, MetricsWatcher, sleep } from './story-crawler';
 
-import { ExposedWindow, MainOptions, RunMode } from './types';
-import { VariantKey, ScreenshotOptions, ScreenshotOptionsForApp, StrictScreenshotOptions } from '../shared/types';
+import { MainOptions, RunMode } from './types';
+import { VariantKey, ScreenshotOptions, StrictScreenshotOptions, Exposed } from '../shared/types';
 import { ScreenshotTimeoutError, InvalidCurrentStoryStateError } from './errors';
 import {
   createBaseScreenshotOptions,
@@ -80,13 +80,14 @@ $doc.body.appendChild($style);
   }
 
   private async expose() {
-    this.page.exposeFunction('emitCatpture', (opt: any, clientStoryKey: string) =>
-      this.handleOnCapture(opt, clientStoryKey),
-    );
-    this.page.exposeFunction('getBaseScreenshotOptions', () => this.baseScreenshotOptions);
-    this.page.exposeFunction('getCurrentStoryKey', (url: string) => url2StoryKey(url));
-    this.page.exposeFunction('getCurrentVariantKey', () => this.currentVariantKey);
-    this.page.exposeFunction('waitBrowserMetricsStable', () => this.waitBrowserMetricsStable('preEmit'));
+    const exposed: Exposed = {
+      emitCatpture: (opt: ScreenshotOptions, clientStoryKey: string) => this.handleOnCapture(opt, clientStoryKey),
+      getBaseScreenshotOptions: () => this.baseScreenshotOptions,
+      getCurrentStoryKey: (url: string) => url2StoryKey(url),
+      getCurrentVariantKey: () => this.currentVariantKey,
+      waitBrowserMetricsStable: () => this.waitBrowserMetricsStable('preEmit'),
+    };
+    Object.entries(exposed).forEach(([k, f]) => this.page.exposeFunction(k, f));
   }
 
   private async resetIfTouched() {
@@ -98,7 +99,7 @@ $doc.body.appendChild($style);
     return;
   }
 
-  private async handleOnCapture(opt: ScreenshotOptionsForApp, clientStoryKey: string) {
+  private async handleOnCapture(opt: ScreenshotOptions, clientStoryKey: string) {
     if (this.touched) return;
     if (!this.currentStory) {
       this.emitter.emit('error', new InvalidCurrentStoryStateError());
@@ -270,7 +271,7 @@ $doc.body.appendChild($style);
     await this.setFocus(mergedScreenshotOptions);
     await this.waitBrowserMetricsStable('postEmit');
     await this.page.evaluate(
-      () => new Promise(res => (window as ExposedWindow).requestIdleCallback(() => res(), { timeout: 3000 })),
+      () => new Promise(res => (window as any).requestIdleCallback(() => res(), { timeout: 3000 })),
     );
     const [invalidReason, keys] = extractVariantKeys(mergedScreenshotOptions);
     if (invalidReason) {

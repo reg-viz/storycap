@@ -41,11 +41,15 @@ export interface StrictScreenshotOptions extends $Strict<ScreenshotOptionFragmen
   defaultVariantSuffix: string;
 }
 
-export type ScreenshotOptionsForApp = StrictScreenshotOptions & {
-  url: string;
-};
-
 export type VariantKey = {
   isDefault: boolean;
   keys: string[];
 };
+
+export interface Exposed {
+  emitCatpture(opt: ScreenshotOptions, clientStoryKey: string): void;
+  getBaseScreenshotOptions(): StrictScreenshotOptions;
+  getCurrentStoryKey(url: string): string | undefined;
+  getCurrentVariantKey(): VariantKey;
+  waitBrowserMetricsStable(): Promise<void>;
+}
