@@ -1,5 +1,5 @@
 import minimatch from 'minimatch';
-import { StorybookServer, StoriesBrowser, Story } from './story-crawler';
+import { StorybookServer, StoriesBrowser, Story, sleep } from './story-crawler';
 import { CapturingBrowser } from './capturing-browser';
 import { MainOptions, RunMode } from './types';
 import { FileSystem } from './file';
@@ -7,7 +7,7 @@ import { createScreenshotService } from './screenshot-service';
 
 async function detectRunMode(storiesBrowser: StoriesBrowser, opt: MainOptions) {
   await storiesBrowser.page.goto(opt.serverOptions.storybookUrl);
-  await storiesBrowser.page.waitForNavigation();
+  await sleep(100);
   const registered: boolean | undefined = await storiesBrowser.page.evaluate(
     () => (window as any).__STORYCAP_MANAGED_MODE_REGISTERED__,
   );
