@@ -1,5 +1,22 @@
 # Migration
 
+<!-- toc -->
+
+- [From storybook-chrome-screenshot 1.x to storycap](#from-storybook-chrome-screenshot-1x-to-storycap)
+  - [Replace dependency](#replace-dependency)
+  - [Replace decorators](#replace-decorators)
+  - [Move global options from `setScreentshotOptions` to `withScreenshot`](#move-global-options-from-setscreentshotoptions-to-withscreenshot)
+  - [Modify screenshot options](#modify-screenshot-options)
+  - [CLI usage](#cli-usage)
+  - [CLI options](#cli-options)
+  - [Other deprecated features](#other-deprecated-features)
+- [From zisui 1.x to storycap](#from-zisui-1x-to-storycap)
+  - [Replace dependency](#replace-dependency-1)
+  - [Simple mode](#simple-mode)
+  - [Managed mode for React](#managed-mode-for-react)
+
+<!-- tocstop -->
+
 ## From storybook-chrome-screenshot 1.x to storycap
 
 ### Replace dependency

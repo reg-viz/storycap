@@ -14,7 +14,7 @@
 `storybook-chrome-screenshot` takes a screenshot and saves it.  
 It is primarily responsible for image generation necessary for Visual Testing such as `reg-viz`.
 
-## Table of Contents
+<!-- toc -->
 
 - [Features](#features)
 - [How it works](#how-it-works)
@@ -36,6 +36,7 @@ It is primarily responsible for image generation necessary for Visual Testing su
 - [Command Line Options](#command-line-options)
 - [Tips](#tips)
   - [Disable component animation](#disable-component-animation)
+  - [Full control the screenshot timing](#full-control-the-screenshot-timing)
 - [Examples](#examples)
 - [TODO](#todo)
 - [Contribute](#contribute)
@@ -43,6 +44,8 @@ It is primarily responsible for image generation necessary for Visual Testing su
     - [`npm run test`](#npm-run-test)
     - [`npm run build`](#npm-run-build)
 - [License](#license)
+
+<!-- tocstop -->
 
 ## Features
 

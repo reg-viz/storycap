@@ -1,7 +1,18 @@
+# Contribution
+
+<!-- toc -->
+
+- [Setup](#setup)
+- [E2E testing](#e2e-testing)
+  - [All storybook versions](#all-storybook-versions)
+  - [Single storybook](#single-storybook)
+
+<!-- tocstop -->
+
 ## Setup
 
-* Clone this repository
-* `yarn --pure-lockfile`
+- Clone this repository
+- `yarn --pure-lockfile`
 
 ## E2E testing
 
