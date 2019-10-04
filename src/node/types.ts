@@ -1,10 +1,22 @@
 import { Logger } from './logger';
-import { StorybookServerOptions } from './story-crawler';
+import { LaunchOptions } from 'puppeteer';
+import { StorybookConnectionOptions, BaseBrowserOptions } from './story-crawler';
 
+/**
+ *
+ * Represents Storycap mode.
+ *
+ **/
 export type RunMode = 'simple' | 'managed';
 
-export interface MainOptions {
-  serverOptions: StorybookServerOptions;
+/**
+ *
+ * Parameters for main procedure.
+ * Almost all of fields are dericed CLI options.
+ *
+ **/
+export interface MainOptions extends BaseBrowserOptions {
+  serverOptions: StorybookConnectionOptions;
   captureTimeout: number;
   captureMaxRetryCount: number;
   delay: number;
@@ -18,6 +30,6 @@ export interface MainOptions {
   disableCssAnimation: boolean;
   parallel: number;
   metricsWatchRetryCount: number;
-  launchOptions: any;
+  launchOptions: LaunchOptions;
   logger: Logger;
 }

@@ -27,11 +27,11 @@ export class StoriesBrowser extends BaseBrowser {
     await this.openPage(this.opt.storybookUrl);
     let stories: Story[] | null = null;
     let oldStories: StoryKind[] | null = null;
-    await this._page.goto(
+    await this.page.goto(
       this.opt.storybookUrl + '/iframe.html?selectedKind=story-crawler-kind&selectedStory=story-crawler-story',
     );
-    await this._page.waitFor(() => (window as ExposedWindow).__STORYBOOK_CLIENT_API__);
-    const result = await this._page.evaluate(() => {
+    await this.page.waitFor(() => (window as ExposedWindow).__STORYBOOK_CLIENT_API__);
+    const result = await this.page.evaluate(() => {
       const win = window as ExposedWindow;
       if (win.__STORYBOOK_CLIENT_API__.raw) {
         // for storybook v5

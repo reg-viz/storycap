@@ -21,17 +21,17 @@ function waitServer(url: string, timeout: number) {
   });
 }
 
-export interface StorybookServerOptions {
+export interface StorybookConnectionOptions {
   storybookUrl: string;
   serverCmd?: string;
   serverTimeout: number;
 }
 
-export class StorybookServer {
+export class StorybookConnection {
   private proc?: cp.ChildProcess;
-  constructor(private opt: StorybookServerOptions, private logger: Logger) {}
+  constructor(private opt: StorybookConnectionOptions, private logger: Logger) {}
 
-  async launchIfNeeded() {
+  async connect() {
     this.logger.log(`Wait for connecting storybook server ${this.logger.color.green(this.opt.storybookUrl)}.`);
     if (this.opt.serverCmd) {
       const [cmd, ...args] = this.opt.serverCmd.split(/\s+/);
@@ -45,9 +45,10 @@ export class StorybookServer {
     } else {
       this.logger.debug('Found Storybook server');
     }
+    return this;
   }
 
-  async shutdown() {
+  async disconnect() {
     if (!this.proc) return;
     try {
       this.logger.debug('Shutdown storybook server', this.proc.pid);

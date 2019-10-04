@@ -1,11 +1,10 @@
 import 'core-js/es/symbol/async-iterator'; // for Node 8
 
-import { Story, createExecutionService } from './story-crawler';
+import { Story, createExecutionService, time } from './story-crawler';
 import { CapturingBrowser } from './capturing-browser';
 import { FileSystem } from './file';
 import { Logger } from './logger';
 import { VariantKey } from '../shared/types';
-import { time } from './story-crawler/timer';
 
 function createRequest({
   story,
@@ -26,6 +25,26 @@ function createRequest({
   return { rid, story, variantKey, count };
 }
 
+/**
+ *
+ * Executor to capture all stories.
+ *
+ **/
+export interface ScreenshotService {
+  /**
+   *
+   * Run capturing procedure.
+   *
+   * @returns The number of captured images
+   **/
+  execute(): Promise<number>;
+}
+
+/**
+ *
+ * Parameters for {@link createScreenshotService}.
+ *
+ **/
 export type ScreenshotServiceOptions = {
   logger: Logger;
   workers: CapturingBrowser[];
@@ -33,20 +52,39 @@ export type ScreenshotServiceOptions = {
   stories: Story[];
 };
 
-export function createScreenshotService({ fileSystem, logger, stories, workers }: ScreenshotServiceOptions) {
+/**
+ *
+ * Create an instance of {@link ScreenshotService}.
+ *
+ * @param options - {@link ScreenshotServiceOptions}
+ * @returns A `ScreenshotService` instance
+ *
+ **/
+export function createScreenshotService({
+  fileSystem,
+  logger,
+  stories,
+  workers,
+}: ScreenshotServiceOptions): ScreenshotService {
   const service = createExecutionService(
     workers,
     stories.map(story => createRequest({ story })),
     ({ rid, story, variantKey, count }, { push }) => async worker => {
-      await worker.setCurrentStory(story, { forceRerender: true });
-      const [result, elapsedTime] = await time(worker.screenshot(rid, variantKey, count));
+      // Delegate the request to the worker.
+      const [result, elapsedTime] = await time(worker.screenshot(rid, story, variantKey, count));
+
       const { succeeded, buffer, variantKeysToPush, defaultVariantSuffix } = result;
+
+      // Queue retry request if the request was not succeeded.
+      // Worker throws `ScreenshotTimeoutError` if the queued request continues failed and the count exceeds the threhold.
       if (!succeeded) return push(createRequest({ story, variantKey, count: count + 1 }));
+
+      // Queue screenshot requests for additional variants.
       variantKeysToPush.forEach(variantKey => push(createRequest({ story, variantKey })));
+
       if (buffer) {
-        const vkForSave =
-          variantKey.isDefault && defaultVariantSuffix ? { ...variantKey, keys: [defaultVariantSuffix] } : variantKey;
-        const path = await fileSystem.save(story.kind, story.story, vkForSave, buffer);
+        const suffix = variantKey.isDefault && defaultVariantSuffix ? [defaultVariantSuffix] : variantKey.keys;
+        const path = await fileSystem.save(story.kind, story.story, suffix, buffer);
         logger.log(`Screenshot stored: ${logger.color.magenta(path)} in ${elapsedTime} msec.`);
         return true;
       }

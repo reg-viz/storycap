@@ -26,6 +26,11 @@ export interface ScreenshotOptionFragmentsForVariant extends ScreenshotOptionFra
   extends?: string | string[];
 }
 
+/**
+ *
+ * Represents a root(default) screenshot options.
+ *
+ **/
 export interface ScreenshotOptions extends ScreenshotOptionFragments {
   viewports?: string[] | { [key: string]: string | Viewport };
   variants?: {
@@ -41,6 +46,16 @@ export interface StrictScreenshotOptions extends $Strict<ScreenshotOptionFragmen
   defaultVariantSuffix: string;
 }
 
+/**
+ *
+ * Represents an identifier for a variant.
+ *
+ * @remarks
+ *
+ * - If `isDefault` is set, this variant key means the variant is the root(default) variant.
+ * - `keys` holds the names of variants in the order closest to root.
+ *
+ **/
 export type VariantKey = {
   isDefault: boolean;
   keys: string[];
@@ -49,7 +64,6 @@ export type VariantKey = {
 export interface Exposed {
   emitCatpture(opt: ScreenshotOptions, clientStoryKey: string): void;
   getBaseScreenshotOptions(): StrictScreenshotOptions;
-  getCurrentStoryKey(url: string): string | undefined;
   getCurrentVariantKey(): VariantKey;
   waitBrowserMetricsStable(): Promise<void>;
 }

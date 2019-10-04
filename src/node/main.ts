@@ -1,13 +1,16 @@
 import minimatch from 'minimatch';
-import { StorybookServer, StoriesBrowser, Story, sleep } from './story-crawler';
+import { StorybookConnection, StoriesBrowser, Story, sleep } from './story-crawler';
 import { CapturingBrowser } from './capturing-browser';
 import { MainOptions, RunMode } from './types';
 import { FileSystem } from './file';
 import { createScreenshotService } from './screenshot-service';
 
 async function detectRunMode(storiesBrowser: StoriesBrowser, opt: MainOptions) {
+  // Reuse `storiesBrowser` instance to avoid cost of re-launching another Puppeteer process.
   await storiesBrowser.page.goto(opt.serverOptions.storybookUrl);
   await sleep(100);
+
+  // We can check whether the secret value is set by `register.js` or not.
   const registered: boolean | undefined = await storiesBrowser.page.evaluate(
     () => (window as any).__STORYCAP_MANAGED_MODE_REGISTERED__,
   );
@@ -21,7 +24,7 @@ async function bootCapturingBrowserAsWorkers(opt: MainOptions, mode: RunMode) {
     [...new Array(Math.max(opt.parallel, 1)).keys()].map(i => new CapturingBrowser(opt, mode, i).boot()),
   );
   opt.logger.debug(`Started ${browsers.length} capture browsers`);
-  return browsers;
+  return { workers: browsers, closeWorkers: () => Promise.all(browsers.map(b => b.close.bind(b))) };
 }
 
 function filterStories(flatStories: Story[], include: string[], exclude: string[]): Story[] {
@@ -31,45 +34,51 @@ function filterStories(flatStories: Story[], include: string[], exclude: string[
   return excluded;
 }
 
-export async function main(opt: MainOptions) {
-  const fileSystem = new FileSystem(opt);
+/**
+ *
+ * Run main process of Storycap.
+ *
+ * @param mainOptions - Parameters for this procedure
+ *
+ **/
+export async function main(mainOptions: MainOptions) {
+  const logger = mainOptions.logger;
+  const fileSystem = new FileSystem(mainOptions);
 
-  const storybookServer = new StorybookServer(opt.serverOptions, opt.logger);
+  // Wait for connection to Storybook server.
+  const connection = await new StorybookConnection(mainOptions.serverOptions, logger).connect();
 
-  const storiesBrowser = new StoriesBrowser(
+  // Launch Puppeteer process and fetch names of all stories.
+  const storiesBrowser = await new StoriesBrowser(
     {
-      launchOptions: opt.launchOptions,
-      storybookUrl: opt.serverOptions.storybookUrl,
+      launchOptions: mainOptions.launchOptions,
+      storybookUrl: mainOptions.serverOptions.storybookUrl,
     },
-    opt.logger,
-  );
-
-  await storybookServer.launchIfNeeded();
-  await storiesBrowser.boot();
-
+    logger,
+  ).boot();
   const allStories = await storiesBrowser.getStories();
-  const mode = await detectRunMode(storiesBrowser, opt);
+
+  // Mode(simple / managed) deteciton.
+  const mode = await detectRunMode(storiesBrowser, mainOptions);
   storiesBrowser.close();
 
-  const stories = filterStories(allStories, opt.include, opt.exclude);
-
+  const stories = filterStories(allStories, mainOptions.include, mainOptions.exclude);
   if (stories.length === 0) {
-    opt.logger.warn('There is no matched story. Check your include/exclude options.');
+    logger.warn('There is no matched story. Check your include/exclude options.');
+    return 0;
   }
-  opt.logger.log(`Found ${opt.logger.color.green(stories.length + '')} stories.`);
 
-  const workers = await bootCapturingBrowserAsWorkers(opt, mode);
+  logger.log(`Found ${logger.color.green(stories.length + '')} stories.`);
 
-  const numberOfCaptured = await createScreenshotService({
-    workers,
-    stories,
-    fileSystem,
-    logger: opt.logger,
-  }).execute();
+  // Launce Puppeteer processes to capture each story.
+  const { workers, closeWorkers } = await bootCapturingBrowserAsWorkers(mainOptions, mode);
 
-  await Promise.all(workers.map(worker => worker.close()));
-
-  storybookServer.shutdown();
-
-  return numberOfCaptured;
+  try {
+    // Execution caputuring procedure.
+    return await createScreenshotService({ workers, stories, fileSystem, logger }).execute();
+  } finally {
+    // Shutdown workers and dispose connection.
+    await closeWorkers();
+    connection.disconnect();
+  }
 }

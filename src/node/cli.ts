@@ -134,9 +134,9 @@ logger.debug('Option:', rest);
 time(main(opt))
   .then(([numberOfCaptured, duration]) => {
     logger.log(
-      `Screenshot was ended successfully in ${opt.logger.color.green(
-        duration + ' msec',
-      )} capturing ${opt.logger.color.green(numberOfCaptured + '')} PNGs.`,
+      `Screenshot was ended successfully in ${logger.color.green(duration + ' msec')} capturing ${logger.color.green(
+        numberOfCaptured + '',
+      )} PNGs.`,
     );
     process.exit(0);
   })

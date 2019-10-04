@@ -10,6 +10,14 @@ const defaultScreenshotOptions = {
   variants: {},
 } as const;
 
+/**
+ *
+ * Convert to `viewport` and `variants` from `viewports` filed.
+ *
+ * @param options - Screenshot options which may have `viewports` field
+ * @returns - Screenshot options with variants corresponding to the `viewports` field
+ *
+ **/
 export function expandViewportsOption(options: ScreenshotOptions) {
   if (!options.viewports) return options;
   const { viewports } = options;
@@ -33,6 +41,14 @@ export function expandViewportsOption(options: ScreenshotOptions) {
   return ret;
 }
 
+/**
+ *
+ * Returns fulfilled `ScreenshotOptions` object from some properties.
+ *
+ * @param props - Some properties of `ScreenshotOptions` fragment
+ * @returns Fulfilled screenshot options
+ *
+ **/
 export function createBaseScreenshotOptions({
   delay,
   viewports,
@@ -58,6 +74,15 @@ export function createBaseScreenshotOptions({
   }
 }
 
+/**
+ *
+ * Combines 2 screenshot options.
+ *
+ * @param base - The base screenshot options
+ * @param fragment - The fragment screenshot options to override the base options
+ * @returns Merged screenshot options
+ *
+ **/
 export function mergeScreenshotOptions<T extends ScreenshotOptions>(base: T, fragment: ScreenshotOptions): T {
   const ret = Object.assign({}, base, fragment) as T;
   if (!base.viewport || typeof base.viewport === 'string') {
@@ -92,22 +117,33 @@ export type VariantKeyNotFound = {
   to: string;
 };
 
-export type InvalidVariantKeysReference = CircularVariantRef | VariantKeyNotFound;
+export type InvalidVariantKeysReason = CircularVariantRef | VariantKeyNotFound;
 
+/**
+ *
+ * Returns keys of all variants in given screenshot options expanding `extends` field in each variant.
+ *
+ * @param options - Screenshot options which may have `variants` field
+ * @returns If succeeded extracted variant keys. If not succeeded the reason of the failure
+ *
+ **/
 export function extractVariantKeys({
   variants,
   defaultVariantSuffix,
-}: ScreenshotOptions): [InvalidVariantKeysReference | null, VariantKey[]] {
+}: ScreenshotOptions): [InvalidVariantKeysReason | null, VariantKey[]] {
   if (!variants) return [null, []];
-  let invalidReason: InvalidVariantKeysReference | undefined = undefined;
+  let invalidReason: InvalidVariantKeysReason | undefined = undefined;
   const ret = Object.keys(variants).reduce(
     (acc, key) => {
       const keysList: string[][] = [];
       const getParentKeys = (currentKey: string, childrenKeys: string[] = []): boolean => {
+        // Set `defaultVariantSuffix` value as the head variant key if it's referred.
         if (defaultVariantSuffix && defaultVariantSuffix === currentKey) {
           keysList.push([currentKey, ...childrenKeys]);
           return true;
         }
+
+        // Check the key exists.
         if (!variants[currentKey]) {
           invalidReason = {
             type: 'notFound',
@@ -116,6 +152,8 @@ export function extractVariantKeys({
           };
           return false;
         }
+
+        // Check circular reference.
         if (childrenKeys.find(k => k === currentKey)) {
           invalidReason = {
             type: 'circular',
@@ -123,12 +161,17 @@ export function extractVariantKeys({
           };
           return false;
         }
+
         const parent = variants![currentKey].extends;
         const parentKeys = Array.isArray(parent) ? parent : typeof parent === 'string' ? [parent] : [];
+
+        // Ends recursive process because the root is here.
         if (!parentKeys.length) {
           keysList.push([currentKey, ...childrenKeys]);
           return true;
         }
+
+        // Get variant keys for each parent if this variant has parents to extend.
         return parentKeys.every(pk => getParentKeys(pk, [currentKey, ...childrenKeys]));
       };
       getParentKeys(key);
@@ -140,7 +183,16 @@ export function extractVariantKeys({
   return [invalidReason, []];
 }
 
-export function pickupFromVariantKey(options: ScreenshotOptions, vk: VariantKey): ScreenshotOptions {
+/**
+ *
+ * Pick up screenshot options corresponding to given variant from the root screenshot options.
+ *
+ * @param options - The root(default) screenshot options
+ * @param vk - Key of the target variant
+ * @returns Screenshot options for the target variant
+ *
+ **/
+export function pickupWithVariantKey(options: ScreenshotOptions, vk: VariantKey): ScreenshotOptions {
   if (vk.isDefault) return options;
   const base = Object.assign({}, options);
   const variants = base.variants || {};

@@ -1,4 +1,4 @@
-import { expandViewportsOption, pickupFromVariantKey, extractVariantKeys } from './screenshot-options-helper';
+import { expandViewportsOption, pickupWithVariantKey, extractVariantKeys } from './screenshot-options-helper';
 
 describe(expandViewportsOption, () => {
   it('should expand viewport and variants from viewports', () => {
@@ -170,10 +170,10 @@ describe(extractVariantKeys, () => {
   });
 });
 
-describe(pickupFromVariantKey, () => {
+describe(pickupWithVariantKey, () => {
   it('should pass through with default variant', () => {
     expect(
-      pickupFromVariantKey(
+      pickupWithVariantKey(
         {
           variants: {
             k1: {
@@ -194,7 +194,7 @@ describe(pickupFromVariantKey, () => {
 
   it('should create merged options with variant', () => {
     expect(
-      pickupFromVariantKey(
+      pickupWithVariantKey(
         {
           delay: 10,
           viewport: 'iPhone 6',
@@ -219,7 +219,7 @@ describe(pickupFromVariantKey, () => {
 
   it('should ignore when head of keys equals to defaultVariantSuffix', () => {
     expect(
-      pickupFromVariantKey(
+      pickupWithVariantKey(
         {
           delay: 10,
           defaultVariantSuffix: 'iPhone 6',

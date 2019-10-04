@@ -1,9 +1,7 @@
 import { EventEmitter } from 'events';
 import path from 'path';
-import { parse } from 'url';
-import querystring from 'querystring';
 import { Viewport } from 'puppeteer';
-import { StoryPreviewBrowser, MetricsWatcher, sleep } from './story-crawler';
+import { Story, StoryPreviewBrowser, MetricsWatcher, sleep } from './story-crawler';
 
 import { MainOptions, RunMode } from './types';
 import { VariantKey, ScreenshotOptions, StrictScreenshotOptions, Exposed } from '../shared/types';
@@ -12,22 +10,34 @@ import {
   createBaseScreenshotOptions,
   mergeScreenshotOptions,
   extractVariantKeys,
-  pickupFromVariantKey,
+  pickupWithVariantKey,
+  InvalidVariantKeysReason,
 } from '../shared/screenshot-options-helper';
 const dd = require('puppeteer/DeviceDescriptors') as { name: string; viewport: Viewport }[];
 
-function url2StoryKey(url: string) {
-  const q = parse(url).query || '';
-  const { id, selectedKind: kind, selectedStory: story } = querystring.parse(q);
-  if (!id) {
-    if (!kind || Array.isArray(kind) || !story || Array.isArray(story)) return;
-    return `${kind}/${story}`;
-  } else {
-    if (Array.isArray(id)) return;
-    return id;
-  }
+/**
+ *
+ * Represents screenshot result.
+ *
+ * @remarks
+ *
+ * - If user's screenshot option has `skip: true`,`buffer` gets null and `succeeded` gets `true`
+ * - `variantKeysToPush` is set an empty array if the capturing process is set not default variant key. It makes sense for only default variant.
+ * - `defaultVariantSuffix` makes sense for only default variant too. It's set non-null value when user specifies multiple viewports.
+ *
+ **/
+interface ScreenshotResult {
+  buffer: Buffer | null;
+  succeeded: boolean;
+  variantKeysToPush: VariantKey[];
+  defaultVariantSuffix?: string;
 }
 
+/**
+ *
+ * A worker to capture screenshot images.
+ *
+ **/
 export class CapturingBrowser extends StoryPreviewBrowser {
   private currentStoryRetryCount = 0;
   private viewport?: Viewport;
@@ -38,6 +48,15 @@ export class CapturingBrowser extends StoryPreviewBrowser {
   private currentVariantKey: VariantKey = { isDefault: true, keys: [] };
   private touched = false;
 
+  /**
+   *
+   * @override
+   *
+   * @param opt - Options for Storycap.
+   * @param mode - Indicates this worker runs as managed mode or simple mode.
+   * @param idx - Worker id.
+   *
+   **/
   constructor(protected opt: MainOptions, private mode: RunMode, idx: number) {
     super(opt, idx, opt.logger);
     this.emitter = new EventEmitter();
@@ -47,6 +66,11 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     this.baseScreenshotOptions = createBaseScreenshotOptions(opt);
   }
 
+  /**
+   *
+   * @override
+   *
+   **/
   async boot() {
     await super.boot();
     await this.expose();
@@ -65,9 +89,9 @@ export class CapturingBrowser extends StoryPreviewBrowser {
 
   private async expose() {
     const exposed: Exposed = {
-      emitCatpture: (opt: ScreenshotOptions, clientStoryKey: string) => this.handleOnCapture(opt, clientStoryKey),
+      emitCatpture: (opt: ScreenshotOptions, clientStoryKey: string) =>
+        this.subscribeScreenshotOptions(opt, clientStoryKey),
       getBaseScreenshotOptions: () => this.baseScreenshotOptions,
-      getCurrentStoryKey: (url: string) => url2StoryKey(url),
       getCurrentVariantKey: () => this.currentVariantKey,
       waitBrowserMetricsStable: () => this.waitBrowserMetricsStable('preEmit'),
     };
@@ -83,16 +107,23 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     return;
   }
 
-  private async handleOnCapture(opt: ScreenshotOptions, clientStoryKey: string) {
+  private async subscribeScreenshotOptions(opt: ScreenshotOptions, clientStoryKey: string) {
     if (this.touched) return;
+
     if (!this.currentStory) {
       this.emitter.emit('error', new InvalidCurrentStoryStateError());
       return;
     }
+
+    // Sometimes preview window emits options before completion of change story.
+    // So asserts story identifiers between this class hold and sent from browser and skips procedure if they're not equal.
     if (this.currentStory.id !== clientStoryKey) {
       this.debug('This options was sent from previous story', this.currentStory.id, clientStoryKey);
       return;
     }
+
+    // Sometimes preview window emits options twice for a story.
+    // The second(or more) options should be ignore because we should guarantee just one PNG for each request.
     if (this.processedStories.has(this.currentRequestId)) {
       this.debug(
         'This story was already processed:',
@@ -105,6 +136,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
       return;
     }
     this.processedStories.add(this.currentRequestId);
+
     this.debug(
       'Start to process to screenshot story:',
       this.currentRequestId,
@@ -113,19 +145,13 @@ export class CapturingBrowser extends StoryPreviewBrowser {
       this.currentVariantKey,
       JSON.stringify(opt),
     );
+
     this.emitter.emit('screenshotOptions', opt);
   }
 
-  private async waitScreenShotOption() {
+  private async waitForOptionsFromBrowser() {
     return new Promise<ScreenshotOptions | undefined>((resolve, reject) => {
-      // eslint-disable-next-line prefer-const
-      let id: NodeJS.Timer;
-      const cb = (opt?: ScreenshotOptions) => {
-        resolve(opt);
-        this.emitter.removeAllListeners();
-        clearTimeout(id);
-      };
-      id = setTimeout(() => {
+      const id = setTimeout(() => {
         this.emitter.removeAllListeners();
         if (!this.currentStory) {
           reject(new InvalidCurrentStoryStateError());
@@ -143,6 +169,13 @@ export class CapturingBrowser extends StoryPreviewBrowser {
         }
         reject(new ScreenshotTimeoutError(this.opt.captureTimeout, this.currentStory));
       }, this.opt.captureTimeout);
+
+      const cb = (opt?: ScreenshotOptions) => {
+        clearTimeout(id);
+        this.emitter.removeAllListeners();
+        resolve(opt);
+      };
+
       this.emitter.once('screenshotOptions', cb);
     });
   }
@@ -151,14 +184,19 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     if (!this.currentStory) {
       throw new InvalidCurrentStoryStateError();
     }
+
     let nextViewport: Viewport;
+
     if (typeof opt.viewport === 'string') {
       if (opt.viewport.match(/^\d+$/)) {
+        // For case such as `--viewport "800"`.
         nextViewport = { width: +opt.viewport, height: 600 };
       } else if (opt.viewport.match(/^\d+x\d+$/)) {
+        // For case such as `--viewport "800x600"`.
         const [w, h] = opt.viewport.split('x');
         nextViewport = { width: +w, height: +h };
       } else {
+        // Handle as Puppeteer device descriptor.
         const hit = dd.find(d => d.name === opt.viewport);
         if (!hit) {
           this.opt.logger.warn(
@@ -175,17 +213,21 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     } else {
       nextViewport = opt.viewport;
     }
+
+    // Sometimes, `page.screenshot` is completed before applying viewport unfortunately.
+    // So we compare the current viewport with the next viewport and wait for `opt.viewportDelay` time if they are different.
     if (!this.viewport || JSON.stringify(this.viewport) !== JSON.stringify(nextViewport)) {
       this.debug('Change viewport', JSON.stringify(nextViewport));
       await this.page.setViewport(nextViewport);
       this.viewport = nextViewport;
       if (this.opt.reloadAfterChangeViewport) {
         this.processedStories.delete(this.currentRequestId);
-        await Promise.all([this.page.reload(), this.waitScreenShotOption()]);
+        await Promise.all([this.page.reload(), this.waitForOptionsFromBrowser()]);
       } else {
         await sleep(this.opt.viewportDelay);
       }
     }
+
     return true;
   }
 
@@ -227,54 +269,101 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     }
   }
 
-  async screenshot(requestId: string, variantKey: VariantKey, retryCount: number) {
+  private logInvalidVariantKeysReason(reason: InvalidVariantKeysReason | null) {
+    if (reason) {
+      if (reason.type === 'notFound') {
+        this.logger.warn(
+          `Invalid variants. The variant key '${reason.to}' does not exist(story id: ${this.currentStory!.id}).`,
+        );
+      } else if (reason.type === 'circular') {
+        this.logger.warn(
+          `Invalid variants. Reference ${reason.refs.join(' -> ')} is circular(story id: ${this.currentStory!.id}).`,
+        );
+      }
+    }
+  }
+
+  /**
+   * Captures screenshot as a PNG image buffer from a story.
+   *
+   * @param requestId - Represents an identifier for the screenshot
+   * @param variantKey - Variant identifier for the screenshot
+   * @param retryCount - The number which represents how many attempting to capture this story and variant
+   *
+   * @returns PNG buffer, whether the capturing process is succeeded or not, additional variant keys if they are emitted, and file name suffix for default the default variant.
+   *
+   * @remarks
+   *
+   * - Throws an error if `retryCount` is equal to `opt.captureMaxRetryCount` and this capturing process is failed
+   *
+   **/
+  async screenshot(
+    requestId: string,
+    story: Story,
+    variantKey: VariantKey,
+    retryCount: number,
+  ): Promise<ScreenshotResult> {
     this.currentRequestId = requestId;
     this.currentVariantKey = variantKey;
     this.currentStoryRetryCount = retryCount;
     let emittedScreenshotOptions: ScreenshotOptions | undefined;
+
+    await this.setCurrentStory(story, { forceRerender: true });
+
     if (this.mode === 'managed') {
-      emittedScreenshotOptions = await this.waitScreenShotOption();
+      // Screenshot options are emitted form the browser process when managed mode.
+      emittedScreenshotOptions = await this.waitForOptionsFromBrowser();
       if (!this.currentStory) {
         throw new InvalidCurrentStoryStateError();
       }
       if (!emittedScreenshotOptions) {
+        // End this capturing process as failure of timeout if emitter don't resolve screenshot options.
         return { buffer: null, succeeded: false, variantKeysToPush: [], defaultVariantSuffix: '' };
-      }
-      if (emittedScreenshotOptions.skip) {
-        return { buffer: null, succeeded: true, variantKeysToPush: [], defaultVariantSuffix: '' };
       }
     } else {
       await sleep(this.opt.delay);
-      emittedScreenshotOptions = pickupFromVariantKey(this.baseScreenshotOptions, this.currentVariantKey);
+      // Use only `baseScreenshotOptions` when simple mode.
+      emittedScreenshotOptions = pickupWithVariantKey(this.baseScreenshotOptions, this.currentVariantKey);
     }
+
     const mergedScreenshotOptions = mergeScreenshotOptions(this.baseScreenshotOptions, emittedScreenshotOptions);
+
+    // Get keys for variants included in the screenshot options in order to queue capturing them after this sequence.
+    const [invalidReason, keys] = extractVariantKeys(mergedScreenshotOptions);
+    const variantKeysToPush = this.currentVariantKey.isDefault ? keys : [];
+    this.logInvalidVariantKeysReason(invalidReason);
+
+    // End this capturing process as success if `skip` set true.
+    if (mergedScreenshotOptions.skip) {
+      await this.waitForDebugInput();
+      return { buffer: null, succeeded: true, variantKeysToPush, defaultVariantSuffix: '' };
+    }
+
     this.touched = false;
-    const changed = await this.setViewport(mergedScreenshotOptions);
-    if (!changed) return { buffer: null, succeeded: true, variantKeysToPush: [], defaultVariantSuffix: '' };
+
+    // Change browser's viewport if needed.
+    const vpChanged = await this.setViewport(mergedScreenshotOptions);
+    // Skip to capture if the viewport option is invalid.
+    if (!vpChanged) return { buffer: null, succeeded: true, variantKeysToPush: [], defaultVariantSuffix: '' };
+
+    // Modify elements state.
     await this.setHover(mergedScreenshotOptions);
     await this.setFocus(mergedScreenshotOptions);
+
+    // Wait until browser main thread gets stable.
     await this.waitBrowserMetricsStable('postEmit');
     await this.page.evaluate(
       () => new Promise(res => (window as any).requestIdleCallback(() => res(), { timeout: 3000 })),
     );
-    const [invalidReason, keys] = extractVariantKeys(mergedScreenshotOptions);
-    if (invalidReason) {
-      if (invalidReason.type === 'notFound') {
-        this.logger.warn(
-          `Invalid variants. The variant key '${invalidReason.to}' does not exist(story id: ${this.currentStory!.id}).`,
-        );
-      } else if (invalidReason.type === 'circular') {
-        this.logger.warn(
-          `Invalid variants. Reference ${invalidReason.refs.join(' -> ')} is circular(story id: ${
-            this.currentStory!.id
-          }).`,
-        );
-      }
-    }
-    const variantKeysToPush = this.currentVariantKey.isDefault ? keys : [];
+
+    // Get PNG image buffer
     const buffer = await this.page.screenshot({ fullPage: emittedScreenshotOptions.fullPage });
+
+    // We should reset elements state(e.g. focusing, hovering) for future screenshot for this story.
     await this.resetIfTouched();
+
     await this.waitForDebugInput();
+
     return {
       buffer,
       succeeded: true,

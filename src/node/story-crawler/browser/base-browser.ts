@@ -7,7 +7,7 @@ export interface BaseBrowserOptions {
 
 export class BaseBrowser {
   private browser!: PuppeteerBrowser;
-  protected _page!: Page;
+  private _page!: Page;
   private debugInputResolver = () => {};
   private debugInputPromise: Promise<void> = Promise.resolve();
 
