@@ -3,7 +3,7 @@
 [storybook]: https://github.com/storybooks/storybook
 [puppeteer]: https://github.com/GoogleChrome/puppeteer
 
-![DEMO](https://raw.githubusercontent.com/tsuyoshiwada/storybook-chrome-screenshot/artwork/demo.gif)
+![DEMO](https://raw.githubusercontent.com/reg-viz/storybook-chrome-screenshot/artwork/demo_v2.gif)
 
 [![npm](https://img.shields.io/npm/v/storybook-chrome-screenshot.svg?style=flat-square)](https://www.npmjs.com/package/storybook-chrome-screenshot)
 [![CircleCI](https://img.shields.io/circleci/project/github/tsuyoshiwada/storybook-chrome-screenshot/master.svg?style=flat-square)](https://circleci.com/gh/tsuyoshiwada/storybook-chrome-screenshot)
