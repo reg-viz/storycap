@@ -25,7 +25,7 @@ It is primarily responsible for image generation necessary for Visual Testing su
     - [Run `storycap` Command](#run-storycap-command)
 - [API](#api)
   - [`withScreenshot`](#withscreenshot)
-  - [interface `ScreenShotOptions`](#interface-screenshotoptions)
+  - [type `ScreenohotOptions`](#type-screenohotoptions)
   - [type `Variants`](#type-variants)
   - [type `Viewport`](#type-viewport)
 - [Command Line Options](#command-line-options)
@@ -183,16 +183,16 @@ $ npx run storycap http://localhost:9009 --serverCmd "storybook -p 9009"
 ### `withScreenshot`
 
 ```typescript
-withScreenshot(opt?: ScreenShotOptions): Function;
+withScreenshot(opt?: ScreenshotOptions): Function;
 ```
 
 A Storybook decorator to notify Storycap to captures stories.
 
 **Note:** Using `withScreenshot` as function is deprecated. Use `addParameters` if you give screenshot options.
 
-### interface `ScreenShotOptions`
+### type `ScreenohotOptions`
 
-`ScreenShotOptions` object is available as the value of the key `screenshot` of `addParameters` argument or `withScreenshot` argument.
+`ScreenshotOptions` object is available as the value of the key `screenshot` of `addParameters` argument or `withScreenshot` argument.
 
 ```ts
 interface ScreenshotOptions {
