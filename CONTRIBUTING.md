@@ -3,6 +3,7 @@
 <!-- toc -->
 
 - [Setup](#setup)
+- [Unit testing](#unit-testing)
 - [E2E testing](#e2e-testing)
   - [All storybook versions](#all-storybook-versions)
   - [Single storybook](#single-storybook)
@@ -12,7 +13,13 @@
 ## Setup
 
 - Clone this repository
-- `yarn --pure-lockfile`
+- `yarn --frozen-lockfile`
+
+## Unit testing
+
+```sh
+$ yarn jest
+```
 
 ## E2E testing
 
