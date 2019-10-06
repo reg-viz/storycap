@@ -374,7 +374,7 @@ normal.story = {
           viewport: 'iPhone 5',
         },
         hovered: {
-          extends: 'iPhone 5',
+          extends: 'small',
           hover: 'button.my-button',
         },
       },
