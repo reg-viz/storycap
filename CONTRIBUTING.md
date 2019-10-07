@@ -1,7 +1,25 @@
+# Contribution
+
+<!-- toc -->
+
+- [Setup](#setup)
+- [Unit testing](#unit-testing)
+- [E2E testing](#e2e-testing)
+  - [All storybook versions](#all-storybook-versions)
+  - [Single storybook](#single-storybook)
+
+<!-- tocstop -->
+
 ## Setup
 
-* Clone this repository
-* `yarn --pure-lockfile`
+- Clone this repository
+- `yarn --frozen-lockfile`
+
+## Unit testing
+
+```sh
+$ yarn jest
+```
 
 ## E2E testing
 
