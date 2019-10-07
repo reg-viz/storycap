@@ -38,6 +38,7 @@ It is primarily responsible for image generation necessary for Visual Testing su
 - [Storybook compatibility](#storybook-compatibility)
   - [Storybook versions](#storybook-versions)
   - [UI frameworks](#ui-frameworks)
+- [Migration](#migration)
 - [How it works](#how-it-works)
 - [Examples](#examples)
 - [TODO](#todo)
@@ -467,6 +468,10 @@ See also packages in `examples` directory.
 ### UI frameworks
 
 Storycap (with both simple and managed mode) is agnostic for specific UI frameworks(e.g. React, Angular, Vue.js, etc...). So you can use it with Storybook with your own favorite framework :smile: .
+
+## Migration
+
+See [migration guide](./MIGRATION.md) if you already use [storybook-chrome-screenshot](https://www.npmjs.com/package/storybook-chrome-screenshot) or [zisui](https://www.npmjs.com/package/zisui).
 
 ## How it works
 
