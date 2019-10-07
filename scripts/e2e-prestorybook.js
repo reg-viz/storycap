@@ -33,7 +33,7 @@ async function main() {
     console.log(`Usage:\n\t${process.argv[1]} directory`);
     return 0;
   }
-  const prjDir = path.resolve(__dirname, '..');
+  const prjDir = path.resolve(__dirname, '../packages/storycap');
   const cwd = process.cwd();
   const dist = path.resolve(cwd, target, 'node_modules/storycap');
   if (prjDir === dist) {

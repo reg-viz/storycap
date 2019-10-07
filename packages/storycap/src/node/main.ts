@@ -1,5 +1,5 @@
 import minimatch from 'minimatch';
-import { StorybookConnection, StoriesBrowser, Story, sleep } from './story-crawler';
+import { StorybookConnection, StoriesBrowser, Story, sleep } from 'storycrawler';
 import { CapturingBrowser } from './capturing-browser';
 import { MainOptions, RunMode } from './types';
 import { FileSystem } from './file';

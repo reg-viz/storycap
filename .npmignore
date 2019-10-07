@@ -1,7 +1,0 @@
-.circleci
-__screenshots__/
-examples/
-src/
-.reg
-regconfig.json
-.eslintrc.yml

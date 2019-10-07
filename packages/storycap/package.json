@@ -1,0 +1,100 @@
+{
+  "name": "storycap",
+  "version": "2.0.0-alpha.3",
+  "description": "A Storybook addon, Save the screenshot image of your stories! via puppeteer.",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "bin": {
+    "storycap": "lib/node/cli.js"
+  },
+  "scripts": {
+    "clean": "rimraf lib",
+    "build": "tsc --p tsconfig.build.json",
+    "prepare": "yarn clean && yarn build",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reg-viz/storybook-chrome-screenshot.git"
+  },
+  "author": "tsuyoshiwada",
+  "contributors": [
+    "Yosuke Kurami"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/reg-viz/storybook-chrome-screenshot/issues"
+  },
+  "homepage": "https://github.com/reg-viz/storybook-chrome-screenshot#readme",
+  "files": [
+    "lib",
+    "assets",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "MIGRATION.md",
+    "README.md",
+    "LICENSE",
+    "package.json",
+    "register.js"
+  ],
+  "keywords": [
+    "storybook",
+    "addon",
+    "puppeteer",
+    "chrome",
+    "screenshot",
+    "capture",
+    "visual-testing"
+  ],
+  "devDependencies": {
+    "@types/jest": "^24.0.18",
+    "jest": "^24.9.0",
+    "minimist": "^1.2.0",
+    "ts-jest": "^24.1.0",
+    "typescript": "^3.6.3"
+  },
+  "dependencies": {
+    "@types/minimatch": "^3.0.3",
+    "@types/mkdirp": "^0.5.2",
+    "@types/node": "^12.6.8",
+    "@types/puppeteer": "^1.19.0",
+    "@types/rimraf": "^2.0.2",
+    "@types/wait-on": "^3.2.0",
+    "@types/yargs": "^13.0.1",
+    "core-js": "^3.2.1",
+    "imagesloaded": "^4.1.4",
+    "minimatch": "^3.0.4",
+    "mkdirp": "^0.5.1",
+    "puppeteer": "^1.19.0",
+    "rimraf": "^3.0.0",
+    "storycrawler": "^2.0.0-alpha.3",
+    "yargs": "^14.0.0"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.build.json"
+      }
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "testMatch": [
+      "**/__tests__/*.(ts|tsx)",
+      "**/*.test.(ts|tsx)"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "_old/.*",
+      "examples/.*",
+      "\\.d\\.ts$",
+      "lib/.*"
+    ],
+    "testURL": "http://localhost"
+  }
+}

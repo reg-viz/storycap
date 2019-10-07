@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { time } from './story-crawler';
+import { time } from 'storycrawler';
 import { main } from './main';
 import { MainOptions } from './types';
 import yargs from 'yargs';

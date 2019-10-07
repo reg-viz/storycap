@@ -1,6 +1,6 @@
 import { Logger } from './logger';
 import { LaunchOptions } from 'puppeteer';
-import { StorybookConnectionOptions, BaseBrowserOptions } from './story-crawler';
+import { StorybookConnectionOptions, BaseBrowserOptions } from 'storycrawler';
 
 /**
  *
