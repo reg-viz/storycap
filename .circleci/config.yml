@@ -15,15 +15,18 @@ jobs:
             - v1-dependencies-
 
       - run: yarn install --frozen-lockfile
+      - run: yarn bootstrap
 
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "yarn.lock" }}
 
+      - run: yarn build
       - run: yarn format:check
       - run: yarn lint
       - run: yarn test
+      - run: yarn e2e
   #     - run: yarn regression
 
   deploy:

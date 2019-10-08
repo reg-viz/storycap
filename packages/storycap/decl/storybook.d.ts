@@ -1,9 +1,9 @@
-declare module "@storybook/addons" {
-  import { EventEmitter } from "events";
+declare module '@storybook/addons' {
+  import { EventEmitter } from 'events';
 
   export interface API {
-    raw?: () => { id: string, kind: string, name: string }[];
-    getStorybook(): { kind: string, stories: { name: string }[] }[];
+    raw?: () => { id: string; kind: string; name: string }[];
+    getStorybook(): { kind: string; stories: { name: string }[] }[];
   }
 
   export interface StoryKind {
@@ -12,8 +12,8 @@ declare module "@storybook/addons" {
   }
 
   export class Channel extends EventEmitter {
-    on(name: "setStories", listener: (event: { stories: StoryKind[] }) => void): this;
-    once(name: "setStories", listener: (event: { stories: StoryKind[] }) => void): this;
+    on(name: 'setStories', listener: (event: { stories: StoryKind[] }) => void): this;
+    once(name: 'setStories', listener: (event: { stories: StoryKind[] }) => void): this;
   }
 
   export interface Addons {
@@ -27,7 +27,7 @@ declare module "@storybook/addons" {
       parameterName: string;
       skipIfNoParametersOrOptions: boolean;
       allowDeprecatedUsage: boolean;
-      wrapper: (getStory: any, context: any, args: { parameters: any, options: any }) => any;
+      wrapper: (getStory: any, context: any, args: { parameters: any; options: any }) => any;
     }): Function;
   }
 

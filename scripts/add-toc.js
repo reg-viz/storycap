@@ -11,4 +11,4 @@ function addToc(markdownFilename) {
   fs.writeFileSync(path.join(__dirname, '..', markdownFilename), contentWithToc, 'utf8');
 }
 
-['README.md', 'MIGRATION.md', 'CONTRIBUTING.md'].forEach(addToc);
+['README.md', 'MIGRATION.md', 'CONTRIBUTING.md', 'packages/storycrawler/README.md'].forEach(addToc);

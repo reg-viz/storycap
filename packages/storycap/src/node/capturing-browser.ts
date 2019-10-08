@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import path from 'path';
 import { Viewport } from 'puppeteer';
-import { Story, StoryPreviewBrowser, MetricsWatcher, sleep } from './story-crawler';
+import { Story, StoryPreviewBrowser, MetricsWatcher, sleep } from 'storycrawler';
 
 import { MainOptions, RunMode } from './types';
 import { VariantKey, ScreenshotOptions, StrictScreenshotOptions, Exposed } from '../shared/types';

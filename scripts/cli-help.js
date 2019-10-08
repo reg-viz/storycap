@@ -11,7 +11,7 @@ const readme = fs.readFileSync(path.join(__dirname, '../README.md'), 'utf8');
 const [head, tmp] = readme.split('<!-- inject:clihelp -->');
 const [_, tail] = tmp.split('<!-- endinject -->');
 
-const help = execSync('node lib/node/cli.js --help');
+const help = execSync('node packages/storycap/lib/node/cli.js --help');
 const out = `${head}<!-- inject:clihelp -->
 ${mark}txt
 ${help}
