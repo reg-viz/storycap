@@ -15,7 +15,8 @@
     "lint": "eslint \"packages/**/src/**/*.ts\"",
     "test": "lerna run test",
     "e2e": "bash e2e.sh",
-    "regression": "reg-suit run"
+    "regression": "reg-suit run",
+    "deploy:manual": "lerna run clean && yarn build && lerna publish"
   },
   "repository": {
     "type": "git",
