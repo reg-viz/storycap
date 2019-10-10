@@ -17,7 +17,7 @@ export class BaseBrowser {
     this.browser = await launch(
       this.opt.launchOptions || {
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        headless: false,
+        headless: true,
       },
     );
     this._page = await this.browser.newPage();

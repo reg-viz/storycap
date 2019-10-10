@@ -5,7 +5,7 @@ export class MetricsWatcher {
   private length = 3;
   private previous: Metrics[] = [];
 
-  constructor(private page: Page, private count: number) {}
+  constructor(private page: Page, private count: number = 1000) {}
 
   async waitForStable() {
     for (let i = 0; i < this.count; ++i) {

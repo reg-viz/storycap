@@ -1,25 +1,3 @@
-# Storycrawler
-
-Utilities to build Storybook crawling tools with Puppeteer.
-
-<!-- toc -->
-
-- [Install](#install)
-- [Usage](#usage)
-- [API](#api)
-- [LICENSE](#license)
-
-<!-- tocstop -->
-
-## Install
-
-```sh
-$ npm i storycrawler
-```
-
-## Usage
-
-```ts
 import {
   StorybookConnection,
   StoriesBrowser,
@@ -67,12 +45,3 @@ import {
     await connection.disconnect();
   }
 })();
-```
-
-## API
-
-**T.B.D.**
-
-## LICENSE
-
-MIT

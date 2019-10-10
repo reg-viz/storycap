@@ -24,14 +24,24 @@ function waitServer(url: string, timeout: number) {
 export interface StorybookConnectionOptions {
   storybookUrl: string;
   serverCmd?: string;
-  serverTimeout: number;
+  serverTimeout?: number;
 }
 
 export class StorybookConnection {
   private proc?: cp.ChildProcess;
-  constructor(private opt: StorybookConnectionOptions, private logger: Logger) {}
+  private _status: 'CONNECTED' | 'CONNECTING' | 'DISCONNECTED' = 'DISCONNECTED';
+  constructor(private opt: StorybookConnectionOptions, private logger: Logger = new Logger('silent')) {}
+
+  get url() {
+    return this.opt.storybookUrl;
+  }
+
+  get status() {
+    return this._status;
+  }
 
   async connect() {
+    this._status = 'CONNECTING';
     this.logger.log(`Wait for connecting storybook server ${this.logger.color.green(this.opt.storybookUrl)}.`);
     if (this.opt.serverCmd) {
       const [cmd, ...args] = this.opt.serverCmd.split(/\s+/);
@@ -39,12 +49,13 @@ export class StorybookConnection {
       this.proc = cp.spawn(cmd, args, { stdio });
       this.logger.debug('Server process created', this.proc.pid);
     }
-    await waitServer(this.opt.storybookUrl, this.opt.serverTimeout);
+    await waitServer(this.opt.storybookUrl, this.opt.serverTimeout || 10_000);
     if (this.opt.serverCmd) {
       this.logger.debug('Storybook server started');
     } else {
       this.logger.debug('Found Storybook server');
     }
+    this._status = 'CONNECTED';
     return this;
   }
 
@@ -56,5 +67,6 @@ export class StorybookConnection {
     } catch (e) {
       // nothing todo
     }
+    this._status = 'DISCONNECTED';
   }
 }

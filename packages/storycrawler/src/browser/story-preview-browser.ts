@@ -2,6 +2,7 @@ import { BaseBrowser, BaseBrowserOptions } from './base-browser';
 import { Story } from '../story-types';
 import { Logger } from '../logger';
 import { sleep } from '../async-utils';
+import { StorybookConnection } from '../storybook-connection';
 
 const dummyV4Story: Story = {
   version: 'v4',
@@ -17,11 +18,22 @@ const dummyV5Story: Story = {
   story: '__dummy__',
 };
 
-export abstract class StoryPreviewBrowser extends BaseBrowser {
+export class StoryPreviewBrowser extends BaseBrowser {
   private _currentStory?: Story;
 
-  constructor(protected opt: BaseBrowserOptions, protected readonly idx: number, protected readonly logger: Logger) {
+  constructor(
+    protected connection: StorybookConnection,
+    protected readonly idx = 0,
+    protected opt: BaseBrowserOptions = {},
+    protected readonly logger: Logger = new Logger('silent'),
+  ) {
     super(opt);
+  }
+
+  async boot() {
+    await super.boot();
+    await this.openPage(this.connection.url + '/iframe.html?selectedKind=scszisui&selectedStory=scszisui');
+    return this;
   }
 
   protected debug(...args: any[]) {

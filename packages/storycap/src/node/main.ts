@@ -19,9 +19,9 @@ async function detectRunMode(storiesBrowser: StoriesBrowser, opt: MainOptions) {
   return mode;
 }
 
-async function bootCapturingBrowserAsWorkers(opt: MainOptions, mode: RunMode) {
+async function bootCapturingBrowserAsWorkers(connection: StorybookConnection, opt: MainOptions, mode: RunMode) {
   const browsers = await Promise.all(
-    [...new Array(Math.max(opt.parallel, 1)).keys()].map(i => new CapturingBrowser(opt, mode, i).boot()),
+    [...new Array(Math.max(opt.parallel, 1)).keys()].map(i => new CapturingBrowser(connection, opt, mode, i).boot()),
   );
   opt.logger.debug(`Started ${browsers.length} capture browsers`);
   return { workers: browsers, closeWorkers: () => Promise.all(browsers.map(b => b.close.bind(b))) };
@@ -49,13 +49,7 @@ export async function main(mainOptions: MainOptions) {
   const connection = await new StorybookConnection(mainOptions.serverOptions, logger).connect();
 
   // Launch Puppeteer process and fetch names of all stories.
-  const storiesBrowser = await new StoriesBrowser(
-    {
-      launchOptions: mainOptions.launchOptions,
-      storybookUrl: mainOptions.serverOptions.storybookUrl,
-    },
-    logger,
-  ).boot();
+  const storiesBrowser = await new StoriesBrowser(connection, mainOptions, logger).boot();
   const allStories = await storiesBrowser.getStories();
 
   // Mode(simple / managed) deteciton.
@@ -71,7 +65,7 @@ export async function main(mainOptions: MainOptions) {
   logger.log(`Found ${logger.color.green(stories.length + '')} stories.`);
 
   // Launce Puppeteer processes to capture each story.
-  const { workers, closeWorkers } = await bootCapturingBrowserAsWorkers(mainOptions, mode);
+  const { workers, closeWorkers } = await bootCapturingBrowserAsWorkers(connection, mainOptions, mode);
 
   try {
     // Execution caputuring procedure.
