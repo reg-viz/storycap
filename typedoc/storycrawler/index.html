@@ -1,0 +1,267 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>storycrawler</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">storycrawler</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> storycrawler</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#storycrawler" id="storycrawler" style="color: inherit; text-decoration: none;">
+					<h1>Storycrawler</h1>
+				</a>
+				<p>Utilities to build Storybook crawling tools with Puppeteer.</p>
+				<!-- toc -->
+				<ul>
+					<li><a href="#install">Install</a></li>
+					<li><a href="#usage">Usage</a></li>
+					<li><a href="#api">API</a></li>
+					<li><a href="#license">LICENSE</a></li>
+				</ul>
+				<!-- tocstop -->
+				<a href="#install" id="install" style="color: inherit; text-decoration: none;">
+					<h2>Install</h2>
+				</a>
+				<pre><code class="language-sh">$ npm i storycrawler</code></pre>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h2>Usage</h2>
+				</a>
+				<pre><code class="language-ts"><span class="hljs-keyword">import</span> {
+  StorybookConnection,
+  StoriesBrowser,
+  StoryPreviewBrowser,
+  MetricsWatcher,
+  createExecutionService,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'storycrawler'</span>;
+
+(<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-comment">// Connect to the target Storybook server.</span>
+  <span class="hljs-keyword">const</span> storybookUrl = <span class="hljs-string">'https://storybookjs-next.now.sh/vue-kitchen-sink'</span>;
+  <span class="hljs-keyword">const</span> connection = <span class="hljs-keyword">await</span> <span class="hljs-keyword">new</span> StorybookConnection({ storybookUrl }).connect();
+
+  <span class="hljs-comment">// Launch Puppeteer process to fetch stories info.</span>
+  <span class="hljs-keyword">const</span> storiesBrowser = <span class="hljs-keyword">await</span> <span class="hljs-keyword">new</span> StoriesBrowser(connection).boot();
+  <span class="hljs-comment">// Item in stories has name, kind and id of the corresponding story</span>
+  <span class="hljs-keyword">const</span> stories = <span class="hljs-keyword">await</span> storiesBrowser.getStories();
+
+  <span class="hljs-comment">// Launce Puppeteer browsers to visit each story's preview window(iframe.html)</span>
+  <span class="hljs-keyword">const</span> workers = <span class="hljs-keyword">await</span> <span class="hljs-built_in">Promise</span>.all([<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].map(<span class="hljs-function"><span class="hljs-params">i</span> =&gt;</span> <span class="hljs-keyword">new</span> StoryPreviewBrowser(connection, i).boot()));
+
+  <span class="hljs-keyword">try</span> {
+    <span class="hljs-comment">// `createExecutionService` creates a queue of the tasks for each story.</span>
+    <span class="hljs-keyword">const</span> service = createExecutionService(workers, stories, <span class="hljs-function"><span class="hljs-params">story</span> =&gt;</span> <span class="hljs-keyword">async</span> worker =&gt; {
+      <span class="hljs-comment">// Display story in the worker's preview window</span>
+      <span class="hljs-keyword">await</span> worker.setCurrentStory(story);
+
+      <span class="hljs-comment">// Wait for UI framework updating DOM</span>
+      <span class="hljs-keyword">await</span> <span class="hljs-keyword">new</span> MetricsWatcher(worker.page).waitForStable();
+
+      <span class="hljs-comment">// Extract information from the preview window.</span>
+      <span class="hljs-comment">// You can access Puppeteer's page instance via `worker.page`.</span>
+      <span class="hljs-keyword">const</span> m = <span class="hljs-keyword">await</span> worker.page.metrics();
+      <span class="hljs-keyword">return</span> { story, nodesCount: m.Nodes };
+    });
+
+    <span class="hljs-comment">// `createExecutionService` register tasks but does not kick them.</span>
+    <span class="hljs-comment">// Tasks in queue start via calling `.execute()`.</span>
+    <span class="hljs-keyword">const</span> results = <span class="hljs-keyword">await</span> service.execute();
+
+    results.forEach(<span class="hljs-function">(<span class="hljs-params">{ story, nodesCount }</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${story.id}</span>: <span class="hljs-subst">${nodesCount}</span>`</span>));
+  } <span class="hljs-keyword">finally</span> {
+    <span class="hljs-keyword">await</span> storiesBrowser.close();
+    <span class="hljs-keyword">await</span> <span class="hljs-built_in">Promise</span>.all(workers.map(<span class="hljs-function"><span class="hljs-params">worker</span> =&gt;</span> worker.close()));
+    <span class="hljs-keyword">await</span> connection.disconnect();
+  }
+})();</code></pre>
+				<a href="#api" id="api" style="color: inherit; text-decoration: none;">
+					<h2>API</h2>
+				</a>
+				<p><strong>T.B.D.</strong></p>
+				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
+					<h2>LICENSE</h2>
+				</a>
+				<p>MIT</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_async_utils_.html">"async-<wbr>utils"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_async_utils_test_.html">"async-<wbr>utils.test"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_browser_base_browser_.html">"browser/base-<wbr>browser"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_browser_index_.html">"browser/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_browser_metrics_watcher_.html">"browser/metrics-<wbr>watcher"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_browser_stories_browser_.html">"browser/stories-<wbr>browser"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_browser_story_preview_browser_.html">"browser/story-<wbr>preview-<wbr>browser"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_errors_.html">"errors"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_flatten_stories_.html">"flatten-<wbr>stories"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_index_.html">"index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_logger_.html">"logger"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_story_types_.html">"story-<wbr>types"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_storybook_connection_.html">"storybook-<wbr>connection"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_timer_.html">"timer"</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
