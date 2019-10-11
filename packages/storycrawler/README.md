@@ -71,7 +71,7 @@ import {
 
 ## API
 
-**T.B.D.**
+See [here](https://reg-viz.github.io/storybook-chrome-screenshot/typedoc/storycrawler/index.html).
 
 ## LICENSE
 
