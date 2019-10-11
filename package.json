@@ -8,7 +8,6 @@
     "doc": "yarn doc:clihelp && yarn doc:toc && prettier --write \"*.md\" \"packages/*/*.md\" --loglevel warn",
     "typedoc:build": "lerna run typedoc",
     "build:pages": "yarn typedoc:build",
-    "deploy:pages": "gh-pages -d dist-pages",
     "copy:misc:storycrawler": "cpy LICENSE packages/storycrawler",
     "copy:misc:storycap": "cpy README.md CONTRIBUTING.md MIGRATION.md LICENSE packages/storycap",
     "copy:misc": "yarn copy:misc:storycrawler && yarn copy:misc:storycap",
@@ -19,7 +18,9 @@
     "test": "lerna run test",
     "e2e": "bash e2e.sh",
     "regression": "reg-suit run",
-    "deploy:manual": "lerna run clean && yarn build && lerna publish"
+    "deploy:ci": "lerna run clearn && yarn build && lerna publish --yes --from-package",
+    "deploy:manual": "lerna run clean && yarn build && lerna publish",
+    "deploy:pages": "gh-pages -d dist-pages"
   },
   "repository": {
     "type": "git",
