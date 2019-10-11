@@ -18,7 +18,7 @@
     "test": "lerna run test",
     "e2e": "bash e2e.sh",
     "regression": "reg-suit run",
-    "deploy:ci": "lerna run clearn && yarn build && lerna publish --yes --from-package",
+    "deploy:ci": "lerna run clean && yarn build && lerna publish --yes --from-package",
     "deploy:manual": "lerna run clean && yarn build && lerna publish",
     "deploy:pages": "gh-pages -d dist-pages"
   },

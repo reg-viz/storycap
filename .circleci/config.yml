@@ -44,6 +44,7 @@ jobs:
           name: Login npm
           command: |
             echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > ~/.npmrc
+            npm whoami
       - run:
           name: Publish
           command: |
