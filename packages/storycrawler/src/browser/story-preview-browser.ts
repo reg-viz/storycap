@@ -2,6 +2,7 @@ import { BaseBrowser, BaseBrowserOptions } from './base-browser';
 import { Story } from '../story-types';
 import { Logger } from '../logger';
 import { sleep } from '../async-utils';
+import { StorybookConnection } from '../storybook-connection';
 
 const dummyV4Story: Story = {
   version: 'v4',
@@ -17,24 +18,65 @@ const dummyV5Story: Story = {
   story: '__dummy__',
 };
 
-export abstract class StoryPreviewBrowser extends BaseBrowser {
+/**
+ *
+ * Browser class to visit Storybook's preview window.
+ *
+ **/
+export class StoryPreviewBrowser extends BaseBrowser {
   private _currentStory?: Story;
 
-  constructor(protected opt: BaseBrowserOptions, protected readonly idx: number, protected readonly logger: Logger) {
+  /**
+   *
+   * @param connection Connected connection to the target Storybook
+   * @param idx Index number of this browser
+   * @param opt Options to launch browser
+   * @param logger Logger instance
+   *
+   **/
+  constructor(
+    protected connection: StorybookConnection,
+    protected readonly idx = 0,
+    protected opt: BaseBrowserOptions = {},
+    protected readonly logger: Logger = new Logger('silent'),
+  ) {
     super(opt);
   }
 
-  protected debug(...args: any[]) {
-    this.logger.debug.apply(this.logger, [`[cid: ${this.idx}]`, ...args]);
+  /**
+   *
+   * @override
+   *
+   **/
+  async boot() {
+    await super.boot();
+    await this.page.goto(this.connection.url + '/iframe.html?selectedKind=scszisui&selectedStory=scszisui');
+    return this;
   }
 
+  /**
+   *
+   * @returns Story which this instance visit
+   *
+   **/
   get currentStory() {
     return this._currentStory;
   }
 
-  async setCurrentStory(s: Story, opt: { forceRerender?: boolean } = {}) {
-    if (this._currentStory && this._currentStory.id === s.id && !!opt.forceRerender) {
-      if (s.version === 'v4') {
+  /**
+   *
+   * Triggers to change story to display in the browser page's frame
+   *
+   * @param story Target story
+   * @param opt: Options
+   *
+   * @remarks
+   * To resolve of this method **does not** mean completion of rendering the target story.
+   *
+   **/
+  async setCurrentStory(story: Story, opt: { forceRerender?: boolean } = {}) {
+    if (this._currentStory && this._currentStory.id === story.id && !!opt.forceRerender) {
+      if (story.version === 'v4') {
         await this.page.evaluate(
           (d: any) => window.postMessage(JSON.stringify(d), '*'),
           this.createPostmessageData(dummyV4Story),
@@ -47,10 +89,19 @@ export abstract class StoryPreviewBrowser extends BaseBrowser {
       }
       await sleep(50);
     }
-    this._currentStory = s;
-    this.debug('Set story', s.id);
-    const data = this.createPostmessageData(s);
+    this._currentStory = story;
+    this.debug('Set story', story.id);
+    const data = this.createPostmessageData(story);
     await this.page.evaluate((d: typeof data) => window.postMessage(JSON.stringify(d), '*'), data);
+  }
+
+  /**
+   *
+   * Logs debug message with the index number
+   *
+   **/
+  protected debug(...args: any[]) {
+    this.logger.debug.apply(this.logger, [`[cid: ${this.idx}]`, ...args]);
   }
 
   private createPostmessageData(story: Story) {

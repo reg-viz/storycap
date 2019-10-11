@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import path from 'path';
 import { Viewport } from 'puppeteer';
-import { Story, StoryPreviewBrowser, MetricsWatcher, sleep } from 'storycrawler';
+import { Story, StorybookConnection, StoryPreviewBrowser, MetricsWatcher, sleep } from 'storycrawler';
 
 import { MainOptions, RunMode } from './types';
 import { VariantKey, ScreenshotOptions, StrictScreenshotOptions, Exposed } from '../shared/types';
@@ -57,8 +57,13 @@ export class CapturingBrowser extends StoryPreviewBrowser {
    * @param idx - Worker id.
    *
    **/
-  constructor(protected opt: MainOptions, private mode: RunMode, idx: number) {
-    super(opt, idx, opt.logger);
+  constructor(
+    protected connection: StorybookConnection,
+    protected opt: MainOptions,
+    private mode: RunMode,
+    idx: number,
+  ) {
+    super(connection, idx, opt, opt.logger);
     this.emitter = new EventEmitter();
     this.emitter.on('error', e => {
       throw e;
@@ -75,9 +80,6 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     await super.boot();
     await this.expose();
     await this.addStyles();
-    await this.openPage(
-      this.opt.serverOptions.storybookUrl + '/iframe.html?selectedKind=scszisui&selectedStory=scszisui',
-    );
     return this;
   }
 

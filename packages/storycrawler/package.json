@@ -8,7 +8,8 @@
     "clean": "rimraf lib",
     "build": "tsc -p tsconfig.build.json",
     "jest": "jest",
-    "test": "npm run jest"
+    "test": "npm run jest",
+    "typedoc": "typedoc --out \"../../dist-pages/typedoc/storycrawler\" --ignoreCompilerErrors --tsconfig tsconfig.build.json src"
   },
   "repository": {
     "type": "git",
@@ -42,6 +43,7 @@
     "jest": "^24.9.0",
     "puppeteer": "^1.19.0",
     "ts-jest": "^24.1.0",
+    "typedoc": "^0.15.0",
     "typescript": "^3.6.3"
   },
   "peerDependencies": {

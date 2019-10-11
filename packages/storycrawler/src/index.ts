@@ -1,4 +1,4 @@
-export { StorybookConnectionOptions, StorybookConnection } from './storybook-connection';
+export { StorybookConnectionOptions, StorybookConnection, StorybookConnectionStatus } from './storybook-connection';
 export * from './browser';
 export * from './errors';
 export * from './logger';

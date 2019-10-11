@@ -3,10 +3,7 @@ import { Logger } from '../logger';
 import { NoStoriesError } from '../errors';
 import { Story, StoryKind, V5Story } from '../story-types';
 import { flattenStories } from '../flatten-stories';
-
-export interface StoriesBrowserOptions extends BaseBrowserOptions {
-  storybookUrl: string;
-}
+import { StorybookConnection } from '../storybook-connection';
 
 interface API {
   raw?: () => { id: string; kind: string; name: string }[];
@@ -17,18 +14,44 @@ type ExposedWindow = typeof window & {
   __STORYBOOK_CLIENT_API__: API;
 };
 
+/**
+ *
+ * Browser class to fetch all stories names.
+ *
+ **/
 export class StoriesBrowser extends BaseBrowser {
-  constructor(protected opt: StoriesBrowserOptions, protected logger: Logger) {
+  /**
+   *
+   * @param connection Connected connection to the target Storybook server
+   * @param opt Options to launch browser
+   * @param logger Logger instance
+   *
+   **/
+  constructor(
+    protected connection: StorybookConnection,
+    protected opt: BaseBrowserOptions = {},
+    protected logger: Logger = new Logger('silent'),
+  ) {
     super(opt);
   }
 
+  /**
+   *
+   * Fetches stories' id, kind and names
+   *
+   * @returns List of stories
+   *
+   * @remarks
+   * This method automatically detects version of the Storybook.
+   *
+   **/
   async getStories() {
     this.logger.debug('Wait for stories definition.');
-    await this.openPage(this.opt.storybookUrl);
+    await this.page.goto(this.connection.url);
     let stories: Story[] | null = null;
     let oldStories: StoryKind[] | null = null;
     await this.page.goto(
-      this.opt.storybookUrl + '/iframe.html?selectedKind=story-crawler-kind&selectedStory=story-crawler-story',
+      this.connection.url + '/iframe.html?selectedKind=story-crawler-kind&selectedStory=story-crawler-story',
     );
     await this.page.waitFor(() => (window as ExposedWindow).__STORYBOOK_CLIENT_API__);
     const result = await this.page.evaluate(() => {
