@@ -14,7 +14,19 @@ type ExposedWindow = typeof window & {
   __STORYBOOK_CLIENT_API__: API;
 };
 
+/**
+ *
+ * Browser class to fetch all stories names.
+ *
+ **/
 export class StoriesBrowser extends BaseBrowser {
+  /**
+   *
+   * @param connection Connected connection to the target Storybook server
+   * @param opt Options to launch browser
+   * @param logger Logger instance
+   *
+   **/
   constructor(
     protected connection: StorybookConnection,
     protected opt: BaseBrowserOptions = {},
@@ -23,9 +35,19 @@ export class StoriesBrowser extends BaseBrowser {
     super(opt);
   }
 
+  /**
+   *
+   * Fetches stories' id, kind and names
+   *
+   * @returns List of stories
+   *
+   * @remarks
+   * This method automatically detects version of the Storybook.
+   *
+   **/
   async getStories() {
     this.logger.debug('Wait for stories definition.');
-    await this.openPage(this.connection.url);
+    await this.page.goto(this.connection.url);
     let stories: Story[] | null = null;
     let oldStories: StoryKind[] | null = null;
     await this.page.goto(

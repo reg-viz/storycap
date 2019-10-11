@@ -1,12 +1,39 @@
 import { Page, Metrics } from 'puppeteer';
 import { sleep } from '../async-utils';
 
+/**
+ *
+ * Helper to detect whether browser's rendering pipeline is stable
+ *
+ * @example
+ *
+ * ```ts
+ * async function someTask() {
+ *   const watcher = new MetricsWatcher(previewBrowser.page);
+ *   await watcher.waitForStable();
+ *   doSomething(previewBrowser.page);
+ * }
+ * ```
+ *
+ **/
 export class MetricsWatcher {
   private length = 3;
   private previous: Metrics[] = [];
 
   constructor(private page: Page, private count: number = 1000) {}
 
+  /**
+   *
+   * Waits until the page's rendering process is stable.
+   *
+   * @remarks
+   * This method checks the following counts get steady:
+   *
+   * - The number of DOM nodes
+   * - The number of calculation style
+   * - The number of calculation layout
+   *
+   **/
   async waitForStable() {
     for (let i = 0; i < this.count; ++i) {
       if (await this.check()) return i;

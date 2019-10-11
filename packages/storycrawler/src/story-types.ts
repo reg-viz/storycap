@@ -14,6 +14,11 @@ export type V5Story = {
   version: 'v5';
 };
 
+/**
+ *
+ * Represents a story object
+ *
+ **/
 export type Story = V4Story | V5Story;
 
 export interface StoryKind {

@@ -27,19 +27,70 @@ export interface StorybookConnectionOptions {
   serverTimeout?: number;
 }
 
+export type StorybookConnectionStatus = 'CONNECTED' | 'CONNECTING' | 'DISCONNECTED';
+
+/**
+ *
+ * Represents a connection to Storybook server
+ *
+ * @example
+ *
+ * ```ts
+ * const connection = new StorybookConnection({ storybookUrl: 'http://localhost:9009' });
+ * await connection.connect();
+ * ```
+ *
+ * You can boot Storybook server via `serverCmd`
+ *
+ * ```ts
+ * const connection = new StorybookConnection({
+ *   storybookUrl: 'http://localhost:9009',
+ *   serverCmd: 'start-storybook -p 9009',
+ * });
+ * await connection.connect();
+ * ```
+ *
+ **/
 export class StorybookConnection {
   private proc?: cp.ChildProcess;
-  private _status: 'CONNECTED' | 'CONNECTING' | 'DISCONNECTED' = 'DISCONNECTED';
+  private _status: StorybookConnectionStatus = 'DISCONNECTED';
+
+  /**
+   *
+   * @param opt Options for construction
+   * @param logger Logger instance
+   *
+   **/
   constructor(private opt: StorybookConnectionOptions, private logger: Logger = new Logger('silent')) {}
 
+  /**
+   *
+   * @returns URL of Storybook server connecting
+   *
+   **/
   get url() {
     return this.opt.storybookUrl;
   }
 
+  /**
+   *
+   * @returns {@link StorybookConnectionStatus}
+   *
+   **/
   get status() {
     return this._status;
   }
 
+  /**
+   *
+   * Connect Storybook server
+   *
+   * @returns Promise of the connection that resolves after connected
+   *
+   * @remarks
+   * If the connection has `serverCmd`, this method boots the server as a child process.
+   *
+   **/
   async connect() {
     this._status = 'CONNECTING';
     this.logger.log(`Wait for connecting storybook server ${this.logger.color.green(this.opt.storybookUrl)}.`);
@@ -59,6 +110,14 @@ export class StorybookConnection {
     return this;
   }
 
+  /**
+   *
+   * Disconnect to the Storybook server.
+   *
+   * @remarks
+   * If the connection has `serverCmd`, this method shutdowns it.
+   *
+   **/
   async disconnect() {
     if (!this.proc) return;
     try {
