@@ -7,7 +7,6 @@
 
 [![npm](https://img.shields.io/npm/v/storycap.svg?style=flat-square)](https://www.npmjs.com/package/storycap)
 [![CircleCI](https://img.shields.io/circleci/project/github/reg-viz/storycap/master.svg?style=flat-square)](https://circleci.com/gh/reg-viz/storycap)
-[![David](https://img.shields.io/david/tsuyoshiwada/storycap.svg?style=flat-square)](https://david-dm.org/tsuyoshiwada/storycap)
 
 > A [Storybook][storybook] Addon, Save the screenshot image of your stories :camera: via [Puppeteer][puppeteer].
 
