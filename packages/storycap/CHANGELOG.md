@@ -27,6 +27,28 @@
 [#91]: https://github.com/reg-viz/storycap/pull/91
 [#93]: https://github.com/reg-viz/storycap/pull/93
 [#94]: https://github.com/reg-viz/storycap/pull/94
+[#95]: https://github.com/reg-viz/storycap/issues/95
+
+## 2.0.0
+
+> 2019-10-13
+
+### New features
+
+- `addParameters` notation support. ([#95])
+- Storybook v5 support. ([#95])
+- Zero configuration. ([#95])
+- Force override element's state (e.g. `:focus`). ([#95])
+- Automatic disable CSS animation. ([#95])
+- Full page support. ([#95])
+
+### Breaking changes
+
+See [migration guide](https://github.com/reg-viz/storycap/blob/master/MIGRATION.md#from-storybook-chrome-screenshot-1x-to-storycap).
+
+### Deprecated features
+
+- Knobs support. ([#95])
 
 ## 1.4.0
 
