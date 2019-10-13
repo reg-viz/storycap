@@ -71,7 +71,7 @@ import {
 
 ## API
 
-See [here](https://reg-viz.github.io/storybook-chrome-screenshot/typedoc/storycrawler/index.html).
+See [here](https://reg-viz.github.io/storycap/typedoc/storycrawler/index.html).
 
 ## LICENSE
 
