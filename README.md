@@ -3,11 +3,10 @@
 [storybook]: https://github.com/storybooks/storybook
 [puppeteer]: https://github.com/GoogleChrome/puppeteer
 
-![DEMO](https://raw.githubusercontent.com/reg-viz/storybook-chrome-screenshot/artwork/demo_v2.gif)
+![DEMO](https://raw.githubusercontent.com/reg-viz/storycap/artwork/demo_v2.gif)
 
-[![npm](https://img.shields.io/npm/v/storybook-chrome-screenshot.svg?style=flat-square)](https://www.npmjs.com/package/storybook-chrome-screenshot)
-[![CircleCI](https://img.shields.io/circleci/project/github/tsuyoshiwada/storybook-chrome-screenshot/master.svg?style=flat-square)](https://circleci.com/gh/tsuyoshiwada/storybook-chrome-screenshot)
-[![David](https://img.shields.io/david/tsuyoshiwada/storybook-chrome-screenshot.svg?style=flat-square)](https://david-dm.org/tsuyoshiwada/storybook-chrome-screenshot)
+[![npm](https://img.shields.io/npm/v/storycap.svg?style=flat-square)](https://www.npmjs.com/package/storycap)
+[![CircleCI](https://img.shields.io/circleci/project/github/reg-viz/storycap/master.svg?style=flat-square)](https://circleci.com/gh/reg-viz/storycap)
 
 > A [Storybook][storybook] Addon, Save the screenshot image of your stories :camera: via [Puppeteer][puppeteer].
 
@@ -490,8 +489,8 @@ Storycap accesses the launched page using [Puppeteer][puppeteer].
 The following tasks remain. Contributes are welcome :smiley:
 
 - [x] Upgrade v2
+- [x] Extract crawler as a NPM package.
 - [ ] More unit testing.
-- [ ] Extract crawler as a NPM package.
 - [ ] Capture with JS/CSS coverages.
 
 ## Contributing

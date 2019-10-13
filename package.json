@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/reg-viz/storybook-chrome-screenshot.git"
+    "url": "git+https://github.com/reg-viz/storycap.git"
   },
   "husky": {
     "hooks": {
@@ -37,9 +37,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/reg-viz/storybook-chrome-screenshot/issues"
+    "url": "https://github.com/reg-viz/storycap/issues"
   },
-  "homepage": "https://github.com/reg-viz/storybook-chrome-screenshot#readme",
+  "homepage": "https://github.com/reg-viz/storycap#readme",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.3.0",
     "@typescript-eslint/parser": "^2.3.0",

@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/reg-viz/storybook-chrome-screenshot.git"
+    "url": "git+https://github.com/reg-viz/storycap.git"
   },
   "author": "tsuyoshiwada",
   "contributors": [
@@ -21,9 +21,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/reg-viz/storybook-chrome-screenshot/issues"
+    "url": "https://github.com/reg-viz/storycap/issues"
   },
-  "homepage": "https://github.com/reg-viz/storybook-chrome-screenshot#readme",
+  "homepage": "https://github.com/reg-viz/storycap/packages/storycrawler",
   "files": [
     "lib",
     "CHANGELOG.md",
