@@ -1,0 +1,85 @@
+{
+  "name": "storycrawler",
+  "version": "2.0.0-alpha.5",
+  "description": "Utilities to build Storybook crawling tools with Puppeteer",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "clean": "rimraf lib",
+    "build": "tsc -p tsconfig.build.json",
+    "jest": "jest",
+    "test": "npm run jest",
+    "typedoc": "typedoc --out \"../../dist-pages/typedoc/storycrawler\" --ignoreCompilerErrors --tsconfig tsconfig.build.json src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reg-viz/storybook-chrome-screenshot.git"
+  },
+  "author": "tsuyoshiwada",
+  "contributors": [
+    "Yosuke Kurami"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/reg-viz/storybook-chrome-screenshot/issues"
+  },
+  "homepage": "https://github.com/reg-viz/storybook-chrome-screenshot#readme",
+  "files": [
+    "lib",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
+  "keywords": [
+    "storybook",
+    "addon",
+    "puppeteer",
+    "chrome"
+  ],
+  "devDependencies": {
+    "@types/jest": "^24.0.18",
+    "@types/puppeteer": "^1.19.0",
+    "jest": "^24.9.0",
+    "puppeteer": "^1.19.0",
+    "ts-jest": "^24.1.0",
+    "typedoc": "^0.15.0",
+    "typescript": "^3.6.3"
+  },
+  "peerDependencies": {
+    "puppeteer": "^1.19.0"
+  },
+  "dependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/node": "^12.6.8",
+    "@types/wait-on": "^3.2.0",
+    "chalk": "^2.4.1",
+    "wait-on": "^3.3.0"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.build.json"
+      }
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "testMatch": [
+      "**/__tests__/*.(ts|tsx)",
+      "**/*.test.(ts|tsx)"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "_old/.*",
+      "examples/.*",
+      "\\.d\\.ts$",
+      "lib/.*"
+    ]
+  }
+}
