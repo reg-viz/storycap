@@ -6,6 +6,11 @@ import { MainOptions } from './types';
 import yargs from 'yargs';
 import { Logger } from './logger';
 
+function showDevices(logger: Logger) {
+  const dd = require('puppeteer/DeviceDescriptors') as { name: string; viewport: any }[];
+  dd.map(device => logger.log(device.name, JSON.stringify(device.viewport)));
+}
+
 function createOptions(): MainOptions {
   const setting = yargs
     .locale('en')
@@ -49,6 +54,11 @@ function createOptions(): MainOptions {
       default: false,
       description: 'Whether to reload after viewport changed.',
     })
+    .option('listDevices', {
+      boolean: true,
+      default: false,
+      description: 'List available device descriptors.',
+    })
     .option('puppeteerLaunchConfig', {
       string: true,
       default: '{ "args": ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"] }',
@@ -85,10 +95,16 @@ function createOptions(): MainOptions {
     viewportDelay,
     reloadAfterChangeViewport,
     disableCssAnimation,
+    listDevices,
     puppeteerLaunchConfig: puppeteerLaunchConfigString,
   } = setting.argv;
 
   const logger = new Logger(verbose ? 'verbose' : silent ? 'silent' : 'normal');
+
+  if (listDevices) {
+    showDevices(logger);
+    process.exit(0);
+  }
 
   let puppeteerLaunchConfig: string;
   try {
