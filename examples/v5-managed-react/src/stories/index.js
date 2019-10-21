@@ -9,6 +9,8 @@ import { Button, Welcome } from '@storybook/react/demo';
 import MyButton from '../MyButton';
 import MyInputText from '../MyInputText';
 
+import { isScreenshot } from 'storycap';
+
 storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
 storiesOf('Welcome_override', module)
 .add('to Storybook', () => <Welcome showApp={linkTo('Button')} />, {
@@ -23,7 +25,7 @@ storiesOf('Welcome_override', module)
 });
 
 storiesOf('Button', module)
-  .add('with text', () => <Button onClick={action('clicked')}>Hello Button</Button>)
+  .add('with text', () => <Button onClick={action('clicked')}>Hello { isScreenshot() ? 'Storycap' : 'Button'}</Button>)
   .add('with some emoji', () => (
     <Button onClick={action('clicked')}>
       <span role="img" aria-label="so cool">
