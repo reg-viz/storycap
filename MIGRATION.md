@@ -175,7 +175,7 @@ $ zisui http://your.storybook.com
 $ storycap http://your.storybook.com
 ```
 
-All CLI options of _zisui_ are available with storycap.
+All CLI options of _zisui_ are available with Storycap.
 
 ### Managed mode for React
 
@@ -195,7 +195,7 @@ You should replace it:
 import 'storycap/register';
 ```
 
-And You should edit `.storybook/config.js`:
+And you should edit `.storybook/config.js`:
 
 ```js
 /* .storybook/config.js */
@@ -221,7 +221,7 @@ addDecorator(withScreenshot({
 });
 ```
 
-**Remarks**: And storycap accepts [Storybook's global parameters notation](https://github.com/storybookjs/storybook/blob/next/MIGRATION.md#options-addon-deprecated), so using `addParameters` is recommended if you use Storybook v5.0 or later:
+**Remarks**: Storycap accepts [Storybook's global parameters notation](https://github.com/storybookjs/storybook/blob/next/MIGRATION.md#options-addon-deprecated), so `addParameters` is recommended if you use Storybook v5.0 or later:
 
 ```js
 /* .storybook/config.js */

@@ -10,8 +10,8 @@
 
 > A [Storybook][storybook] Addon, Save the screenshot image of your stories :camera: via [Puppeteer][puppeteer].
 
-Storycap takes a screenshot and saves it.  
-It is primarily responsible for image generation necessary for Visual Testing such as `reg-viz`.
+Storycap crawls your Storybook and takes screenshot images.
+It is primarily responsible for image generation necessary for Visual Testing such as [reg-suit](https://github.com/reg-viz/reg-suit).
 
 <!-- toc -->
 
