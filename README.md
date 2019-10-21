@@ -24,9 +24,10 @@ It is primarily responsible for image generation necessary for Visual Testing su
     - [Run `storycap` Command](#run-storycap-command)
 - [API](#api)
   - [`withScreenshot`](#withscreenshot)
-  - [type `ScreenohotOptions`](#type-screenohotoptions)
+  - [type `ScreenshotOptions`](#type-screenshotoptions)
   - [type `Variants`](#type-variants)
   - [type `Viewport`](#type-viewport)
+  - [function `isScreenshot`](#function-isscreenshot)
 - [Command Line Options](#command-line-options)
 - [Multiple PNGs from 1 story](#multiple-pngs-from-1-story)
   - [Basic usage](#basic-usage)
@@ -190,7 +191,7 @@ A Storybook decorator to notify Storycap to captures stories.
 
 **Note:** Using `withScreenshot` as function is deprecated. Use `addParameters` if you give screenshot options.
 
-### type `ScreenohotOptions`
+### type `ScreenshotOptions`
 
 `ScreenshotOptions` object is available as the value of the key `screenshot` of `addParameters` argument or `withScreenshot` argument.
 
@@ -280,6 +281,14 @@ addParameters({
   },
 });
 ```
+
+### function `isScreenshot`
+
+```typescript
+function isScreenshot(): boolean;
+```
+
+Returns whether current process runs in Storycap browser. It's useful to change your stories' behavior only in Storycap (e.g. disable JavaScript animation).
 
 ## Command Line Options
 
