@@ -73,7 +73,7 @@
 				<blockquote>
 					<p>A <a href="https://github.com/storybooks/storybook">Storybook</a> Addon, Save the screenshot image of your stories :camera: via <a href="https://github.com/GoogleChrome/puppeteer">Puppeteer</a>.</p>
 				</blockquote>
-				<p>Storycap takes a screenshot and saves it.<br>It is primarily responsible for image generation necessary for Visual Testing such as <code>reg-viz</code>.</p>
+				<p>Storycap takes a screenshot and saves it.<br>It is primarily responsible for image generation necessary for Visual Testing such as <a href="https://github.com/reg-viz/reg-suit">reg-suit</a>.</p>
 				<!-- toc -->
 				<ul>
 					<li><a href="#features">Features</a></li>
@@ -89,9 +89,10 @@
 					</li>
 					<li><a href="#api">API</a><ul>
 							<li><a href="#withscreenshot"><code>withScreenshot</code></a></li>
-							<li><a href="#type-screenohotoptions">type <code>ScreenohotOptions</code></a></li>
+							<li><a href="#type-screenshotoptions">type <code>ScreenshotOptions</code></a></li>
 							<li><a href="#type-variants">type <code>Variants</code></a></li>
 							<li><a href="#type-viewport">type <code>Viewport</code></a></li>
+							<li><a href="#function-isscreenshot">function <code>isScreenshot</code></a></li>
 						</ul>
 					</li>
 					<li><a href="#command-line-options">Command Line Options</a></li>
@@ -224,8 +225,8 @@ $ npx run storycap http://localhost:9009</code></pre>
 				<pre><code class="language-typescript">withScreenshot(opt?: ScreenshotOptions): <span class="hljs-built_in">Function</span>;</code></pre>
 				<p>A Storybook decorator to notify Storycap to captures stories.</p>
 				<p><strong>Note:</strong> Using <code>withScreenshot</code> as function is deprecated. Use <code>addParameters</code> if you give screenshot options.</p>
-				<a href="#type-codescreenohotoptionscode" id="type-codescreenohotoptionscode" style="color: inherit; text-decoration: none;">
-					<h3>type <code>ScreenohotOptions</code></h3>
+				<a href="#type-codescreenshotoptionscode" id="type-codescreenshotoptionscode" style="color: inherit; text-decoration: none;">
+					<h3>type <code>ScreenshotOptions</code></h3>
 				</a>
 				<p><code>ScreenshotOptions</code> object is available as the value of the key <code>screenshot</code> of <code>addParameters</code> argument or <code>withScreenshot</code> argument.</p>
 				<pre><code class="language-ts"><span class="hljs-keyword">interface</span> ScreenshotOptions {
@@ -303,6 +304,11 @@ $ npx run storycap http://localhost:9009</code></pre>
     },
   },
 });</code></pre>
+				<a href="#function-codeisscreenshotcode" id="function-codeisscreenshotcode" style="color: inherit; text-decoration: none;">
+					<h3>function <code>isScreenshot</code></h3>
+				</a>
+				<pre><code class="language-typescript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isScreenshot</span>(<span class="hljs-params"></span>): <span class="hljs-title">boolean</span></span>;</code></pre>
+				<p>Returns whether current process runs in Storycap browser. It&#39;s useful to change your stories&#39; behavior only in Storycap (e.g. disable JavaScript animation).</p>
 				<a href="#command-line-options" id="command-line-options" style="color: inherit; text-decoration: none;">
 					<h2>Command Line Options</h2>
 				</a>
@@ -512,6 +518,9 @@ addParameters({
 				<ul>
 					<li class="globals  ">
 						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_client_is_screenshot_.html">"client/is-<wbr>screenshot"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_client_register_.html">"client/register"</a>
