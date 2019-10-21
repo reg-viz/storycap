@@ -9,7 +9,7 @@
   },
   "scripts": {
     "clean": "rimraf lib",
-    "build": "tsc --p tsconfig.build.json",
+    "build": "tsc --p tsconfig.build.json && tsc -p tsconfig.client.json",
     "prepare": "yarn clean && yarn build",
     "test": "jest",
     "typedoc": "typedoc --out \"../../dist-pages/typedoc/storycap\" --ignoreCompilerErrors --tsconfig tsconfig.build.json src"
