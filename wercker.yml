@@ -38,5 +38,4 @@ deploy:
     - script:
       name: deploy
       code: |
-        yarn deploy
-        yarn publish:npm
+        yarn deploy:ci
