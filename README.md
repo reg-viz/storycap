@@ -317,6 +317,7 @@ Options:
   --metricsWatchRetryCount     Number of count to retry until browser metrics stable.           [number] [default: 1000]
   --viewportDelay              Delay time [msec] between changing viewport and capturing.        [number] [default: 300]
   --reloadAfterChangeViewport  Whether to reload after viewport changed.                      [boolean] [default: false]
+  --stateChangeDelay           Delay time [msec] after changing element's state.                   [number] [default: 0]
   --listDevices                List available device descriptors.                             [boolean] [default: false]
   --puppeteerLaunchConfig      JSON string of launch config for Puppeteer.
                [string] [default: "{ "args": ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"] }"]

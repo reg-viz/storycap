@@ -22,6 +22,7 @@ export interface MainOptions extends BaseBrowserOptions {
   delay: number;
   viewports: string[];
   viewportDelay: number;
+  stateChangeDelay: number;
   reloadAfterChangeViewport: boolean;
   outDir: string;
   flat: boolean;

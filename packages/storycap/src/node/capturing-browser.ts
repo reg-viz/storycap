@@ -100,6 +100,11 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     Object.entries(exposed).forEach(([k, f]) => this.page.exposeFunction(k, f));
   }
 
+  private async waitIfTouched() {
+    if (!this.touched) return;
+    await sleep(this.opt.stateChangeDelay);
+  }
+
   private async resetIfTouched() {
     const story = this.currentStory;
     if (!this.touched || !story) return;
@@ -351,6 +356,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     // Modify elements state.
     await this.setHover(mergedScreenshotOptions);
     await this.setFocus(mergedScreenshotOptions);
+    await this.waitIfTouched();
 
     // Wait until browser main thread gets stable.
     await this.waitBrowserMetricsStable('postEmit');

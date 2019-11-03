@@ -54,6 +54,11 @@ function createOptions(): MainOptions {
       default: false,
       description: 'Whether to reload after viewport changed.',
     })
+    .option('stateChangeDelay', {
+      number: true,
+      default: 0,
+      description: "Delay time [msec] after changing element's state.",
+    })
     .option('listDevices', {
       boolean: true,
       default: false,
@@ -94,6 +99,7 @@ function createOptions(): MainOptions {
     metricsWatchRetryCount,
     viewportDelay,
     reloadAfterChangeViewport,
+    stateChangeDelay,
     disableCssAnimation,
     listDevices,
     puppeteerLaunchConfig: puppeteerLaunchConfigString,
@@ -135,6 +141,7 @@ function createOptions(): MainOptions {
     metricsWatchRetryCount,
     viewportDelay,
     reloadAfterChangeViewport,
+    stateChangeDelay,
     disableCssAnimation,
     launchOptions: puppeteerLaunchConfig,
     logger,
