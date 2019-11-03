@@ -1,0 +1,42 @@
+box: regviz/node-xcb
+
+build:
+  steps:
+    - script:
+      name: set yarn cache
+      code: |
+        export YARN_CACHE=$WERCKER_CACHE_DIR/yarn
+
+    - script:
+      name: test
+      code: |
+        yarn --frozen-lockfile
+        yarn bootstrap
+        yarn build
+        yarn format:check
+        yarn lint
+        yarn test
+        yarn e2e
+
+deploy:
+  steps:
+    - script:
+      name: set yarn cache
+      code: |
+        export YARN_CACHE=$WERCKER_CACHE_DIR/yarn
+    - script:
+      name: build
+      code: |
+        yarn install --frozen-lockfile
+        yarn bootstrap
+        yarn build
+    - script:
+      name: Login npm
+      code: |
+        echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > ~/.npmrc
+        npm whoami
+    - script:
+      name: deploy
+      code: |
+        yarn deploy
+        yarn publish:npm
