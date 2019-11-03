@@ -6,7 +6,7 @@
 ![DEMO](https://raw.githubusercontent.com/reg-viz/storycap/artwork/demo_v2.gif)
 
 [![npm](https://img.shields.io/npm/v/storycap.svg?style=flat-square)](https://www.npmjs.com/package/storycap)
-[![CircleCI](https://img.shields.io/circleci/project/github/reg-viz/storycap/master.svg?style=flat-square)](https://circleci.com/gh/reg-viz/storycap)
+[![wercker status](https://app.wercker.com/status/c229497229bbdd3627c5d86830bb7872/s/master 'wercker status')](https://app.wercker.com/project/byKey/c229497229bbdd3627c5d86830bb7872)
 
 > A [Storybook][storybook] Addon, Save the screenshot image of your stories :camera: via [Puppeteer][puppeteer].
 
