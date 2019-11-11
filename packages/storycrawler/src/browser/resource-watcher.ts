@@ -52,6 +52,8 @@ export class ResourceWatcher {
     this.page.on('request', request => {
       const url = request.url();
       if (request.method() !== 'GET') return;
+      // Ignore the following resource types because they might create HTTP request never completed
+      if (['media', 'texttrack', 'websocket', 'eventsource', 'other'].includes(request.resourceType())) return;
       this.requestedAssetUrls.add(url);
       if (this.resolvedAssetsMap.has(url)) return;
       let resolve: () => void = () => {};
@@ -65,12 +67,6 @@ export class ResourceWatcher {
 
     this.page.on('requestfinished', req => setAsResolved(req.url()));
     this.page.on('requestfailed', req => setAsResolved(req.url()));
-    this.page.on('response', res => {
-      const contentType = res.headers()['content-type'];
-      if (contentType && contentType.indexOf('text/event-stream') !== -1) {
-        setAsResolved(res.url());
-      }
-    });
     return this;
   }
 
