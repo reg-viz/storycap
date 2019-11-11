@@ -265,7 +265,8 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     return;
   }
 
-  private async waitForResources() {
+  private async waitForResources(screenshotOptions: StrictScreenshotOptions) {
+    if (!screenshotOptions.waitAssets && !screenshotOptions.waitImages) return;
     this.debug('Wait for requested resources resolved', this.resourceWatcher.getRequestedUrls());
     await this.resourceWatcher.waitForRequestsComplete();
   }
@@ -367,10 +368,10 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     await this.setFocus(mergedScreenshotOptions);
     await this.waitIfTouched();
 
-    await this.waitForResources();
-
     // Wait until browser main thread gets stable.
+    await this.waitForResources(mergedScreenshotOptions);
     await this.waitBrowserMetricsStable('postEmit');
+
     await this.page.evaluate(
       () => new Promise(res => (window as any).requestIdleCallback(() => res(), { timeout: 3000 })),
     );
