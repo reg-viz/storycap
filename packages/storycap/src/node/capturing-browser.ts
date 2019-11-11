@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import path from 'path';
 import { Viewport } from 'puppeteer';
-import { Story, StorybookConnection, StoryPreviewBrowser, MetricsWatcher, sleep } from 'storycrawler';
+import { Story, StorybookConnection, StoryPreviewBrowser, MetricsWatcher, ResourceWatcher, sleep } from 'storycrawler';
 
 import { MainOptions, RunMode } from './types';
 import { VariantKey, ScreenshotOptions, StrictScreenshotOptions, Exposed } from '../shared/types';
@@ -47,6 +47,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
   private currentRequestId!: string;
   private currentVariantKey: VariantKey = { isDefault: true, keys: [] };
   private touched = false;
+  private resourceWatcher!: ResourceWatcher;
 
   /**
    *
@@ -80,6 +81,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     await super.boot();
     await this.expose();
     await this.addStyles();
+    this.resourceWatcher = new ResourceWatcher(this.page).init();
     return this;
   }
 
@@ -263,6 +265,11 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     return;
   }
 
+  private async waitForResources() {
+    this.debug('Wait for requested resources resolved', this.resourceWatcher.getRequestedUrls());
+    await this.resourceWatcher.waitForRequestsComplete();
+  }
+
   private async waitBrowserMetricsStable(phase: 'preEmit' | 'postEmit') {
     const mw = new MetricsWatcher(this.page, this.opt.metricsWatchRetryCount);
     const checkCountUntillStable = await mw.waitForStable();
@@ -314,6 +321,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     this.currentVariantKey = variantKey;
     this.currentStoryRetryCount = retryCount;
     let emittedScreenshotOptions: ScreenshotOptions | undefined;
+    this.resourceWatcher.clear();
 
     await this.setCurrentStory(story, { forceRerender: true });
 
@@ -329,6 +337,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
       }
     } else {
       await sleep(this.opt.delay);
+      await this.waitBrowserMetricsStable('preEmit');
       // Use only `baseScreenshotOptions` when simple mode.
       emittedScreenshotOptions = pickupWithVariantKey(this.baseScreenshotOptions, this.currentVariantKey);
     }
@@ -357,6 +366,8 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     await this.setHover(mergedScreenshotOptions);
     await this.setFocus(mergedScreenshotOptions);
     await this.waitIfTouched();
+
+    await this.waitForResources();
 
     // Wait until browser main thread gets stable.
     await this.waitBrowserMetricsStable('postEmit');
