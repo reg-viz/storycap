@@ -29,6 +29,7 @@ export interface MainOptions extends BaseBrowserOptions {
   include: string[];
   exclude: string[];
   disableCssAnimation: boolean;
+  disableWaitAssets: boolean;
   parallel: number;
   metricsWatchRetryCount: number;
   launchOptions: LaunchOptions;

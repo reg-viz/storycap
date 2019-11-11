@@ -29,6 +29,11 @@ function createOptions(): MainOptions {
       default: true,
       description: 'Disable CSS animation and transition.',
     })
+    .option('disableWaitAssets', {
+      boolean: true,
+      default: false,
+      description: 'Disable waiting for requested assets',
+    })
     .option('silent', { boolean: true, default: false })
     .option('verbose', { boolean: true, default: false })
     .option('serverCmd', { string: true, default: '', description: 'Command line to launch Storybook server.' })
@@ -101,6 +106,7 @@ function createOptions(): MainOptions {
     reloadAfterChangeViewport,
     stateChangeDelay,
     disableCssAnimation,
+    disableWaitAssets,
     listDevices,
     puppeteerLaunchConfig: puppeteerLaunchConfigString,
   } = setting.argv;
@@ -143,6 +149,7 @@ function createOptions(): MainOptions {
     reloadAfterChangeViewport,
     stateChangeDelay,
     disableCssAnimation,
+    disableWaitAssets,
     launchOptions: puppeteerLaunchConfig,
     logger,
   } as MainOptions;

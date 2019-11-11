@@ -198,7 +198,7 @@ A Storybook decorator to notify Storycap to captures stories.
 ```ts
 interface ScreenshotOptions {
   delay?: number;                           // default 0 msec
-  waitImages?: boolean;                     // default true
+  waitAssets?: boolean;                     // default true
   waitFor?: string | () => Promise<void>;   // default ""
   fullPage?: boolean;                       // default true
   hover?: string;                           // default ""
@@ -207,11 +207,12 @@ interface ScreenshotOptions {
   viewport?: Viewport;
   viewports?: string[] | { [variantName]: Viewport };
   variants?: Variants;
+  waitImages?: boolean;                     // default true
 }
 ```
 
 - `delay`: Waiting time [msec] before capturing.
-- `waitImages`: If set true, Storycap waits until `<img>` in the story are loaded.
+- `waitAssets`: If set true, Storycap waits until all resources requested by the story, such as `<img>` or CSS background images, are finished.
 - `waitFor` : If you set a function to return `Promise`, Storycap waits the promise is resolved. You can also set a name of global function that returns `Promise`.
 - `fullPage`: If set true, Storycap captures the entire page of stories.
 - `focus`: If set a valid CSS selector string, Storycap captures after focusing the element matched by the selector.
@@ -219,6 +220,7 @@ interface ScreenshotOptions {
 - `skip`: If set true, Storycap cancels capturing corresponding stories.
 - `viewport`, `viewports`: See type `Viewport` section below.
 - `variants`: See type `Variants` section below.
+- `waitImages`: Deprecated. Use `waitAssets`. If set true, Storycap waits until `<img>` in the story are loaded.
 
 ### type `Variants`
 
@@ -229,13 +231,14 @@ type Variants = {
   [variantName: string]: {
     extends?: string | string[]; // default: ""
     delay?: number;
-    waitImages?: boolean;
+    waitAssets?: boolean;
     waitFor?: string | () => Promise<void>;
     fullPage?: boolean;
     hover?: string;
     focus?: string;
     skip?: boolean;
     viewport?: Viewport;
+    waitImages?: boolean;
   };
 };
 ```
@@ -308,6 +311,7 @@ Options:
   --delay                      Waiting time [msec] before screenshot for each story.               [number] [default: 0]
   --viewport, -V               Viewport.                                                  [array] [default: ["800x600"]]
   --disableCssAnimation        Disable CSS animation and transition.                           [boolean] [default: true]
+  --disableWaitAssets          Disable waiting for requested assets                           [boolean] [default: false]
   --silent                                                                                    [boolean] [default: false]
   --verbose                                                                                   [boolean] [default: false]
   --serverCmd                  Command line to launch Storybook server.                           [string] [default: ""]

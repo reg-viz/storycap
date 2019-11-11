@@ -37,7 +37,7 @@ export class MetricsWatcher {
   async waitForStable() {
     for (let i = 0; i < this.count; ++i) {
       if (await this.check()) return i;
-      await sleep(20);
+      await sleep(16);
     }
     return this.count;
   }

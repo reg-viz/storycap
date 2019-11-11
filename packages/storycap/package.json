@@ -64,7 +64,6 @@
     "@types/wait-on": "^3.2.0",
     "@types/yargs": "^13.0.1",
     "core-js": "^3.2.1",
-    "imagesloaded": "^4.1.4",
     "minimatch": "^3.0.4",
     "mkdirp": "^0.5.1",
     "puppeteer": "^1.19.0",

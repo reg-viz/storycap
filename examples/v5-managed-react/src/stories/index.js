@@ -8,6 +8,7 @@ import { Button, Welcome } from '@storybook/react/demo';
 
 import MyButton from '../MyButton';
 import MyInputText from '../MyInputText';
+import ImageButton from '../ImageButton';
 
 import { isScreenshot } from 'storycap';
 
@@ -60,3 +61,5 @@ storiesOf('MyButton', module)
       },
     },
   });
+
+storiesOf('ImageButton', module).add('default', () => <ImageButton />)

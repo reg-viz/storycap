@@ -13,7 +13,8 @@ export type Viewport = {
 
 export interface ScreenshotOptionFragments {
   delay?: number;
-  waitImages?: boolean;
+  waitAssets?: boolean;
+  waitImages?: boolean; // deprecated. Use `waitAssets`
   waitFor?: string | (() => Promise<any>);
   viewport?: Viewport | string;
   fullPage?: boolean;

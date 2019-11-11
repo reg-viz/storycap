@@ -1,7 +1,8 @@
 import { VariantKey, StrictScreenshotOptions, ScreenshotOptions, ScreenshotOptionFragments } from '../shared/types';
 
 const defaultScreenshotOptions = {
-  waitImages: true,
+  waitAssets: true,
+  waitImages: false,
   waitFor: '',
   fullPage: true,
   skip: false,
@@ -51,15 +52,18 @@ export function expandViewportsOption(options: ScreenshotOptions) {
  **/
 export function createBaseScreenshotOptions({
   delay,
+  disableWaitAssets,
   viewports,
 }: {
   delay: number;
+  disableWaitAssets: boolean;
   viewports: string[];
 }): StrictScreenshotOptions {
   if (viewports.length > 1) {
     return {
       ...defaultScreenshotOptions,
       delay,
+      waitAssets: !disableWaitAssets,
       viewport: viewports[0],
       variants: viewports.slice(1).reduce((acc, vp) => ({ ...acc, [vp]: { viewport: vp } }), {}),
       defaultVariantSuffix: viewports[0],
@@ -68,6 +72,7 @@ export function createBaseScreenshotOptions({
     return {
       ...defaultScreenshotOptions,
       delay,
+      waitAssets: !disableWaitAssets,
       viewport: viewports[0],
       defaultVariantSuffix: '',
     };

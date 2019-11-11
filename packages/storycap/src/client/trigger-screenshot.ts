@@ -1,5 +1,4 @@
 import { ScreenshotOptions, Exposed } from '../shared/types';
-import imagesloaded from 'imagesloaded';
 import {
   mergeScreenshotOptions,
   pickupWithVariantKey,
@@ -42,13 +41,6 @@ function url2StoryKey(url: string) {
 
 function waitForDelayTime(time: number = 0) {
   return new Promise(res => setTimeout(res, time));
-}
-
-function waitForImages(enabled: boolean, selector = 'body') {
-  if (!enabled) return Promise.resolve();
-  const elm = document.querySelector(selector);
-  if (!elm) return Promise.reject();
-  return new Promise<void>(res => imagesloaded(elm, () => res()));
 }
 
 function waitUserFunction(waitFor: undefined | null | string | (() => Promise<any>)) {
@@ -130,11 +122,9 @@ function capture() {
     if (scOpt.skip) return win.emitCatpture(scOpt, storyKey);
 
     // Wait for the following:
-    // - All `<img>`s are loaded
     // - Delay time set by options(API or CLI)
     // - User promise function
     // - Other browser's main thread procedure(using rIC)
-    await waitForImages(!!scOpt.waitImages);
     await waitForDelayTime(scOpt.delay);
     await waitUserFunction(scOpt.waitFor);
     await waitForNextIdle(win);
