@@ -68,6 +68,7 @@
     "mkdirp": "^0.5.1",
     "puppeteer": "^1.19.0",
     "rimraf": "^3.0.0",
+    "sanitize-filename": "^1.6.3",
     "storycrawler": "^2.3.1",
     "yargs": "^14.0.0"
   },
