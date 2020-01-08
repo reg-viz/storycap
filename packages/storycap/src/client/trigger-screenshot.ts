@@ -78,7 +78,9 @@ function consumeOptions(win: StorycapWindow, storyKey: string): ScreenshotOption
 function stock(opt: ScreenshotOptions = {}, context: any) {
   let storyKey: string | undefined = undefined;
 
-  if (context && !!context.kind && !!context.story) {
+  if (context && context.id) {
+    storyKey = context.id;
+  } else if (context && !!context.story && !!context.kind) {
     storyKey = context.kind + '/' + context.story;
   } else {
     storyKey = url2StoryKey(location.href);
