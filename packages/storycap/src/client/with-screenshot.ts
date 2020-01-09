@@ -24,7 +24,7 @@ const withScreenshotDecorator =
     allowDeprecatedUsage: true,
     wrapper: (getStory, context, { parameters, options }) => {
       const screenshotOptions = parameters || options;
-      triggerScreenshot(screenshotOptions);
+      triggerScreenshot(screenshotOptions, context);
       return getStory(context);
     },
   });
@@ -32,7 +32,7 @@ const withScreenshotDecorator =
 function withScreenshotLegacy(screenshotOptions: ScreenshotOptions = {}) {
   return (storyFn: Function, ctx: StoryKind | undefined) => {
     const wrapperWithContext = (context: any) => {
-      triggerScreenshot(screenshotOptions);
+      triggerScreenshot(screenshotOptions, context);
       return storyFn(context);
     };
 

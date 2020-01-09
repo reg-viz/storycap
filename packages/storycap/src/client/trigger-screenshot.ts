@@ -75,8 +75,17 @@ function consumeOptions(win: StorycapWindow, storyKey: string): ScreenshotOption
   return result;
 }
 
-function stock(opt: ScreenshotOptions = {}) {
-  const storyKey = url2StoryKey(location.href);
+function stock(opt: ScreenshotOptions = {}, context: any) {
+  let storyKey: string | undefined = undefined;
+
+  if (context && context.id) {
+    storyKey = context.id;
+  } else if (context && !!context.story && !!context.kind) {
+    storyKey = context.kind + '/' + context.story;
+  } else {
+    storyKey = url2StoryKey(location.href);
+  }
+
   withExpoesdWindow(win => pushOptions(win, storyKey, opt));
 }
 
@@ -141,9 +150,9 @@ function capture() {
  * @param screenshotOptions - Options for screenshot
  *
  */
-export function triggerScreenshot(screenshotOptions: ScreenshotOptions) {
+export function triggerScreenshot(screenshotOptions: ScreenshotOptions, context: any) {
   // This function can be called twice or more.
   // So we should stock all options for each calling and emit merged them to Node.js
-  stock(screenshotOptions);
+  stock(screenshotOptions, context);
   Promise.resolve().then(capture);
 }
