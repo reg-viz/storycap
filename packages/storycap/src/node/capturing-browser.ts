@@ -112,7 +112,13 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     if (!this.touched || !story) return;
     this.debug('Reset story because page state got dirty in this request.', this.currentRequestId);
     await this.setCurrentStory(story, { forceRerender: true });
+
+    // Clear the browser state.
+    await this.page.hover('body');
+    await this.page.focus('body');
+
     this.touched = false;
+
     return;
   }
 
