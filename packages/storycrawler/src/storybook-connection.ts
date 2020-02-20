@@ -97,7 +97,7 @@ export class StorybookConnection {
     if (this.opt.serverCmd) {
       const [cmd, ...args] = this.opt.serverCmd.split(/\s+/);
       const stdio = this.logger.level === 'verbose' ? [0, 1, 2] : [];
-      this.proc = cp.spawn(cmd, args, { stdio });
+      this.proc = cp.spawn(cmd, args, { stdio, shell: true });
       this.logger.debug('Server process created', this.proc.pid);
     }
     await waitServer(this.opt.storybookUrl, this.opt.serverTimeout || 10_000);
