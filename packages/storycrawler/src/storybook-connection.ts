@@ -52,6 +52,15 @@ export type StorybookConnectionStatus = 'CONNECTED' | 'CONNECTING' | 'DISCONNECT
  *
  **/
 export class StorybookConnection {
+  static spawnCmd(command: string, options?: cp.SpawnOptions) {
+    const opt: cp.SpawnOptions = {
+      ...(options || {}),
+      shell: true,
+    };
+    const [cmd, ...args] = command.split(/\s+/);
+    return cp.spawn(cmd, args, opt);
+  }
+
   private proc?: cp.ChildProcess;
   private _status: StorybookConnectionStatus = 'DISCONNECTED';
 
@@ -95,9 +104,8 @@ export class StorybookConnection {
     this._status = 'CONNECTING';
     this.logger.log(`Wait for connecting storybook server ${this.logger.color.green(this.opt.storybookUrl)}.`);
     if (this.opt.serverCmd) {
-      const [cmd, ...args] = this.opt.serverCmd.split(/\s+/);
       const stdio = this.logger.level === 'verbose' ? [0, 1, 2] : [];
-      this.proc = cp.spawn(cmd, args, { stdio, shell: true });
+      this.proc = StorybookConnection.spawnCmd(this.opt.serverCmd, { stdio });
       this.logger.debug('Server process created', this.proc.pid);
     }
     await waitServer(this.opt.storybookUrl, this.opt.serverTimeout || 10_000);
