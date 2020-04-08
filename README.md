@@ -73,8 +73,15 @@ $ npx storycap http://localhost:9001
 
 You can launch your server via `--serverCmd` option.
 
-```
+```sh
 $ storycap --serverCmd "start-storybook -p 9001" http://localhost:9001
+```
+
+Of course, you can use pre-built Storybook:
+
+```sh
+$ build-storybook -o dist-storybook
+$ storycap --serverCmd "npx http-server dist-storybook -p 9001" http://localhost:9001 
 ```
 
 Also, Storycap can crawls built and hosted Storybook pages:
