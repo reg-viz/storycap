@@ -38,13 +38,13 @@
     "chrome"
   ],
   "devDependencies": {
-    "@types/jest": "^24.0.18",
-    "@types/puppeteer": "^1.19.0",
-    "jest": "^24.9.0",
-    "puppeteer": "^1.19.0",
-    "ts-jest": "^24.1.0",
-    "typedoc": "^0.15.0",
-    "typescript": "^3.6.3"
+    "@types/jest": "24.0.18",
+    "@types/puppeteer": "1.19.1",
+    "jest": "24.9.0",
+    "puppeteer": "1.20.0",
+    "ts-jest": "24.1.0",
+    "typedoc": "0.15.0",
+    "typescript": "3.6.3"
   },
   "peerDependencies": {
     "puppeteer": "^1.19.0"

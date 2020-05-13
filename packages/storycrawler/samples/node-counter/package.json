@@ -7,10 +7,10 @@
   },
   "author": "Yosuke Kurami",
   "dependencies": {
-    "puppeteer": "^1.20.0",
-    "ts-node": "^8.4.1"
+    "puppeteer": "1.20.0",
+    "ts-node": "8.4.1"
   },
   "devDependencies": {
-    "typescript": "^3.6.3"
+    "typescript": "3.6.3"
   }
 }
