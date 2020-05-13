@@ -59,7 +59,7 @@
     "reg-publish-s3-plugin": "0.7.25",
     "reg-suit": "0.8.1",
     "typescript": "3.6.3",
-    "typescript-eslint-language-service": "1.4.0"
+    "typescript-eslint-language-service": "1.4.1"
   },
   "workspaces": [
     "packages/*"

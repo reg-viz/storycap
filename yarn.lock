@@ -7276,10 +7276,10 @@ typedoc@0.15.0:
     typedoc-default-themes "^0.6.0"
     typescript "3.5.x"
 
-typescript-eslint-language-service@1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/typescript-eslint-language-service/-/typescript-eslint-language-service-1.4.0.tgz#2b4a1cab0dd903c5555ee084f3244524d4c36883"
-  integrity sha512-tukb/z5Koi1wPkTl/BrRYNg2SdKX2YaBeZhG+7mr7Z7js4KYxs1HnmsqWV20QgEwFSYe8JbGlfmZJoM3adiPlA==
+typescript-eslint-language-service@1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/typescript-eslint-language-service/-/typescript-eslint-language-service-1.4.1.tgz#ec63f3c4a966a7a0d0d4cd25e5fd5b18e12d7c83"
+  integrity sha512-CAKm16pE6ZdASBknkHm9GjcMGBIcPKsenC88Zue+J218QxGdoUDRWUgXqtPeD5W3ZkIVZIQZztXi4N4qktq5aQ==
 
 typescript@3.5.x:
   version "3.5.3"
