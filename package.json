@@ -41,8 +41,8 @@
   },
   "homepage": "https://github.com/reg-viz/storycap#readme",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "2.3.0",
-    "@typescript-eslint/parser": "2.3.0",
+    "@typescript-eslint/eslint-plugin": "2.33.0",
+    "@typescript-eslint/parser": "2.33.0",
     "copy-dir": "1.2.0",
     "cpy": "7.3.0",
     "cpy-cli": "2.0.0",
