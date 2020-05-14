@@ -57,7 +57,7 @@
   },
   "dependencies": {
     "@types/minimatch": "^3.0.3",
-    "@types/mkdirp": "^0.5.2",
+    "@types/mkdirp": "^1.0.0",
     "@types/node": "^12.6.8",
     "@types/puppeteer": "^1.19.0",
     "@types/rimraf": "^3.0.0",
@@ -65,7 +65,7 @@
     "@types/yargs": "^13.0.1",
     "core-js": "^3.2.1",
     "minimatch": "^3.0.4",
-    "mkdirp": "^0.5.1",
+    "mkdirp": "^1.0.0",
     "puppeteer": "^1.19.0",
     "rimraf": "^3.0.0",
     "sanitize-filename": "^1.6.3",
