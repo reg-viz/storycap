@@ -51,7 +51,7 @@
     "@types/jest": "24.0.18",
     "jest": "24.9.0",
     "minimist": "^1.2.0",
-    "ts-jest": "24.1.0",
+    "ts-jest": "24.3.0",
     "typedoc": "0.17.6",
     "typescript": "3.6.3"
   },
