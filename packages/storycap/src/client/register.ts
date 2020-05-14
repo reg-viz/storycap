@@ -1,11 +1,7 @@
-type Addons = {
-  register(name: string, cb: Function): void;
-};
+import addons from '@storybook/addons';
 
 (window as any).__STORYCAP_MANAGED_MODE_REGISTERED__ = true;
 
-const addoons = require('@storybook/addons').default as Addons;
-
-addoons.register('storycap', () => {
+addons.register('storycap', () => {
   // nothing to do
 });
