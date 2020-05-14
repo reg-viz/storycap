@@ -35,7 +35,7 @@ describe(runParallel, () => {
     const result = await runParallel(tasks, [...new Array(4).keys()].map(createWorker));
     const end = Date.now();
     expect(result.length).toEqual(10);
-    expect(end - start < 200 / 2).toBeTruthy();
+    expect(end - start <= 200).toBeTruthy();
   });
 });
 
