@@ -54,7 +54,7 @@
     "@types/node": "^12.6.8",
     "@types/wait-on": "^3.2.0",
     "chalk": "^2.4.1",
-    "wait-on": "^3.3.0"
+    "wait-on": "^5.0.0"
   },
   "jest": {
     "globals": {
