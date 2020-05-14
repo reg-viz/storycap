@@ -62,7 +62,7 @@
     "@types/puppeteer": "^1.19.0",
     "@types/rimraf": "^3.0.0",
     "@types/wait-on": "^3.2.0",
-    "@types/yargs": "^13.0.1",
+    "@types/yargs": "^15.0.0",
     "core-js": "^3.2.1",
     "minimatch": "^3.0.4",
     "mkdirp": "^1.0.0",
@@ -70,7 +70,7 @@
     "rimraf": "^3.0.0",
     "sanitize-filename": "^1.6.3",
     "storycrawler": "^2.3.5",
-    "yargs": "^14.0.0"
+    "yargs": "^15.0.0"
   },
   "jest": {
     "globals": {
