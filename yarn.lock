@@ -2286,16 +2286,6 @@ cosmiconfig@^5.1.0, cosmiconfig@^5.2.1:
     js-yaml "^3.13.1"
     parse-json "^4.0.0"
 
-cp-file@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/cp-file/-/cp-file-4.2.0.tgz#715361663b71ede0b6dddbc3c80e2ba02e725ec3"
-  dependencies:
-    graceful-fs "^4.1.2"
-    make-dir "^1.0.0"
-    nested-error-stacks "^2.0.0"
-    pify "^2.3.0"
-    safe-buffer "^5.0.1"
-
 cp-file@^6.1.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/cp-file/-/cp-file-6.2.0.tgz#40d5ea4a1def2a9acdd07ba5c0b0246ef73dc10d"
@@ -6418,9 +6408,10 @@ redent@^2.0.0:
     indent-string "^3.0.0"
     strip-indent "^2.0.0"
 
-reg-cli@^0.15.7:
-  version "0.15.7"
-  resolved "https://registry.yarnpkg.com/reg-cli/-/reg-cli-0.15.7.tgz#d577b3346683a1df3f55dc2469c8efd339dfe0c0"
+reg-cli@^0.15.13:
+  version "0.15.13"
+  resolved "https://registry.yarnpkg.com/reg-cli/-/reg-cli-0.15.13.tgz#6397bec7ad626792bd1b1f839ef8048ae77998cf"
+  integrity sha512-2qfJEG15DybbT/AAHf2AttoVAnfCrfybN0JQa1057CmQ72aN9oOjmbhtTxFQeGjxLEx1epkmrZcu1EhOm/HLhw==
   dependencies:
     bluebird "3.5.5"
     chalk "2.4.2"
@@ -6469,13 +6460,14 @@ reg-publish-s3-plugin@0.9.0:
     reg-suit-util "^0.8.5"
     uuid "^3.1.0"
 
-reg-suit-core@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/reg-suit-core/-/reg-suit-core-0.8.1.tgz#ecf66ebcd6a3cf1ea9e66ef67cb60c3401aeb97d"
+reg-suit-core@^0.8.6:
+  version "0.8.6"
+  resolved "https://registry.yarnpkg.com/reg-suit-core/-/reg-suit-core-0.8.6.tgz#8f44d504da2483d8b9fc623f9d86963b631758a5"
+  integrity sha512-0weAI3I/510+kJvv8LtvK8nS6feWYv/5zFtlx2zeiuQdVyCGZnXbe0Wh1oonTQx4om7LtfU2xc9YpDs3DJ5hsg==
   dependencies:
     cpx "^1.5.0"
-    reg-cli "^0.15.7"
-    reg-suit-util "^0.7.25"
+    reg-cli "^0.15.13"
+    reg-suit-util "^0.8.5"
     rimraf "^2.6.1"
 
 reg-suit-util@^0.7.25:
@@ -6503,16 +6495,16 @@ reg-suit-util@^0.8.5:
     mime-types "^2.1.15"
     mkdirp "^0.5.1"
 
-reg-suit@0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.8.1.tgz#e86c4dec079546ca7132002d3cf245899b8f260e"
-  integrity sha512-7VzJf3Bdt2DlLpX4VfD8SvlXHiKeupD51laYCL/Zy2UZp+ix0HkXOFNdwLFfgyo52uMrtWUZSHDIp1qAn/IaVw==
+reg-suit@0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.10.0.tgz#9ff86f96ed0a1b661ae931adb6e537150c3e9701"
+  integrity sha512-Fum+moxCbv1+z8puUxhInLrEdRaFFl1JFmMOHU/6+MZqzJsWAcrRsrUIVipR/SDouRNJ6JVFWlJ/sUAoNr5Dfg==
   dependencies:
-    cp-file "^4.2.0"
+    cp-file "^7.0.0"
     ignore "^3.3.7"
     inquirer "^3.1.1"
-    reg-suit-core "^0.8.1"
-    reg-suit-util "^0.7.25"
+    reg-suit-core "^0.8.6"
+    reg-suit-util "^0.8.5"
     yargs "^8.0.2"
 
 regenerator-runtime@^0.11.0:
