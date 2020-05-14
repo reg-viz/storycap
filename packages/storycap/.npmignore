@@ -1,4 +1,5 @@
 __screenshots__/
 src/
+decl/
 tsconfig.json
 tsconfig.build.json

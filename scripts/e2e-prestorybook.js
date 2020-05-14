@@ -42,7 +42,7 @@ async function main() {
   }
   execSync('npm run build', { cwd: prjDir });
   rimraf.sync(dist);
-  mkdirp(dist);
+  mkdirp.sync(dist);
   copyDir.sync(`${path.join(prjDir, 'lib')}`, path.join(dist, 'lib'), {});
   await cpy(['package.json', 'register.js'], dist, { cwd: prjDir });
   rimraf.sync(path.resolve(dist, '../.bin/storycap'));
