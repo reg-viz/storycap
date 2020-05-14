@@ -38,7 +38,7 @@
     "chrome"
   ],
   "devDependencies": {
-    "@types/jest": "24.0.18",
+    "@types/jest": "24.9.1",
     "@types/puppeteer": "1.19.1",
     "jest": "26.0.1",
     "puppeteer": "1.20.0",
