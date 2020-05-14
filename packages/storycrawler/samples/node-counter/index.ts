@@ -6,7 +6,7 @@ import {
   createExecutionService,
 } from 'storycrawler';
 
-(async function() {
+(async function () {
   // Connect to the target Storybook server.
   const storybookUrl = 'https://storybookjs-next.now.sh/vue-kitchen-sink';
   const connection = await new StorybookConnection({ storybookUrl }).connect();

@@ -81,7 +81,7 @@ Of course, you can use pre-built Storybook:
 
 ```sh
 $ build-storybook -o dist-storybook
-$ storycap --serverCmd "npx http-server dist-storybook -p 9001" http://localhost:9001 
+$ storycap --serverCmd "npx http-server dist-storybook -p 9001" http://localhost:9001
 ```
 
 Also, Storycap can crawls built and hosted Storybook pages:
@@ -257,14 +257,16 @@ type Variants = {
 `Viewport` is compatible for [Puppeteer viewport interface](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagesetviewportviewport).
 
 ```ts
-type Viewport = string | {
-  width: number;              // default: 800
-  height: number;             // default: 600
-  deviceScaleFactor:?number;  // default: 1,
-  isMobile?: boolean;         // default: false,
-  hasTouch?: boolean;         // default: false,
-  isLandscape?: boolean;      // default: false,
-};
+type Viewport =
+  | string
+  | {
+      width: number; // default: 800
+      height: number; // default: 600
+      deviceScaleFactor: ?number; // default: 1,
+      isMobile?: boolean; // default: false,
+      hasTouch?: boolean; // default: false,
+      isLandscape?: boolean; // default: false,
+    };
 ```
 
 **Note:** You should choose a valid [device name](https://github.com/GoogleChrome/puppeteer/blob/master/lib/DeviceDescriptors.js) if set string.

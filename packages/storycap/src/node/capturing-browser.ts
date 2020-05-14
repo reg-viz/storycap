@@ -174,8 +174,9 @@ export class CapturingBrowser extends StoryPreviewBrowser {
         }
         if (this.currentStoryRetryCount < this.opt.captureMaxRetryCount) {
           this.opt.logger.warn(
-            `Capture timeout exceeded in ${this.opt.captureTimeout +
-              ''} msec. Retry to screenshot this story after this sequence.`,
+            `Capture timeout exceeded in ${
+              this.opt.captureTimeout + ''
+            } msec. Retry to screenshot this story after this sequence.`,
             this.currentStory.kind,
             this.currentStory.story,
           );

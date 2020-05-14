@@ -138,52 +138,49 @@ export function extractVariantKeys({
 }: ScreenshotOptions): [InvalidVariantKeysReason | null, VariantKey[]] {
   if (!variants) return [null, []];
   let invalidReason: InvalidVariantKeysReason | undefined = undefined;
-  const ret = Object.keys(variants).reduce(
-    (acc, key) => {
-      const keysList: string[][] = [];
-      const getParentKeys = (currentKey: string, childrenKeys: string[] = []): boolean => {
-        // Set `defaultVariantSuffix` value as the head variant key if it's referred.
-        if (defaultVariantSuffix && defaultVariantSuffix === currentKey) {
-          keysList.push([currentKey, ...childrenKeys]);
-          return true;
-        }
+  const ret = Object.keys(variants).reduce((acc, key) => {
+    const keysList: string[][] = [];
+    const getParentKeys = (currentKey: string, childrenKeys: string[] = []): boolean => {
+      // Set `defaultVariantSuffix` value as the head variant key if it's referred.
+      if (defaultVariantSuffix && defaultVariantSuffix === currentKey) {
+        keysList.push([currentKey, ...childrenKeys]);
+        return true;
+      }
 
-        // Check the key exists.
-        if (!variants[currentKey]) {
-          invalidReason = {
-            type: 'notFound',
-            from: childrenKeys[0],
-            to: currentKey,
-          };
-          return false;
-        }
+      // Check the key exists.
+      if (!variants[currentKey]) {
+        invalidReason = {
+          type: 'notFound',
+          from: childrenKeys[0],
+          to: currentKey,
+        };
+        return false;
+      }
 
-        // Check circular reference.
-        if (childrenKeys.find(k => k === currentKey)) {
-          invalidReason = {
-            type: 'circular',
-            refs: [currentKey, ...childrenKeys],
-          };
-          return false;
-        }
+      // Check circular reference.
+      if (childrenKeys.find(k => k === currentKey)) {
+        invalidReason = {
+          type: 'circular',
+          refs: [currentKey, ...childrenKeys],
+        };
+        return false;
+      }
 
-        const parent = variants![currentKey].extends;
-        const parentKeys = Array.isArray(parent) ? parent : typeof parent === 'string' ? [parent] : [];
+      const parent = variants![currentKey].extends;
+      const parentKeys = Array.isArray(parent) ? parent : typeof parent === 'string' ? [parent] : [];
 
-        // Ends recursive process because the root is here.
-        if (!parentKeys.length) {
-          keysList.push([currentKey, ...childrenKeys]);
-          return true;
-        }
+      // Ends recursive process because the root is here.
+      if (!parentKeys.length) {
+        keysList.push([currentKey, ...childrenKeys]);
+        return true;
+      }
 
-        // Get variant keys for each parent if this variant has parents to extend.
-        return parentKeys.every(pk => getParentKeys(pk, [currentKey, ...childrenKeys]));
-      };
-      getParentKeys(key);
-      return [...acc, ...keysList.map(keys => ({ isDefault: false, keys }))];
-    },
-    [] as VariantKey[],
-  );
+      // Get variant keys for each parent if this variant has parents to extend.
+      return parentKeys.every(pk => getParentKeys(pk, [currentKey, ...childrenKeys]));
+    };
+    getParentKeys(key);
+    return [...acc, ...keysList.map(keys => ({ isDefault: false, keys }))];
+  }, [] as VariantKey[]);
   if (!invalidReason) return [null, ret];
   return [invalidReason, []];
 }
