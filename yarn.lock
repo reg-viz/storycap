@@ -3116,7 +3116,7 @@ find-up@^3.0.0:
   dependencies:
     locate-path "^3.0.0"
 
-find-up@^4.0.0:
+find-up@^4.0.0, find-up@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/find-up/-/find-up-4.1.0.tgz#97afe7d6cdc0bc5928584b7c8d7b16e8a9aa5d19"
   dependencies:
@@ -6299,6 +6299,15 @@ read-pkg-up@^4.0.0:
     find-up "^3.0.0"
     read-pkg "^3.0.0"
 
+read-pkg-up@^7.0.0:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/read-pkg-up/-/read-pkg-up-7.0.1.tgz#f3a6135758459733ae2b95638056e1854e7ef507"
+  integrity sha512-zK0TB7Xd6JpCLmlLmufqykGE+/TlOePD6qKClNW7hHDKFh/J7/7gCWGR7joEQEW1bKq3a3yUZSObOoWLFQ4ohg==
+  dependencies:
+    find-up "^4.1.0"
+    read-pkg "^5.2.0"
+    type-fest "^0.8.1"
+
 read-pkg@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/read-pkg/-/read-pkg-1.1.0.tgz#f5ffaa5ecd29cb31c0474bca7d756b6bb29e3f28"
@@ -6469,18 +6478,6 @@ reg-suit-core@^0.8.6:
     reg-cli "^0.15.13"
     reg-suit-util "^0.8.5"
     rimraf "^2.6.1"
-
-reg-suit-util@^0.7.25:
-  version "0.7.25"
-  resolved "https://registry.yarnpkg.com/reg-suit-util/-/reg-suit-util-0.7.25.tgz#92c753160cfdcd22f86e31fa1e69cae9637f5a63"
-  dependencies:
-    chalk "^2.0.1"
-    cli-progress "^1.4.1"
-    cli-spinner "^0.2.6"
-    glob "^7.1.2"
-    lodash "^4.17.4"
-    mime-types "^2.1.15"
-    mkdirp "^0.5.1"
 
 reg-suit-util@^0.8.5:
   version "0.8.5"
@@ -7557,10 +7554,12 @@ typedoc@0.17.6:
     shelljs "^0.8.4"
     typedoc-default-themes "^0.10.1"
 
-typescript-eslint-language-service@1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/typescript-eslint-language-service/-/typescript-eslint-language-service-1.4.1.tgz#ec63f3c4a966a7a0d0d4cd25e5fd5b18e12d7c83"
-  integrity sha512-CAKm16pE6ZdASBknkHm9GjcMGBIcPKsenC88Zue+J218QxGdoUDRWUgXqtPeD5W3ZkIVZIQZztXi4N4qktq5aQ==
+typescript-eslint-language-service@2.1.8:
+  version "2.1.8"
+  resolved "https://registry.yarnpkg.com/typescript-eslint-language-service/-/typescript-eslint-language-service-2.1.8.tgz#0c797e4c780328d14c236de750ac6a5e2683637c"
+  integrity sha512-AwfL0Qpx2qaZuMKKo8Fg/fpvrHf04NdT1BSCef6YCoXTuXbX+ArHMphNECSJ0qrict08q48BkT5MLE59HweWpA==
+  dependencies:
+    read-pkg-up "^7.0.0"
 
 typescript@3.6.3:
   version "3.6.3"
