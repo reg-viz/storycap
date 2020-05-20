@@ -44,7 +44,7 @@
     "puppeteer": "1.20.0",
     "ts-jest": "26.0.0",
     "typedoc": "0.17.7",
-    "typescript": "3.9.2"
+    "typescript": "3.9.3"
   },
   "peerDependencies": {
     "puppeteer": "^1.19.0"
