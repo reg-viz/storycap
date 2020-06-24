@@ -66,7 +66,7 @@
     "core-js": "^3.2.1",
     "minimatch": "^3.0.4",
     "mkdirp": "^1.0.0",
-    "puppeteer": "^1.19.0",
+    "puppeteer": "^4.0.0",
     "rimraf": "^3.0.0",
     "sanitize-filename": "^1.6.3",
     "storycrawler": "^2.3.5",

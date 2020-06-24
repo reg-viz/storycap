@@ -7,7 +7,7 @@
   },
   "author": "Yosuke Kurami",
   "dependencies": {
-    "puppeteer": "1.20.0",
+    "puppeteer": "4.0.1",
     "ts-node": "8.10.2"
   },
   "devDependencies": {
