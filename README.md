@@ -269,7 +269,7 @@ type Viewport =
     };
 ```
 
-**Note:** You should choose a valid [device name](https://github.com/GoogleChrome/puppeteer/blob/master/lib/DeviceDescriptors.js) if set string.
+**Note:** You should choose a valid [device name](https://github.com/puppeteer/puppeteer/blob/main/src/common/DeviceDescriptors.ts) if set string.
 
 `Viewport` values are available in `viewports` field such as:
 
