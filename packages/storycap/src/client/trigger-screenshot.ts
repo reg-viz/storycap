@@ -20,7 +20,7 @@ type StorycapWindow = typeof window & {
 function withExpoesdWindow(cb: (win: StorycapWindow) => any) {
   if (typeof 'window' === 'undefined') return;
   const win = window as StorycapWindow;
-  if (!win.emitCatpture) return;
+  if (!win.emitCapture) return;
   return cb(win);
 }
 
@@ -128,7 +128,7 @@ function capture() {
     const scOpt = pickupWithVariantKey(mergedOptions, variantKey);
 
     // Emit canceling to the main process if `skip: true` and exit this function.
-    if (scOpt.skip) return win.emitCatpture(scOpt, storyKey);
+    if (scOpt.skip) return win.emitCapture(scOpt, storyKey);
 
     // Wait for the following:
     // - Delay time set by options(API or CLI)
@@ -139,7 +139,7 @@ function capture() {
     await waitForNextIdle(win);
 
     // Finally, send options to the Node.js main process.
-    await win.emitCatpture(scOpt, storyKey);
+    await win.emitCapture(scOpt, storyKey);
   });
 }
 

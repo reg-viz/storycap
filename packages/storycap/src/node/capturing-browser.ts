@@ -93,7 +93,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
 
   private async expose() {
     const exposed: Exposed = {
-      emitCatpture: (opt: ScreenshotOptions, clientStoryKey: string) =>
+      emitCapture: (opt: ScreenshotOptions, clientStoryKey: string) =>
         this.subscribeScreenshotOptions(opt, clientStoryKey),
       getBaseScreenshotOptions: () => this.baseScreenshotOptions,
       getCurrentVariantKey: () => this.currentVariantKey,
