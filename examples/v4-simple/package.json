@@ -13,11 +13,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "storybook:start": "start-storybook -p 9009 -s public",
-    "storybook": "start-storybook -p 9009 -s public",
+    "storybook:start": "start-storybook -p 9002 -s public",
+    "storybook": "start-storybook -p 9002 -s public",
     "build-storybook": "build-storybook -s public",
     "prestorybook": "../../scripts/e2e-prestorybook.js .",
-    "storycap:all": "yarn prestorybook && storycap --server-timeout 100000 --server-cmd \"start-storybook -p 9009 -s public\" \"http://localhost:9009\""
+    "storycap:all": "yarn prestorybook && storycap --server-timeout 100000 --server-cmd \"start-storybook -p 9002 -s public\" \"http://localhost:9002\""
   },
   "devDependencies": {
     "@storybook/addon-actions": "^3.4.10",
