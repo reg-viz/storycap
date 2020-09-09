@@ -7,10 +7,10 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "storybook": "start-storybook -p 9009",
+    "storybook": "start-storybook -p 9005",
     "build-storybook": "build-storybook",
     "prestorybook": "../../scripts/e2e-prestorybook.js .",
-    "storycap:all": "yarn prestorybook && storycap --server-timeout 100000 --server-cmd \"yarn run storybook\" \"http://localhost:9009\""
+    "storycap:all": "yarn prestorybook && storycap --server-timeout 100000 --server-cmd \"yarn run storybook\" \"http://localhost:9005\""
   },
   "dependencies": {
     "core-js": "^2.6.5",
