@@ -39,7 +39,7 @@
   ],
   "devDependencies": {
     "@types/jest": "25.2.3",
-    "@types/puppeteer": "1.19.1",
+    "@types/puppeteer": "1.20.7",
     "jest": "26.0.1",
     "puppeteer": "1.20.0",
     "ts-jest": "26.1.0",
