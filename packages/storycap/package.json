@@ -48,7 +48,7 @@
     "visual-testing"
   ],
   "devDependencies": {
-    "@types/jest": "25.2.3",
+    "@types/jest": "26.0.13",
     "jest": "26.0.1",
     "minimist": "1.2.5",
     "ts-jest": "26.3.0",
