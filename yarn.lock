@@ -7285,12 +7285,12 @@ reg-gh-app-interface@^1.0.1:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/reg-gh-app-interface/-/reg-gh-app-interface-1.0.6.tgz#6e4f78f2e5c60585dac87b21d1cbc586dbb7f71c"
 
-reg-keygen-git-hash-plugin@0.8.5:
-  version "0.8.5"
-  resolved "https://registry.yarnpkg.com/reg-keygen-git-hash-plugin/-/reg-keygen-git-hash-plugin-0.8.5.tgz#8738a964396844de14dbf98f07ac5a5d983b3576"
-  integrity sha512-d0Bk8bWnXLaqIl37MVVdZRia87POgLuJ6yOhZBrVGz0Zn41vE+SeS8nuMEwsxvNBrqWvESvzBmetcfTFOEhkxw==
+reg-keygen-git-hash-plugin@0.10.3:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/reg-keygen-git-hash-plugin/-/reg-keygen-git-hash-plugin-0.10.3.tgz#8519a8c1384d5996877a8e45ec04aa4ccabc6361"
+  integrity sha512-Dpe4hmyV1P0nlMXZ1kDQye1XyuZaVBCIIqt83N6sQnohPy0/ez3vFSS8B0JUJjr7J2YSphbaiWXuIOvb46aSsg==
   dependencies:
-    reg-suit-util "^0.8.5"
+    reg-suit-util "^0.10.3"
 
 reg-notify-github-plugin@0.8.5:
   version "0.8.5"
@@ -7323,6 +7323,19 @@ reg-suit-core@^0.8.6:
     reg-cli "^0.15.13"
     reg-suit-util "^0.8.5"
     rimraf "^2.6.1"
+
+reg-suit-util@^0.10.3:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/reg-suit-util/-/reg-suit-util-0.10.3.tgz#c5c4067e77b7a1b8fde661ffd31d818d7e0d3af1"
+  integrity sha512-Fx++RKCxr08mqN+Yg10ueaaq8IUnm9h3fu+45LsFkMg34e22kfZk5JtpeUANvUuYzsVYjQ0NU25S024Aho6gzg==
+  dependencies:
+    chalk "^2.0.1"
+    cli-progress "^1.4.1"
+    cli-spinner "^0.2.6"
+    glob "^7.1.2"
+    lodash "^4.17.4"
+    mime-types "^2.1.15"
+    mkdirp "^0.5.1"
 
 reg-suit-util@^0.8.5:
   version "0.8.5"
