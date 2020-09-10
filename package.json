@@ -56,7 +56,7 @@
     "pretty-quick": "2.0.1",
     "reg-keygen-git-hash-plugin": "0.8.5",
     "reg-notify-github-plugin": "0.8.5",
-    "reg-publish-s3-plugin": "0.9.0",
+    "reg-publish-s3-plugin": "0.10.3",
     "reg-suit": "0.10.0",
     "typescript": "3.9.5",
     "typescript-eslint-language-service": "2.1.8"
