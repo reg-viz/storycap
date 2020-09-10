@@ -70,7 +70,7 @@
     "rimraf": "^3.0.0",
     "sanitize-filename": "^1.6.3",
     "storycrawler": "^2.3.6",
-    "yargs": "^15.0.0"
+    "yargs": "^16.0.0"
   },
   "jest": {
     "globals": {
