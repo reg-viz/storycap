@@ -63,7 +63,7 @@ export type VariantKey = {
 };
 
 export interface Exposed {
-  emitCatpture(opt: ScreenshotOptions, clientStoryKey: string): void;
+  emitCapture(opt: ScreenshotOptions, clientStoryKey: string): void;
   getBaseScreenshotOptions(): StrictScreenshotOptions;
   getCurrentVariantKey(): VariantKey;
   waitBrowserMetricsStable(): Promise<void>;

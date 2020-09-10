@@ -4,5 +4,5 @@
  *
  **/
 export function isScreenshot() {
-  return !!(window as any).emitCatpture;
+  return !!(window as any).emitCapture;
 }
