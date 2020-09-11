@@ -49,7 +49,7 @@
   ],
   "devDependencies": {
     "@types/jest": "26.0.13",
-    "jest": "26.0.1",
+    "jest": "26.4.2",
     "minimist": "1.2.5",
     "ts-jest": "26.3.0",
     "typedoc": "0.17.7",
