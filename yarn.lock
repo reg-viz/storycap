@@ -8671,10 +8671,10 @@ typedoc@0.19.1:
     shelljs "^0.8.4"
     typedoc-default-themes "^0.11.1"
 
-typescript-eslint-language-service@2.1.8:
-  version "2.1.8"
-  resolved "https://registry.yarnpkg.com/typescript-eslint-language-service/-/typescript-eslint-language-service-2.1.8.tgz#0c797e4c780328d14c236de750ac6a5e2683637c"
-  integrity sha512-AwfL0Qpx2qaZuMKKo8Fg/fpvrHf04NdT1BSCef6YCoXTuXbX+ArHMphNECSJ0qrict08q48BkT5MLE59HweWpA==
+typescript-eslint-language-service@4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/typescript-eslint-language-service/-/typescript-eslint-language-service-4.0.1.tgz#e5458eef3cdfac5086d3b6ccad11c0201ca91b05"
+  integrity sha512-lMiU7Q6Kvzmh13LMCVKpSlHXja26ZtJoEgMt5KKaP8j9NdBkmfk8hsBdTHMcBILmYazoXPIUBvkRzNVRkO9+mw==
   dependencies:
     read-pkg-up "^7.0.0"
 

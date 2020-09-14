@@ -1,16 +1,16 @@
 root: true
 extends:
   - prettier
-  - "prettier/@typescript-eslint"
-parser: "@typescript-eslint/parser"
+  - 'prettier/@typescript-eslint'
+parser: '@typescript-eslint/parser'
 parserOptions:
-  sourceType: "module"
-  project: "./tsconfig.json"
+  sourceType: 'module'
+  project: './tsconfig.json'
   ecmaFeatures:
     jsx: true
   useJSXTextNode: true
 plugins:
-  - "@typescript-eslint"
+  - '@typescript-eslint'
 rules:
   no-eval: error
   no-debugger: error
@@ -27,6 +27,5 @@ rules:
   no-trailing-spaces:
     - error
     - ignoreComments: true
-  "@typescript-eslint/camelcase": error
-  "@typescript-eslint/no-use-before-define": error
-  "@typescript-eslint/no-namespace": error
+  '@typescript-eslint/no-use-before-define': error
+  '@typescript-eslint/no-namespace': error
