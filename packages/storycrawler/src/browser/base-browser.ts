@@ -1,5 +1,10 @@
-import { launch, Browser as PuppeteerBrowser, Page, LaunchOptions } from 'puppeteer';
+import type { Browser as PuppeteerBrowser, Page, LaunchOptions } from 'puppeteer-core';
 import { sleep } from '../async-utils';
+
+function getPuppeteer() {
+  const pc = require('puppeteer-core') as typeof import('puppeteer-core');
+  return pc;
+}
 
 /**
  *
@@ -13,6 +18,7 @@ export interface BaseBrowserOptions {
    *
    **/
   launchOptions?: LaunchOptions;
+  chromiumPath?: string;
 }
 
 /**
@@ -51,12 +57,15 @@ export abstract class BaseBrowser {
    *
    **/
   async boot() {
-    this.browser = await launch(
-      this.opt.launchOptions || {
+    const executablePath = this.opt.chromiumPath || this.opt.launchOptions?.executablePath;
+    const puppeteer = getPuppeteer();
+    this.browser = await puppeteer.launch({
+      ...(this.opt.launchOptions || {
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
         headless: true,
-      },
-    );
+      }),
+      executablePath,
+    });
     this._page = await this.browser.newPage();
     await this.setupDebugInput();
     return this;

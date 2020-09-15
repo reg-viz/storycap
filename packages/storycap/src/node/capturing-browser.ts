@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import path from 'path';
-import { Viewport } from 'puppeteer';
+import type { Viewport } from 'puppeteer-core';
 import { Story, StorybookConnection, StoryPreviewBrowser, MetricsWatcher, ResourceWatcher, sleep } from 'storycrawler';
 
 import { MainOptions, RunMode } from './types';
