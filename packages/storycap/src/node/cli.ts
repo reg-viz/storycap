@@ -7,7 +7,7 @@ import yargs from 'yargs';
 import { Logger } from './logger';
 
 function showDevices(logger: Logger) {
-  const dd = require('puppeteer/DeviceDescriptors') as { name: string; viewport: any }[];
+  const dd = require('puppeteer').devices as { name: string; viewport: any }[];
   dd.map(device => logger.log(device.name, JSON.stringify(device.viewport)));
 }
 

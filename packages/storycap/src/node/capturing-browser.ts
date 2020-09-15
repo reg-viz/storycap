@@ -13,7 +13,8 @@ import {
   pickupWithVariantKey,
   InvalidVariantKeysReason,
 } from '../shared/screenshot-options-helper';
-const dd = require('puppeteer/DeviceDescriptors') as { name: string; viewport: Viewport }[];
+
+const dd = require('puppeteer').devices as { name: string; viewport: Viewport }[];
 
 /**
  *
