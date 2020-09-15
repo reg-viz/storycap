@@ -50,7 +50,10 @@ export class StoryPreviewBrowser extends BaseBrowser {
    **/
   async boot() {
     await super.boot();
-    await this.page.goto(this.connection.url + '/iframe.html?selectedKind=scszisui&selectedStory=scszisui');
+    await this.page.goto(this.connection.url + '/iframe.html?selectedKind=scszisui&selectedStory=scszisui', {
+      timeout: 60_000,
+      waitUntil: 'domcontentloaded',
+    });
     return this;
   }
 
