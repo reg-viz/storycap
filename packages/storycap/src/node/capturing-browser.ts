@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import path from 'path';
-import { Viewport } from 'puppeteer';
+import type { Viewport } from 'puppeteer-core';
 import { Story, StorybookConnection, StoryPreviewBrowser, MetricsWatcher, ResourceWatcher, sleep } from 'storycrawler';
 
 import { MainOptions, RunMode } from './types';
@@ -13,7 +13,7 @@ import {
   pickupWithVariantKey,
   InvalidVariantKeysReason,
 } from '../shared/screenshot-options-helper';
-const dd = require('puppeteer/DeviceDescriptors') as { name: string; viewport: Viewport }[];
+import { getDeviceDescriptors } from './devices';
 
 /**
  *
@@ -213,7 +213,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
         nextViewport = { width: +w, height: +h };
       } else {
         // Handle as Puppeteer device descriptor.
-        const hit = dd.find(d => d.name === opt.viewport);
+        const hit = getDeviceDescriptors().find(d => d.name === opt.viewport);
         if (!hit) {
           this.opt.logger.warn(
             `Skip screenshot for ${this.opt.logger.color.yellow(

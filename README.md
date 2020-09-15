@@ -35,6 +35,7 @@ It is primarily responsible for image generation necessary for Visual Testing su
 - [Tips](#tips)
   - [Run with Docker](#run-with-docker)
   - [Full control the screenshot timing](#full-control-the-screenshot-timing)
+- [Chromium version](#chromium-version)
 - [Storybook compatibility](#storybook-compatibility)
   - [Storybook versions](#storybook-versions)
   - [UI frameworks](#ui-frameworks)
@@ -60,6 +61,14 @@ It is primarily responsible for image generation necessary for Visual Testing su
 ```sh
 $ npm install storycap
 ```
+
+Or
+
+```sh
+$ npm install storycap puppeteer
+```
+
+Installing puppeteer is optional. See [Chromium version](#chromium-version) to get more detail.
 
 ## Getting Started
 
@@ -332,6 +341,9 @@ Options:
       --reloadAfterChangeViewport  Whether to reload after viewport changed.                  [boolean] [default: false]
       --stateChangeDelay           Delay time [msec] after changing element's state.               [number] [default: 0]
       --listDevices                List available device descriptors.                         [boolean] [default: false]
+  -C, --chromiumChannel            Channel to search local Chromium. One of "puppeteer", "canary", "stable", "*"
+                                                                                                 [string] [default: "*"]
+      --chromiumPath               Executable Chromium path.                                      [string] [default: ""]
       --puppeteerLaunchConfig      JSON string of launch config for Puppeteer.
                [string] [default: "{ "args": ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"] }"]
 
@@ -472,6 +484,16 @@ addParameters({
   },
 });
 ```
+
+## Chromium version
+
+Since v3.0.0, Storycap does not use Puppeteer directly. Instead, Storycap searches Chromium binary in the following order:
+
+1. Installed Puppeteer package (if you installed explicitly)
+1. Canary Chrome installed locally
+1. Stable Chrome installed locally
+
+You can change search channel with `--chromiumChannel` option or set executable Chromium file path with `--chromiumPath` option.
 
 ## Storybook compatibility
 

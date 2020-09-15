@@ -2,13 +2,13 @@
 
 import { time } from 'storycrawler';
 import { main } from './main';
-import { MainOptions } from './types';
+import { MainOptions, ChromeChannel } from './types';
 import yargs from 'yargs';
 import { Logger } from './logger';
+import { getDeviceDescriptors } from './devices';
 
 function showDevices(logger: Logger) {
-  const dd = require('puppeteer/DeviceDescriptors') as { name: string; viewport: any }[];
-  dd.map(device => logger.log(device.name, JSON.stringify(device.viewport)));
+  getDeviceDescriptors().map(device => logger.log(device.name, JSON.stringify(device.viewport)));
 }
 
 function createOptions(): MainOptions {
@@ -69,6 +69,17 @@ function createOptions(): MainOptions {
       default: false,
       description: 'List available device descriptors.',
     })
+    .option('chromiumChannel', {
+      alias: 'C',
+      string: true,
+      default: '*',
+      description: 'Channel to search local Chromium. One of "puppeteer", "canary", "stable", "*"',
+    })
+    .option('chromiumPath', {
+      string: true,
+      default: '',
+      description: 'Executable Chromium path.',
+    })
     .option('puppeteerLaunchConfig', {
       string: true,
       default: '{ "args": ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"] }',
@@ -108,6 +119,8 @@ function createOptions(): MainOptions {
     disableCssAnimation,
     disableWaitAssets,
     listDevices,
+    chromiumChannel,
+    chromiumPath,
     puppeteerLaunchConfig: puppeteerLaunchConfigString,
   } = setting.argv;
 
@@ -150,6 +163,8 @@ function createOptions(): MainOptions {
     stateChangeDelay,
     disableCssAnimation,
     disableWaitAssets,
+    chromiumChannel: chromiumChannel as ChromeChannel,
+    chromiumPath,
     launchOptions: puppeteerLaunchConfig,
     logger,
   } as MainOptions;

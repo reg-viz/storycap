@@ -1,5 +1,5 @@
 import { Logger } from './logger';
-import { LaunchOptions } from 'puppeteer';
+import type { LaunchOptions } from 'puppeteer-core';
 import { StorybookConnectionOptions, BaseBrowserOptions } from 'storycrawler';
 
 /**
@@ -8,6 +8,13 @@ import { StorybookConnectionOptions, BaseBrowserOptions } from 'storycrawler';
  *
  **/
 export type RunMode = 'simple' | 'managed';
+
+/**
+ *
+ * Channel to search local Chromium
+ *
+ **/
+export type ChromeChannel = 'puppeteer' | 'canary' | 'stable' | '*';
 
 /**
  *
@@ -32,6 +39,8 @@ export interface MainOptions extends BaseBrowserOptions {
   disableWaitAssets: boolean;
   parallel: number;
   metricsWatchRetryCount: number;
+  chromiumChannel: ChromeChannel;
+  chromiumPath: string;
   launchOptions: LaunchOptions;
   logger: Logger;
 }
