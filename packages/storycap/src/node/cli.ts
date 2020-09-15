@@ -5,10 +5,10 @@ import { main } from './main';
 import { MainOptions, ChromeChannel } from './types';
 import yargs from 'yargs';
 import { Logger } from './logger';
+import { getDeviceDescriptors } from './devices';
 
 function showDevices(logger: Logger) {
-  const dd = require('puppeteer').devices as Record<string, { name: string; viewport: any }>;
-  Object.values(dd).map(device => logger.log(device.name, JSON.stringify(device.viewport)));
+  getDeviceDescriptors().map(device => logger.log(device.name, JSON.stringify(device.viewport)));
 }
 
 function createOptions(): MainOptions {

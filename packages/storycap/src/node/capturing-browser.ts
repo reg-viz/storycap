@@ -13,8 +13,7 @@ import {
   pickupWithVariantKey,
   InvalidVariantKeysReason,
 } from '../shared/screenshot-options-helper';
-
-const dd = require('puppeteer').devices as Record<string, { name: string; viewport: Viewport }>;
+import { getDeviceDescriptors } from './devices';
 
 /**
  *
@@ -214,7 +213,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
         nextViewport = { width: +w, height: +h };
       } else {
         // Handle as Puppeteer device descriptor.
-        const hit = Object.values(dd).find(d => d.name === opt.viewport);
+        const hit = getDeviceDescriptors().find(d => d.name === opt.viewport);
         if (!hit) {
           this.opt.logger.warn(
             `Skip screenshot for ${this.opt.logger.color.yellow(
