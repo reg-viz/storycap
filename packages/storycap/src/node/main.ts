@@ -1,10 +1,9 @@
 import minimatch from 'minimatch';
-import { StorybookConnection, StoriesBrowser, Story, sleep } from 'storycrawler';
+import { StorybookConnection, StoriesBrowser, Story, sleep, ChromiumNotFoundError } from 'storycrawler';
 import { CapturingBrowser } from './capturing-browser';
 import { MainOptions, RunMode } from './types';
 import { FileSystem } from './file';
 import { createScreenshotService } from './screenshot-service';
-import { findChrome } from './find-chrome';
 
 async function detectRunMode(storiesBrowser: StoriesBrowser, opt: MainOptions) {
   // Reuse `storiesBrowser` instance to avoid cost of re-launching another Puppeteer process.
@@ -45,21 +44,13 @@ function filterStories(flatStories: Story[], include: string[], exclude: string[
 export async function main(mainOptions: MainOptions) {
   const logger = mainOptions.logger;
   const fileSystem = new FileSystem(mainOptions);
-  const found = await findChrome({ executablePath: mainOptions.chromiumPath, channel: mainOptions.chromiumChannel });
-  logger.debug('Search local Chromium:', logger.color.magenta(mainOptions.chromiumChannel));
-  if (!found) {
-    throw new Error(
-      `Chromium is not installed. Execute "npm i puppeteer" or install manually and set "--chromiumPath" option.`,
-    );
-  }
-  logger.log('Executable Chromium path:', found.executablePath);
-  mainOptions.chromiumPath = found.executablePath;
 
   // Wait for connection to Storybook server.
   const connection = await new StorybookConnection(mainOptions.serverOptions, logger).connect();
 
   // Launch Puppeteer process and fetch names of all stories.
   const storiesBrowser = await new StoriesBrowser(connection, mainOptions, logger).boot();
+  logger.log('Executable Chromium path:', logger.color.magenta(storiesBrowser.executablePath));
   const allStories = await storiesBrowser.getStories();
 
   // Mode(simple / managed) deteciton.
@@ -80,6 +71,13 @@ export async function main(mainOptions: MainOptions) {
   try {
     // Execution caputuring procedure.
     return await createScreenshotService({ workers, stories, fileSystem, logger }).execute();
+  } catch (error) {
+    if (error instanceof ChromiumNotFoundError) {
+      throw new Error(
+        `Chromium is not installed. Execute "npm i puppeteer" or install manually and set "--chromiumPath" option.`,
+      );
+    }
+    throw error;
   } finally {
     // Shutdown workers and dispose connection.
     await closeWorkers();

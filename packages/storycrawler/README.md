@@ -30,7 +30,7 @@ import {
 
 (async function () {
   // Connect to the target Storybook server.
-  const storybookUrl = 'https://storybookjs-next.now.sh/vue-kitchen-sink';
+  const storybookUrl = 'https://storybookjs.netlify.app/vue-kitchen-sink';
   const connection = await new StorybookConnection({ storybookUrl }).connect();
 
   // Launch Puppeteer process to fetch stories info.

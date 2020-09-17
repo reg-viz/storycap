@@ -1,5 +1,8 @@
 import type { Browser as PuppeteerBrowser, Page, LaunchOptions } from 'puppeteer-core';
 import { sleep } from '../async-utils';
+import { findChrome } from '../find-chrome';
+import { ChromiumNotFoundError } from '../errors';
+import { ChromeChannel } from '../types';
 
 function getPuppeteer() {
   const pc = require('puppeteer-core') as typeof import('puppeteer-core');
@@ -18,6 +21,19 @@ export interface BaseBrowserOptions {
    *
    **/
   launchOptions?: LaunchOptions;
+
+  /**
+   *
+   * Channel to search installed Chromium for.
+   *
+   **/
+  chromiumChannel?: ChromeChannel;
+
+  /**
+   *
+   * User defind Chromium execuatable binary path
+   *
+   **/
   chromiumPath?: string;
 }
 
@@ -29,6 +45,7 @@ export interface BaseBrowserOptions {
 export abstract class BaseBrowser {
   private browser!: PuppeteerBrowser;
   private _page!: Page;
+  private _executablePath = '';
   private debugInputResolver = () => {};
   private debugInputPromise: Promise<void> = Promise.resolve();
 
@@ -57,7 +74,15 @@ export abstract class BaseBrowser {
    *
    **/
   async boot() {
-    const executablePath = this.opt.chromiumPath || this.opt.launchOptions?.executablePath;
+    const baseExecutablePath = this.opt.chromiumPath || this.opt.launchOptions?.executablePath;
+    const { executablePath } = await findChrome({
+      executablePath: baseExecutablePath,
+      channel: this.opt.chromiumChannel,
+    });
+    if (!executablePath) {
+      throw new ChromiumNotFoundError();
+    }
+    this._executablePath = executablePath;
     const puppeteer = getPuppeteer();
     this.browser = await puppeteer.launch({
       ...(this.opt.launchOptions || {
@@ -84,6 +109,15 @@ export abstract class BaseBrowser {
     } catch (e) {
       // nothing to do
     }
+  }
+
+  /**
+   *
+   * Get found or user defined executable Chromium binray path.
+   *
+   **/
+  get executablePath() {
+    return this._executablePath;
   }
 
   /**

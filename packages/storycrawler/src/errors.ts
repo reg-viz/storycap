@@ -19,3 +19,7 @@ export class StorybookServerTimeoutError extends Error {
 export class NoStoriesError extends Error {
   name = 'NoStoriesError';
 }
+
+export class ChromiumNotFoundError extends Error {
+  name = 'ChromiumNotFoundError';
+}
