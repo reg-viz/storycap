@@ -3,8 +3,6 @@ import path from 'path';
 import { execSync, execFileSync } from 'child_process';
 import { ChromeChannel } from './types';
 
-// const puppeteer = require('puppeteer-core');
-
 const newLineRegex = /\r?\n/;
 
 function canAccess(file: string) {
@@ -167,13 +165,13 @@ function win32(canary = false) {
 
 export type FindOptions = {
   executablePath?: string;
-  channel: ChromeChannel;
+  channel?: ChromeChannel;
 };
 
 export async function findChrome(options: FindOptions) {
   if (options.executablePath) return { executablePath: options.executablePath, type: 'user' };
 
-  const config = new Set<ChromeChannel>([options.channel] || ['*']);
+  const config = new Set<ChromeChannel>(options.channel ? [options.channel] : ['*']);
 
   let executablePath: string | undefined = undefined;
   if (config.has('puppeteer') || config.has('*')) {
@@ -196,5 +194,5 @@ export async function findChrome(options: FindOptions) {
     if (executablePath) return { executablePath, type: 'stable' };
   }
 
-  return null;
+  return { executablePath: null, type: null };
 }

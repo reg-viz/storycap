@@ -1,7 +1,15 @@
 import { EventEmitter } from 'events';
 import path from 'path';
 import type { Viewport } from 'puppeteer-core';
-import { Story, StorybookConnection, StoryPreviewBrowser, MetricsWatcher, ResourceWatcher, sleep } from 'storycrawler';
+import {
+  Story,
+  StorybookConnection,
+  StoryPreviewBrowser,
+  MetricsWatcher,
+  ResourceWatcher,
+  sleep,
+  getDeviceDescriptors,
+} from 'storycrawler';
 
 import { MainOptions, RunMode } from './types';
 import { VariantKey, ScreenshotOptions, StrictScreenshotOptions, Exposed } from '../shared/types';
@@ -13,7 +21,6 @@ import {
   pickupWithVariantKey,
   InvalidVariantKeysReason,
 } from '../shared/screenshot-options-helper';
-import { getDeviceDescriptors } from './devices';
 
 /**
  *

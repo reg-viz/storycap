@@ -1,6 +1,6 @@
 import { Logger } from './logger';
 import type { LaunchOptions } from 'puppeteer-core';
-import { StorybookConnectionOptions, BaseBrowserOptions } from 'storycrawler';
+import { StorybookConnectionOptions, BaseBrowserOptions, ChromeChannel } from 'storycrawler';
 
 /**
  *
@@ -8,13 +8,6 @@ import { StorybookConnectionOptions, BaseBrowserOptions } from 'storycrawler';
  *
  **/
 export type RunMode = 'simple' | 'managed';
-
-/**
- *
- * Channel to search local Chromium
- *
- **/
-export type ChromeChannel = 'puppeteer' | 'canary' | 'stable' | '*';
 
 /**
  *

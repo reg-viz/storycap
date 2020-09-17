@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 
-import { time } from 'storycrawler';
+import { time, ChromeChannel, getDeviceDescriptors } from 'storycrawler';
 import { main } from './main';
-import { MainOptions, ChromeChannel } from './types';
+import { MainOptions } from './types';
 import yargs from 'yargs';
 import { Logger } from './logger';
-import { getDeviceDescriptors } from './devices';
 
 function showDevices(logger: Logger) {
   getDeviceDescriptors().map(device => logger.log(device.name, JSON.stringify(device.viewport)));
