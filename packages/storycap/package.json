@@ -48,7 +48,7 @@
     "visual-testing"
   ],
   "devDependencies": {
-    "@types/jest": "26.0.13",
+    "@types/jest": "26.0.14",
     "@types/puppeteer": "3.0.2",
     "jest": "26.4.2",
     "minimist": "1.2.5",
