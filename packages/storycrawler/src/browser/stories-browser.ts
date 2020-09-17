@@ -62,7 +62,7 @@ export class StoriesBrowser extends BaseBrowser {
         waitUntil: 'domcontentloaded',
       },
     );
-    await this.page.waitFor(() => (window as ExposedWindow).__STORYBOOK_CLIENT_API__);
+    await this.page.waitForFunction(() => (window as ExposedWindow).__STORYBOOK_CLIENT_API__);
     const result = await this.page.evaluate(
       () =>
         new Promise<{ stories: V5Story[] | null; oldStories: StoryKind[] | null }>(res => {
