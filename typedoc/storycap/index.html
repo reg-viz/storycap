@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>storycap</title>
-	<meta name="description" content="">
+	<meta name="description" content="Documentation for storycap">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
 </head>
@@ -13,7 +13,7 @@
 	<div class="tsd-page-toolbar">
 		<div class="container">
 			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
 					<div class="field">
 						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
 						<input id="tsd-search-field" type="text" />
@@ -56,7 +56,7 @@
 					<a href="globals.html">Globals</a>
 				</li>
 			</ul>
-			<h1> storycap</h1>
+			<h1>storycap</h1>
 		</div>
 	</div>
 </header>
@@ -69,11 +69,12 @@
 				</a>
 				<p><img src="https://raw.githubusercontent.com/reg-viz/storycap/artwork/demo_v2.gif" alt="DEMO"></p>
 				<p><a href="https://www.npmjs.com/package/storycap"><img src="https://img.shields.io/npm/v/storycap.svg?style=flat-square" alt="npm"></a>
-				<a href="https://circleci.com/gh/reg-viz/storycap"><img src="https://img.shields.io/circleci/project/github/reg-viz/storycap/master.svg?style=flat-square" alt="CircleCI"></a></p>
+				<a href="https://circleci.com/gh/reg-viz/storycap"><img src="https://circleci.com/gh/reg-viz/storycap.svg?style=svg" alt="CircleCI"></a></p>
 				<blockquote>
 					<p>A <a href="https://github.com/storybooks/storybook">Storybook</a> Addon, Save the screenshot image of your stories :camera: via <a href="https://github.com/GoogleChrome/puppeteer">Puppeteer</a>.</p>
 				</blockquote>
-				<p>Storycap takes a screenshot and saves it.<br>It is primarily responsible for image generation necessary for Visual Testing such as <a href="https://github.com/reg-viz/reg-suit">reg-suit</a>.</p>
+				<p>Storycap crawls your Storybook and takes screenshot images.
+				It is primarily responsible for image generation necessary for Visual Testing such as <a href="https://github.com/reg-viz/reg-suit">reg-suit</a>.</p>
 				<!-- toc -->
 				<ul>
 					<li><a href="#features">Features</a></li>
@@ -106,6 +107,7 @@
 							<li><a href="#full-control-the-screenshot-timing">Full control the screenshot timing</a></li>
 						</ul>
 					</li>
+					<li><a href="#chromium-version">Chromium version</a></li>
 					<li><a href="#storybook-compatibility">Storybook compatibility</a><ul>
 							<li><a href="#storybook-versions">Storybook versions</a></li>
 							<li><a href="#ui-frameworks">UI frameworks</a></li>
@@ -133,6 +135,9 @@
 					<h2>Install</h2>
 				</a>
 				<pre><code class="language-sh">$ npm install storycap</code></pre>
+				<p>Or</p>
+				<pre><code class="language-sh">$ npm install storycap puppeteer</code></pre>
+				<p>Installing puppeteer is optional. See <a href="#chromium-version">Chromium version</a> to get more detail.</p>
 				<a href="#getting-started" id="getting-started" style="color: inherit; text-decoration: none;">
 					<h2>Getting Started</h2>
 				</a>
@@ -140,7 +145,11 @@
 				<p>With the simple mode, you don&#39;t need to configure your Storybook. All you need is give Storybook&#39;s URL, such as:</p>
 				<pre><code class="language-sh">$ npx storycap http://localhost:9001</code></pre>
 				<p>You can launch your server via <code>--serverCmd</code> option.</p>
-				<pre><code><span class="hljs-symbol">$</span> storycap --serverCmd <span class="hljs-string">"start-storybook -p 9001"</span> http:<span class="hljs-comment">//localhost:9001</span></code></pre><p>Also, Storycap can crawls built and hosted Storybook pages:</p>
+				<pre><code class="language-sh">$ storycap --serverCmd <span class="hljs-string">"start-storybook -p 9001"</span> http://localhost:9001</code></pre>
+				<p>Of course, you can use pre-built Storybook:</p>
+				<pre><code class="language-sh">$ build-storybook -o dist-storybook
+$ storycap --serverCmd <span class="hljs-string">"npx http-server dist-storybook -p 9001"</span> http://localhost:9001</code></pre>
+				<p>Also, Storycap can crawls built and hosted Storybook pages:</p>
 				<pre><code class="language-sh">$ storycap https://storybookjs-next.now.sh/vue-kitchen-sink</code></pre>
 				<a href="#managed-mode" id="managed-mode" style="color: inherit; text-decoration: none;">
 					<h3>Managed mode</h3>
@@ -183,12 +192,12 @@ addParameters({
   },
 };
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> normal = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &lt;MyComponent /&gt;;
-export const small = () =&gt; &lt;MyComponent text="small" /&gt;;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> normal = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">MyComponent</span> /&gt;</span></span>;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> small = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">MyComponent</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"small"</span> /&gt;</span></span>;
 small.story = {
-  parameters: {
-    screenshot: {
-      viewport: 'iPhone 5',
+  <span class="hljs-attr">parameters</span>: {
+    <span class="hljs-attr">screenshot</span>: {
+      <span class="hljs-attr">viewport</span>: <span class="hljs-string">'iPhone 5'</span>,
     },
   },
 };</code></pre>
@@ -203,13 +212,13 @@ storiesOf(<span class="hljs-string">'MyComponent'</span>)
       <span class="hljs-attr">delay</span>: <span class="hljs-number">200</span>,
     },
   })
-  .add(<span class="hljs-string">'normal'</span>, () =&gt; &lt;MyComponent /&gt;)
-  .add('small', () =&gt; &lt;MyComponent text="small" /&gt;, {
-    screenshot: {
-      viewport: 'iPhone 5',
+  .add(<span class="hljs-string">'normal'</span>, () =&gt; <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">MyComponent</span> /&gt;</span></span>)
+  .add(<span class="hljs-string">'small'</span>, () =&gt; <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">MyComponent</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"small"</span> /&gt;</span></span>, {
+    <span class="hljs-attr">screenshot</span>: {
+      <span class="hljs-attr">viewport</span>: <span class="hljs-string">'iPhone 5'</span>,
     },
   });</code></pre>
-				<a href="#run-codestorycapcode-command" id="run-codestorycapcode-command" style="color: inherit; text-decoration: none;">
+				<a href="#run-storycap-command" id="run-storycap-command" style="color: inherit; text-decoration: none;">
 					<h4>Run <code>storycap</code> Command</h4>
 				</a>
 				<pre><code class="language-sh">$ npm run storybook -p 9009
@@ -219,19 +228,19 @@ $ npx run storycap http://localhost:9009</code></pre>
 				<a href="#api" id="api" style="color: inherit; text-decoration: none;">
 					<h2>API</h2>
 				</a>
-				<a href="#codewithscreenshotcode" id="codewithscreenshotcode" style="color: inherit; text-decoration: none;">
+				<a href="#withscreenshot" id="withscreenshot" style="color: inherit; text-decoration: none;">
 					<h3><code>withScreenshot</code></h3>
 				</a>
 				<pre><code class="language-typescript">withScreenshot(opt?: ScreenshotOptions): <span class="hljs-built_in">Function</span>;</code></pre>
 				<p>A Storybook decorator to notify Storycap to captures stories.</p>
 				<p><strong>Note:</strong> Using <code>withScreenshot</code> as function is deprecated. Use <code>addParameters</code> if you give screenshot options.</p>
-				<a href="#type-codescreenshotoptionscode" id="type-codescreenshotoptionscode" style="color: inherit; text-decoration: none;">
+				<a href="#type-screenshotoptions" id="type-screenshotoptions" style="color: inherit; text-decoration: none;">
 					<h3>type <code>ScreenshotOptions</code></h3>
 				</a>
 				<p><code>ScreenshotOptions</code> object is available as the value of the key <code>screenshot</code> of <code>addParameters</code> argument or <code>withScreenshot</code> argument.</p>
 				<pre><code class="language-ts"><span class="hljs-keyword">interface</span> ScreenshotOptions {
   delay?: <span class="hljs-built_in">number</span>;                           <span class="hljs-comment">// default 0 msec</span>
-  waitImages?: <span class="hljs-built_in">boolean</span>;                     <span class="hljs-comment">// default true</span>
+  waitAssets?: <span class="hljs-built_in">boolean</span>;                     <span class="hljs-comment">// default true</span>
   waitFor?: <span class="hljs-built_in">string</span> | <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-built_in">void</span>&gt;;   <span class="hljs-comment">// default ""</span>
   fullPage?: <span class="hljs-built_in">boolean</span>;                       <span class="hljs-comment">// default true</span>
   hover?: <span class="hljs-built_in">string</span>;                           <span class="hljs-comment">// default ""</span>
@@ -240,10 +249,11 @@ $ npx run storycap http://localhost:9009</code></pre>
   viewport?: Viewport;
   viewports?: <span class="hljs-built_in">string</span>[] | { [variantName]: Viewport };
   variants?: Variants;
+  waitImages?: <span class="hljs-built_in">boolean</span>;                     <span class="hljs-comment">// default true</span>
 }</code></pre>
 				<ul>
 					<li><code>delay</code>: Waiting time [msec] before capturing.</li>
-					<li><code>waitImages</code>: If set true, Storycap waits until <code>&lt;img&gt;</code> in the story are loaded.</li>
+					<li><code>waitAssets</code>: If set true, Storycap waits until all resources requested by the story, such as <code>&lt;img&gt;</code> or CSS background images, are finished.</li>
 					<li><code>waitFor</code> : If you set a function to return <code>Promise</code>, Storycap waits the promise is resolved. You can also set a name of global function that returns <code>Promise</code>.</li>
 					<li><code>fullPage</code>: If set true, Storycap captures the entire page of stories.</li>
 					<li><code>focus</code>: If set a valid CSS selector string, Storycap captures after focusing the element matched by the selector.</li>
@@ -251,8 +261,9 @@ $ npx run storycap http://localhost:9009</code></pre>
 					<li><code>skip</code>: If set true, Storycap cancels capturing corresponding stories.</li>
 					<li><code>viewport</code>, <code>viewports</code>: See type <code>Viewport</code> section below.</li>
 					<li><code>variants</code>: See type <code>Variants</code> section below.</li>
+					<li><code>waitImages</code>: Deprecated. Use <code>waitAssets</code>. If set true, Storycap waits until <code>&lt;img&gt;</code> in the story are loaded.</li>
 				</ul>
-				<a href="#type-codevariantscode" id="type-codevariantscode" style="color: inherit; text-decoration: none;">
+				<a href="#type-variants" id="type-variants" style="color: inherit; text-decoration: none;">
 					<h3>type <code>Variants</code></h3>
 				</a>
 				<p><code>Variants</code> is used to generate <a href="#multiple-pngs-from-1-story">multiple PNGs from 1 story</a>.</p>
@@ -260,31 +271,34 @@ $ npx run storycap http://localhost:9009</code></pre>
   [variantName: <span class="hljs-built_in">string</span>]: {
     <span class="hljs-keyword">extends</span>?: <span class="hljs-built_in">string</span> | <span class="hljs-built_in">string</span>[]; <span class="hljs-comment">// default: ""</span>
     delay?: <span class="hljs-built_in">number</span>;
-    waitImages?: <span class="hljs-built_in">boolean</span>;
+    waitAssets?: <span class="hljs-built_in">boolean</span>;
     waitFor?: <span class="hljs-built_in">string</span> | <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-built_in">void</span>&gt;;
     fullPage?: <span class="hljs-built_in">boolean</span>;
     hover?: <span class="hljs-built_in">string</span>;
     focus?: <span class="hljs-built_in">string</span>;
     skip?: <span class="hljs-built_in">boolean</span>;
     viewport?: Viewport;
+    waitImages?: <span class="hljs-built_in">boolean</span>;
   };
 };</code></pre>
 				<ul>
 					<li><code>extends</code>: If set other variant&#39;s name(or an array of names of them), this variant extends the other variant options. And this variant generates a PNG file with suffix such as <code>_${parentVariantName}_${thisVariantName}</code>.</li>
 				</ul>
-				<a href="#type-codeviewportcode" id="type-codeviewportcode" style="color: inherit; text-decoration: none;">
+				<a href="#type-viewport" id="type-viewport" style="color: inherit; text-decoration: none;">
 					<h3>type <code>Viewport</code></h3>
 				</a>
 				<p><code>Viewport</code> is compatible for <a href="https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagesetviewportviewport">Puppeteer viewport interface</a>.</p>
-				<pre><code class="language-ts"><span class="hljs-keyword">type</span> Viewport = <span class="hljs-built_in">string</span> | {
-  width: <span class="hljs-built_in">number</span>;              <span class="hljs-comment">// default: 800</span>
-  height: <span class="hljs-built_in">number</span>;             <span class="hljs-comment">// default: 600</span>
-  deviceScaleFactor:?<span class="hljs-built_in">number</span>;  <span class="hljs-comment">// default: 1,</span>
-  isMobile?: <span class="hljs-built_in">boolean</span>;         <span class="hljs-comment">// default: false,</span>
-  hasTouch?: <span class="hljs-built_in">boolean</span>;         <span class="hljs-comment">// default: false,</span>
-  isLandscape?: <span class="hljs-built_in">boolean</span>;      <span class="hljs-comment">// default: false,</span>
-};</code></pre>
-				<p><strong>Note:</strong> You should choose a valid <a href="https://github.com/GoogleChrome/puppeteer/blob/master/lib/DeviceDescriptors.js">device name</a> if set string.</p>
+				<pre><code class="language-ts"><span class="hljs-keyword">type</span> Viewport =
+  | <span class="hljs-built_in">string</span>
+  | {
+      width: <span class="hljs-built_in">number</span>; <span class="hljs-comment">// default: 800</span>
+      height: <span class="hljs-built_in">number</span>; <span class="hljs-comment">// default: 600</span>
+      deviceScaleFactor: ?<span class="hljs-built_in">number</span>; <span class="hljs-comment">// default: 1,</span>
+      isMobile?: <span class="hljs-built_in">boolean</span>; <span class="hljs-comment">// default: false,</span>
+      hasTouch?: <span class="hljs-built_in">boolean</span>; <span class="hljs-comment">// default: false,</span>
+      isLandscape?: <span class="hljs-built_in">boolean</span>; <span class="hljs-comment">// default: false,</span>
+    };</code></pre>
+				<p><strong>Note:</strong> You should choose a valid <a href="https://github.com/puppeteer/puppeteer/blob/main/src/common/DeviceDescriptors.ts">device name</a> if set string.</p>
 				<p><code>Viewport</code> values are available in <code>viewports</code> field such as:</p>
 				<pre><code class="language-js">addParameters({
   <span class="hljs-attr">screenshot</span>: {
@@ -304,7 +318,7 @@ $ npx run storycap http://localhost:9009</code></pre>
     },
   },
 });</code></pre>
-				<a href="#function-codeisscreenshotcode" id="function-codeisscreenshotcode" style="color: inherit; text-decoration: none;">
+				<a href="#function-isscreenshot" id="function-isscreenshot" style="color: inherit; text-decoration: none;">
 					<h3>function <code>isScreenshot</code></h3>
 				</a>
 				<pre><code class="language-typescript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isScreenshot</span>(<span class="hljs-params"></span>): <span class="hljs-title">boolean</span></span>;</code></pre>
@@ -316,26 +330,32 @@ $ npx run storycap http://localhost:9009</code></pre>
 				<pre><code class="language-txt">usage: storycap [options] storybook_url
 
 Options:
-  --help                       Show help                                                                       [boolean]
-  --version                    Show version number                                                             [boolean]
-  --outDir, -o                 Output directory.                                   [string] [default: &quot;__screenshots__&quot;]
-  --parallel, -p               Number of browsers to screenshot.                                   [number] [default: 4]
-  --flat, -f                   Flatten output filename.                                       [boolean] [default: false]
-  --include, -i                Including stories name rule.                                        [array] [default: []]
-  --exclude, -e                Excluding stories name rule.                                        [array] [default: []]
-  --delay                      Waiting time [msec] before screenshot for each story.               [number] [default: 0]
-  --viewport, -V               Viewport.                                                  [array] [default: [&quot;800x600&quot;]]
-  --disableCssAnimation        Disable CSS animation and transition.                           [boolean] [default: true]
-  --silent                                                                                    [boolean] [default: false]
-  --verbose                                                                                   [boolean] [default: false]
-  --serverCmd                  Command line to launch Storybook server.                           [string] [default: &quot;&quot;]
-  --serverTimeout              Timeout [msec] for starting Storybook server.                   [number] [default: 20000]
-  --captureTimeout             Timeout [msec] for capture a story.                              [number] [default: 5000]
-  --captureMaxRetryCount       Number of count to retry to capture.                                [number] [default: 3]
-  --metricsWatchRetryCount     Number of count to retry until browser metrics stable.           [number] [default: 1000]
-  --viewportDelay              Delay time [msec] between changing viewport and capturing.        [number] [default: 300]
-  --reloadAfterChangeViewport  Whether to reload after viewport changed.                      [boolean] [default: false]
-  --puppeteerLaunchConfig      JSON string of launch config for Puppeteer.
+      --help                       Show help                                                                   [boolean]
+      --version                    Show version number                                                         [boolean]
+  -o, --outDir                     Output directory.                               [string] [default: &quot;__screenshots__&quot;]
+  -p, --parallel                   Number of browsers to screenshot.                               [number] [default: 4]
+  -f, --flat                       Flatten output filename.                                   [boolean] [default: false]
+  -i, --include                    Including stories name rule.                                    [array] [default: []]
+  -e, --exclude                    Excluding stories name rule.                                    [array] [default: []]
+      --delay                      Waiting time [msec] before screenshot for each story.           [number] [default: 0]
+  -V, --viewport                   Viewport.                                              [array] [default: [&quot;800x600&quot;]]
+      --disableCssAnimation        Disable CSS animation and transition.                       [boolean] [default: true]
+      --disableWaitAssets          Disable waiting for requested assets                       [boolean] [default: false]
+      --silent                                                                                [boolean] [default: false]
+      --verbose                                                                               [boolean] [default: false]
+      --serverCmd                  Command line to launch Storybook server.                       [string] [default: &quot;&quot;]
+      --serverTimeout              Timeout [msec] for starting Storybook server.               [number] [default: 20000]
+      --captureTimeout             Timeout [msec] for capture a story.                          [number] [default: 5000]
+      --captureMaxRetryCount       Number of count to retry to capture.                            [number] [default: 3]
+      --metricsWatchRetryCount     Number of count to retry until browser metrics stable.       [number] [default: 1000]
+      --viewportDelay              Delay time [msec] between changing viewport and capturing.    [number] [default: 300]
+      --reloadAfterChangeViewport  Whether to reload after viewport changed.                  [boolean] [default: false]
+      --stateChangeDelay           Delay time [msec] after changing element&#39;s state.               [number] [default: 0]
+      --listDevices                List available device descriptors.                         [boolean] [default: false]
+  -C, --chromiumChannel            Channel to search local Chromium. One of &quot;puppeteer&quot;, &quot;canary&quot;, &quot;stable&quot;, &quot;*&quot;
+                                                                                                 [string] [default: &quot;*&quot;]
+      --chromiumPath               Executable Chromium path.                                      [string] [default: &quot;&quot;]
+      --puppeteerLaunchConfig      JSON string of launch config for Puppeteer.
                [string] [default: &quot;{ &quot;args&quot;: [&quot;--no-sandbox&quot;, &quot;--disable-setuid-sandbox&quot;, &quot;--disable-dev-shm-usage&quot;] }&quot;]
 
 Examples:
@@ -361,18 +381,18 @@ Examples:
   <span class="hljs-attr">title</span>: <span class="hljs-string">'MyButton'</span>,
 };
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> normal = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">MyButton</span> /&gt;</span>;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> normal = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">MyButton</span> /&gt;</span></span>;
 normal.story = {
-  parameters: {
-    screenshot: {
-      variants: {
-        hovered: {
-          hover: 'button.my-button',
+  <span class="hljs-attr">parameters</span>: {
+    <span class="hljs-attr">screenshot</span>: {
+      <span class="hljs-attr">variants</span>: {
+        <span class="hljs-attr">hovered</span>: {
+          <span class="hljs-attr">hover</span>: <span class="hljs-string">'button.my-button'</span>,
         },
       },
     },
   },
-};</span></code></pre>
+};</code></pre>
 				<p>The above configuration generates 2 PNGs:</p>
 				<ul>
 					<li><code>MyButton/normal.png</code></li>
@@ -454,6 +474,16 @@ addParameters({
     <span class="hljs-attr">waitFor</span>: <span class="hljs-string">'fontLoading'</span>,
   },
 });</code></pre>
+				<a href="#chromium-version" id="chromium-version" style="color: inherit; text-decoration: none;">
+					<h2>Chromium version</h2>
+				</a>
+				<p>Since v3.0.0, Storycap does not use Puppeteer directly. Instead, Storycap searches Chromium binary in the following order:</p>
+				<ol>
+					<li>Installed Puppeteer package (if you installed explicitly)</li>
+					<li>Canary Chrome installed locally</li>
+					<li>Stable Chrome installed locally</li>
+				</ol>
+				<p>You can change search channel with <code>--chromiumChannel</code> option or set executable Chromium file path with <code>--chromiumPath</code> option.</p>
 				<a href="#storybook-compatibility" id="storybook-compatibility" style="color: inherit; text-decoration: none;">
 					<h2>Storybook compatibility</h2>
 				</a>
@@ -465,11 +495,13 @@ addParameters({
 					<li>Simple mode:<ul>
 							<li><input checked="" disabled="" type="checkbox"> Storybook v4.x</li>
 							<li><input checked="" disabled="" type="checkbox"> Storybook v5.x</li>
+							<li><input checked="" disabled="" type="checkbox"> Storybook v6.x</li>
 						</ul>
 					</li>
 					<li>Managed mode:<ul>
 							<li><input checked="" disabled="" type="checkbox"> Storybook v4.x</li>
 							<li><input checked="" disabled="" type="checkbox"> Storybook v5.x</li>
+							<li><input checked="" disabled="" type="checkbox"> Storybook v6.x</li>
 						</ul>
 					</li>
 				</ul>
@@ -519,53 +551,53 @@ addParameters({
 					<li class="globals  ">
 						<a href="globals.html"><em>Globals</em></a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_client_is_screenshot_.html">"client/is-<wbr>screenshot"</a>
+					<li class=" tsd-kind-module">
+						<a href="modules/_storycap_src_client_is_screenshot_.html">&quot;storycap/src/client/is-<wbr>screenshot&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_client_register_.html">"client/register"</a>
+					<li class=" tsd-kind-module">
+						<a href="modules/_storycap_src_client_register_.html">&quot;storycap/src/client/register&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_client_trigger_screenshot_.html">"client/trigger-<wbr>screenshot"</a>
+					<li class=" tsd-kind-module">
+						<a href="modules/_storycap_src_client_trigger_screenshot_.html">&quot;storycap/src/client/trigger-<wbr>screenshot&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_client_with_screenshot_.html">"client/with-<wbr>screenshot"</a>
+					<li class=" tsd-kind-module">
+						<a href="modules/_storycap_src_client_with_screenshot_.html">&quot;storycap/src/client/with-<wbr>screenshot&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_index_.html">"index"</a>
+					<li class=" tsd-kind-module">
+						<a href="modules/_storycap_src_index_.html">&quot;storycap/src/index&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_node_capturing_browser_.html">"node/capturing-<wbr>browser"</a>
+					<li class=" tsd-kind-module">
+						<a href="modules/_storycap_src_node_capturing_browser_.html">&quot;storycap/src/node/capturing-<wbr>browser&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_node_cli_.html">"node/cli"</a>
+					<li class=" tsd-kind-module">
+						<a href="modules/_storycap_src_node_cli_.html">&quot;storycap/src/node/cli&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_node_errors_.html">"node/errors"</a>
+					<li class=" tsd-kind-module">
+						<a href="modules/_storycap_src_node_errors_.html">&quot;storycap/src/node/errors&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_node_file_.html">"node/file"</a>
+					<li class=" tsd-kind-module">
+						<a href="modules/_storycap_src_node_file_.html">&quot;storycap/src/node/file&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_node_logger_.html">"node/logger"</a>
+					<li class=" tsd-kind-module">
+						<a href="modules/_storycap_src_node_logger_.html">&quot;storycap/src/node/logger&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_node_main_.html">"node/main"</a>
+					<li class=" tsd-kind-module">
+						<a href="modules/_storycap_src_node_main_.html">&quot;storycap/src/node/main&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_node_screenshot_service_.html">"node/screenshot-<wbr>service"</a>
+					<li class=" tsd-kind-module">
+						<a href="modules/_storycap_src_node_screenshot_service_.html">&quot;storycap/src/node/screenshot-<wbr>service&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_node_types_.html">"node/types"</a>
+					<li class=" tsd-kind-module">
+						<a href="modules/_storycap_src_node_types_.html">&quot;storycap/src/node/types&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_shared_screenshot_options_helper_.html">"shared/screenshot-<wbr>options-<wbr>helper"</a>
+					<li class=" tsd-kind-module">
+						<a href="modules/_storycap_src_shared_screenshot_options_helper_.html">&quot;storycap/src/shared/screenshot-<wbr>options-<wbr>helper&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_shared_screenshot_options_helper_test_.html">"shared/screenshot-<wbr>options-<wbr>helper.test"</a>
+					<li class=" tsd-kind-module">
+						<a href="modules/_storycap_src_shared_screenshot_options_helper_test_.html">&quot;storycap/src/shared/screenshot-<wbr>options-<wbr>helper.test&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_shared_types_.html">"shared/types"</a>
+					<li class=" tsd-kind-module">
+						<a href="modules/_storycap_src_shared_types_.html">&quot;storycap/src/shared/types&quot;</a>
 					</li>
 				</ul>
 			</nav>
@@ -581,57 +613,18 @@ addParameters({
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
-				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
 				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
 				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
-				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
 				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
-				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
-			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
-				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
-				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
 			</ul>
 		</div>
 	</div>
@@ -641,6 +634,5 @@ addParameters({
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>
