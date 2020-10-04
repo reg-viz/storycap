@@ -185,14 +185,14 @@ storiesOf('MyComponent')
 #### Run `storycap` Command
 
 ```sh
-$ npm run storybook -p 9009
-$ npx run storycap http://localhost:9009
+$ npx start-storybook -p 9009
+$ npx storycap http://localhost:9009
 ```
 
 Or you can exec with one-liner via `--serverCmd` option:
 
 ```sh
-$ npx run storycap http://localhost:9009 --serverCmd "storybook -p 9009"
+$ npx storycap http://localhost:9009 --serverCmd "start-storybook -p 9009"
 ```
 
 ## API
