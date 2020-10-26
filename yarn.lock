@@ -2692,6 +2692,15 @@ cliui@^7.0.0:
     strip-ansi "^6.0.0"
     wrap-ansi "^7.0.0"
 
+cliui@^7.0.2:
+  version "7.0.3"
+  resolved "https://registry.yarnpkg.com/cliui/-/cliui-7.0.3.tgz#ef180f26c8d9bff3927ee52428bfec2090427981"
+  integrity sha512-Gj3QHTkVMPKqwP3f7B4KPkBZRMR9r4rfi5bXFpg1a+Svvj8l7q5CnkBkVQzfxT5DFSsGk2+PascOgL0JYkL2kw==
+  dependencies:
+    string-width "^4.2.0"
+    strip-ansi "^6.0.0"
+    wrap-ansi "^7.0.0"
+
 clone-deep@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/clone-deep/-/clone-deep-4.0.1.tgz#c19fd9bdbbf85942b4fd979c84dcf7d5f07c2387"
@@ -3484,6 +3493,11 @@ escalade@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/escalade/-/escalade-3.0.2.tgz#6a580d70edb87880f22b4c91d0d56078df6962c4"
   integrity sha512-gPYAU37hYCUhW5euPeR+Y74F7BL+IBsV93j5cvGriSaD1aG6MGsqsV1yamRdrWrb2j3aiZvb0X+UBOWpx3JWtQ==
+
+escalade@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/escalade/-/escalade-3.1.1.tgz#d8cfdc7000965c5a0174b4a82eaa5c0552742e40"
+  integrity sha512-k0er2gUkLf8O0zKJiAhmkTnJlTvINGv7ygDNPbeIsX/TJjGJZHuh9B2UxbsaEkmlEo9MfhrSzmhIlhRlI2GXnw==
 
 escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   version "1.0.5"
@@ -5874,7 +5888,12 @@ lodash.uniq@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
-lodash@4.17.15, lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.2.1:
+lodash@4.17.19:
+  version "4.17.19"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
+  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
+
+lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.2.1:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
 
@@ -7512,10 +7531,10 @@ redent@^3.0.0:
     indent-string "^4.0.0"
     strip-indent "^3.0.0"
 
-reg-cli@^0.16.1:
-  version "0.16.1"
-  resolved "https://registry.yarnpkg.com/reg-cli/-/reg-cli-0.16.1.tgz#4f1d447742c4120d110783e84e2f85ee9dc18247"
-  integrity sha512-e9Afa1ajOCKrmdDuQye6nzt8L6pfxD+hGQ/acHPyzoLKfXHaFfDPgq8iJNjf/chJ5CBKA7w5M4YTNH02pzjkSw==
+reg-cli@^0.16.2:
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/reg-cli/-/reg-cli-0.16.2.tgz#b200f7c9db26d297831ff5ff04f69e228fe12f6e"
+  integrity sha512-amxib9sO22tLv7bxJnjG61Hs3JoTNsYzqh+ERkuuRQPn3Pn5w/+km/J0RZ06QH3KF2k2lF0hx19+JwalIbqPNQ==
   dependencies:
     bluebird "3.5.5"
     chalk "2.4.2"
@@ -7524,7 +7543,7 @@ reg-cli@^0.16.1:
     del "3.0.0"
     glob "7.1.4"
     img-diff-js "0.4.1"
-    lodash "4.17.15"
+    lodash "4.17.19"
     make-dir "3.0.0"
     md5-file "4.0.0"
     meow "3.7.0"
@@ -7536,49 +7555,49 @@ reg-gh-app-interface@^1.1.0:
   resolved "https://registry.yarnpkg.com/reg-gh-app-interface/-/reg-gh-app-interface-1.1.0.tgz#a71c80acad06944d21fa5d4fb3d1bf7545a8eb42"
   integrity sha512-hTUJVbmV/67xdqXE+Z/vFpoo+1QdNlQDcrynlKc3d+7mY2trff3n70ETOwhtrxMwSzLxtCTcnHRSIqMeW4AnaQ==
 
-reg-keygen-git-hash-plugin@0.10.7:
-  version "0.10.7"
-  resolved "https://registry.yarnpkg.com/reg-keygen-git-hash-plugin/-/reg-keygen-git-hash-plugin-0.10.7.tgz#72251df588faf4aa422383dec252f26c184d4500"
-  integrity sha512-OnUoxaYJ7z8ttaNZD8OVqTJgpLYv1BwpC5kywAcF5lUOSraFpWX9/H7f/LqPimzpZMeff3Tw5CRcZTO23joo+Q==
+reg-keygen-git-hash-plugin@0.10.8:
+  version "0.10.8"
+  resolved "https://registry.yarnpkg.com/reg-keygen-git-hash-plugin/-/reg-keygen-git-hash-plugin-0.10.8.tgz#0735c0cde652175502cd420f07138a3ece2baec6"
+  integrity sha512-YeKp6ZwWGnBB0FL05UDA1cvK0EZpOv1TKlX9xXzOsDp+QxZDINJeA8LFMHslT3ki3PAftRaB/79gFQuDA+q3yQ==
   dependencies:
-    reg-suit-util "^0.10.7"
+    reg-suit-util "^0.10.8"
 
-reg-notify-github-plugin@0.10.7:
-  version "0.10.7"
-  resolved "https://registry.yarnpkg.com/reg-notify-github-plugin/-/reg-notify-github-plugin-0.10.7.tgz#e11b3538184a7c6567226a0ef327829cafe6fcc1"
-  integrity sha512-DFx52RfbfWHZOS8EhtA0aVaMHgeoJEAfCrZmMPCzBzx+1bBuRXDKvsoHl3t9x3/3hQJKIr0vGXvJhySeeLYT7w==
+reg-notify-github-plugin@0.10.8:
+  version "0.10.8"
+  resolved "https://registry.yarnpkg.com/reg-notify-github-plugin/-/reg-notify-github-plugin-0.10.8.tgz#ba962043d1530e1758175b1fa0441564d6ff1b7f"
+  integrity sha512-Y3b64rkztandAO2OD8OnqivoLEAou8kB7FLWom9u4lfR0ICa9QgU+6jmA6azveu4HzplIFH1fvBKrugPpitaZw==
   dependencies:
     open "^7.2.1"
     reg-gh-app-interface "^1.1.0"
-    reg-suit-util "^0.10.7"
+    reg-suit-util "^0.10.8"
     request "^2.88.2"
     request-promise "^4.2.6"
     tiny-commit-walker "^1.1.2"
 
-reg-publish-s3-plugin@0.10.7:
-  version "0.10.7"
-  resolved "https://registry.yarnpkg.com/reg-publish-s3-plugin/-/reg-publish-s3-plugin-0.10.7.tgz#1818d4b065562622f78da18cfa2213f8f2d9a3f3"
-  integrity sha512-i3mpD0JEDTE62SprElhZpiaI+wIRJy2whDI4nZW3VKhtFtOenBu5RKtwNluwXXQrqwWVGMlh1hhX05u/5Ci4gQ==
+reg-publish-s3-plugin@0.10.8:
+  version "0.10.8"
+  resolved "https://registry.yarnpkg.com/reg-publish-s3-plugin/-/reg-publish-s3-plugin-0.10.8.tgz#22b846fbf16679807c182e263cd01fea33eceba1"
+  integrity sha512-ig+IsMUVTi2XvYhlY/qX2Lz+BHA8e0D/C168Yq0ZzGqs/oBJCL7E0eMETBH85PjpDdXwV5k1JqcA4Ux5KRKicw==
   dependencies:
     aws-sdk "^2.755.0"
     mkdirp "^1.0.4"
-    reg-suit-util "^0.10.7"
+    reg-suit-util "^0.10.8"
     uuid "^8.3.0"
 
-reg-suit-core@^0.10.7:
-  version "0.10.7"
-  resolved "https://registry.yarnpkg.com/reg-suit-core/-/reg-suit-core-0.10.7.tgz#074433981307f3c771043d7355fa4bfe2e63ece9"
-  integrity sha512-W0JsOtkWCeIE+HEiTFYEYiu479UMo0rDU/gd9r/w/JpwMhrwh9fZPHkt7/DdJorXBgWZBotEL/1L1pzFZH0bCw==
+reg-suit-core@^0.10.8:
+  version "0.10.8"
+  resolved "https://registry.yarnpkg.com/reg-suit-core/-/reg-suit-core-0.10.8.tgz#af0634c5cc91bba6eefe88b8b7cf57abe1160ee4"
+  integrity sha512-zDvecmG7HWOVbAUGYN46ZtFX4lNx/S+dSsmBai17ygaHoOAH6Mu5X79Gaaztuhaah6VM2VE5DcdreEZf9XDimA==
   dependencies:
     cpx "^1.5.0"
-    reg-cli "^0.16.1"
-    reg-suit-util "^0.10.7"
+    reg-cli "^0.16.2"
+    reg-suit-util "^0.10.8"
     rimraf "^3.0.2"
 
-reg-suit-util@^0.10.7:
-  version "0.10.7"
-  resolved "https://registry.yarnpkg.com/reg-suit-util/-/reg-suit-util-0.10.7.tgz#5f5981b423e063a40a188fe354fd0169c63c4993"
-  integrity sha512-v11Z4s263nqfMT65XTpPqw698K2R7/RA5mvz90L67i+hmEX0JG5qFF3XjKHiSG9LQ32G2NFfJ2zGC/JuKMPCAQ==
+reg-suit-util@^0.10.8:
+  version "0.10.8"
+  resolved "https://registry.yarnpkg.com/reg-suit-util/-/reg-suit-util-0.10.8.tgz#82ee9e92848ecdc09b7eb60f2b0aab4b6b36479a"
+  integrity sha512-eVJ11zsWD9F90Wl27f0H09Let+e6102ZSUDPchHLmBjdsfzajipvUbmjDbuuHi179mmsUtw7qDtb1SoghTDzpQ==
   dependencies:
     "@types/cli-progress" "^3.8.0"
     "@types/cli-spinner" "^0.2.0"
@@ -7594,17 +7613,17 @@ reg-suit-util@^0.10.7:
     mime-types "^2.1.27"
     mkdirp "^1.0.4"
 
-reg-suit@0.10.7:
-  version "0.10.7"
-  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.10.7.tgz#903c34e395c893bf5aff5ae02d1155d971a307df"
-  integrity sha512-D3/ijunxUueHbswVTZlTh6MIrx5aP0J/oHtZkWEckjYfsvMUG1d7+NC7h1yjAGWHlLFt7jGLlySnYrI4LXGb4w==
+reg-suit@0.10.8:
+  version "0.10.8"
+  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.10.8.tgz#12d4127448c306935d18b331dbc2b2f396ed0760"
+  integrity sha512-d++Pc1UmMSkhEbT8SI2y9I/grJZNXgVqAXy+VuTbrlGXX98MmB1nk4k/SHua8dKg4bVWB3uwvItlM7R/VY8X+g==
   dependencies:
     cp-file "9.0.0"
     ignore "5.1.8"
     inquirer "7.3.3"
-    reg-suit-core "^0.10.7"
-    reg-suit-util "^0.10.7"
-    yargs "16.0.3"
+    reg-suit-core "^0.10.8"
+    reg-suit-util "^0.10.8"
+    yargs "16.1.0"
 
 regenerator-runtime@^0.11.0:
   version "0.11.1"
@@ -9307,6 +9326,11 @@ y18n@^5.0.1:
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-5.0.1.tgz#1ad2a7eddfa8bce7caa2e1f6b5da96c39d99d571"
   integrity sha512-/jJ831jEs4vGDbYPQp4yGKDYPSCCEQ45uZWJHE1AoYBzqdZi8+LDWas0z4HrmJXmKdpFsTiowSHXdxyFhpmdMg==
 
+y18n@^5.0.2:
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/y18n/-/y18n-5.0.5.tgz#8769ec08d03b1ea2df2500acef561743bbb9ab18"
+  integrity sha512-hsRUr4FFrvhhRH12wOdfs38Gy7k2FFzB9qgN9v3aLykRq0dRcdcpz5C9FxdS2NuhOrI/628b/KSTJ3rwHysYSg==
+
 yallist@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-2.1.2.tgz#1c11f9218f076089a47dd512f93c6699a6a81d52"
@@ -9351,18 +9375,23 @@ yargs-parser@^20.0.0:
   resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-20.0.0.tgz#c65a1daaa977ad63cebdd52159147b789a4e19a9"
   integrity sha512-8eblPHTL7ZWRkyjIZJjnGf+TijiKJSwA24svzLRVvtgoi/RZiKa9fFQTrlx0OKLnyHSdt/enrdadji6WFfESVA==
 
-yargs@16.0.3, yargs@^16.0.0:
-  version "16.0.3"
-  resolved "https://registry.yarnpkg.com/yargs/-/yargs-16.0.3.tgz#7a919b9e43c90f80d4a142a89795e85399a7e54c"
-  integrity sha512-6+nLw8xa9uK1BOEOykaiYAJVh6/CjxWXK/q9b5FpRgNslt8s22F2xMBqVIKgCRjNgGvGPBy8Vog7WN7yh4amtA==
+yargs-parser@^20.2.2:
+  version "20.2.3"
+  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-20.2.3.tgz#92419ba867b858c868acf8bae9bf74af0dd0ce26"
+  integrity sha512-emOFRT9WVHw03QSvN5qor9QQT9+sw5vwxfYweivSMHTcAXPefwVae2FjO7JJjj8hCE4CzPOPeFM83VwT29HCww==
+
+yargs@16.1.0:
+  version "16.1.0"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-16.1.0.tgz#fc333fe4791660eace5a894b39d42f851cd48f2a"
+  integrity sha512-upWFJOmDdHN0syLuESuvXDmrRcWd1QafJolHskzaw79uZa7/x53gxQKiR07W59GWY1tFhhU/Th9DrtSfpS782g==
   dependencies:
-    cliui "^7.0.0"
-    escalade "^3.0.2"
+    cliui "^7.0.2"
+    escalade "^3.1.1"
     get-caller-file "^2.0.5"
     require-directory "^2.1.1"
     string-width "^4.2.0"
-    y18n "^5.0.1"
-    yargs-parser "^20.0.0"
+    y18n "^5.0.2"
+    yargs-parser "^20.2.2"
 
 yargs@^14.2.2:
   version "14.2.3"
@@ -9397,6 +9426,19 @@ yargs@^15.4.1:
     which-module "^2.0.0"
     y18n "^4.0.0"
     yargs-parser "^18.1.2"
+
+yargs@^16.0.0:
+  version "16.0.3"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-16.0.3.tgz#7a919b9e43c90f80d4a142a89795e85399a7e54c"
+  integrity sha512-6+nLw8xa9uK1BOEOykaiYAJVh6/CjxWXK/q9b5FpRgNslt8s22F2xMBqVIKgCRjNgGvGPBy8Vog7WN7yh4amtA==
+  dependencies:
+    cliui "^7.0.0"
+    escalade "^3.0.2"
+    get-caller-file "^2.0.5"
+    require-directory "^2.1.1"
+    string-width "^4.2.0"
+    y18n "^5.0.1"
+    yargs-parser "^20.0.0"
 
 yauzl@^2.10.0:
   version "2.10.0"
