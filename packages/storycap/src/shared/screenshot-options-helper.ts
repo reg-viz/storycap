@@ -8,6 +8,7 @@ const defaultScreenshotOptions = {
   skip: false,
   focus: '',
   hover: '',
+  click: '',
   variants: {},
 } as const;
 

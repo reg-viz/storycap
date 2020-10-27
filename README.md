@@ -219,6 +219,7 @@ interface ScreenshotOptions {
   fullPage?: boolean;                       // default true
   hover?: string;                           // default ""
   focus?: string;                           // default ""
+  click?: string;                           // default ""
   skip?: boolean;                           // default false
   viewport?: Viewport;
   viewports?: string[] | { [variantName]: Viewport };
@@ -233,6 +234,7 @@ interface ScreenshotOptions {
 - `fullPage`: If set true, Storycap captures the entire page of stories.
 - `focus`: If set a valid CSS selector string, Storycap captures after focusing the element matched by the selector.
 - `hover`: If set a valid CSS selector string, Storycap captures after hovering the element matched by the selector.
+- `click`: If set a valid CSS selector string, Storycap captures after clicking the element matched by the selector.
 - `skip`: If set true, Storycap cancels capturing corresponding stories.
 - `viewport`, `viewports`: See type `Viewport` section below.
 - `variants`: See type `Variants` section below.
@@ -252,6 +254,7 @@ type Variants = {
     fullPage?: boolean;
     hover?: string;
     focus?: string;
+    click?: string;
     skip?: boolean;
     viewport?: Viewport;
     waitImages?: boolean;
