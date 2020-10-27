@@ -7334,10 +7334,10 @@ punycode@^2.1.0, punycode@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
 
-puppeteer-core@5.4.0:
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-5.4.0.tgz#ccbb67cbe10cbbc032ca50ff41ba9f3a1a16d1d2"
-  integrity sha512-8g+e3nff1JstfKuQZOneLiOWjOSv51dEkIgBHuPgxaZKecK5+iK4Sr7GG/B0HsSAvip5ySrN0LnMv9fmHhCFtA==
+puppeteer-core@5.4.1:
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-5.4.1.tgz#68b85c1aae2dcde8e41df1d12aad8852768a88bd"
+  integrity sha512-JfPCQgLvyBlpwQTbdnEwCEvD2KiRB2Hv+J1YCwz9o0PxlTqVSuzSQ4XeLhPmy6fZpBFynyQ+r4FSn6RUywawqA==
   dependencies:
     debug "^4.1.0"
     devtools-protocol "0.0.809251"
