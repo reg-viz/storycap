@@ -3,6 +3,9 @@ jobs:
   build:
     docker:
       - image: regviz/node-xcb
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
 
     working_directory: ~/repo
 
