@@ -123,6 +123,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     // Clear the browser state.
     await this.page.hover('body');
     await this.page.focus('body');
+    await this.page.click('body');
 
     this.touched = false;
 
@@ -279,6 +280,14 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     return;
   }
 
+  private async setClick(screenshotOptions: StrictScreenshotOptions) {
+    if (!screenshotOptions.click) return;
+    await this.warnIfTargetElementNotFound(screenshotOptions.click);
+    await this.page.click(screenshotOptions.click);
+    this.touched = true;
+    return;
+  }
+
   private async waitForResources(screenshotOptions: StrictScreenshotOptions) {
     if (!screenshotOptions.waitAssets && !screenshotOptions.waitImages) return;
     this.debug('Wait for requested resources resolved', this.resourceWatcher.getRequestedUrls());
@@ -380,6 +389,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     // Modify elements state.
     await this.setHover(mergedScreenshotOptions);
     await this.setFocus(mergedScreenshotOptions);
+    await this.setClick(mergedScreenshotOptions);
     await this.waitIfTouched();
 
     // Wait until browser main thread gets stable.
