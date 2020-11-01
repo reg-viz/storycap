@@ -9,6 +9,7 @@ const defaultScreenshotOptions = {
   focus: '',
   hover: '',
   variants: {},
+  omitBackground: false,
 } as const;
 
 /**

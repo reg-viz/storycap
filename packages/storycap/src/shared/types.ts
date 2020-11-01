@@ -21,6 +21,7 @@ export interface ScreenshotOptionFragments {
   hover?: string;
   focus?: string;
   skip?: boolean;
+  omitBackground?: boolean;
 }
 
 export interface ScreenshotOptionFragmentsForVariant extends ScreenshotOptionFragments {
