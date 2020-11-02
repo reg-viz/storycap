@@ -391,7 +391,10 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     );
 
     // Get PNG image buffer
-    const buffer = await this.page.screenshot({ fullPage: emittedScreenshotOptions.fullPage });
+    const buffer = await this.page.screenshot({
+      fullPage: emittedScreenshotOptions.fullPage,
+      omitBackground: emittedScreenshotOptions.omitBackground,
+    });
 
     // We should reset elements state(e.g. focusing, hovering) for future screenshot for this story.
     await this.resetIfTouched();

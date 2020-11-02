@@ -224,6 +224,7 @@ interface ScreenshotOptions {
   viewports?: string[] | { [variantName]: Viewport };
   variants?: Variants;
   waitImages?: boolean;                     // default true
+  omitBackground?: boolean;                 // default false
 }
 ```
 
@@ -237,6 +238,7 @@ interface ScreenshotOptions {
 - `viewport`, `viewports`: See type `Viewport` section below.
 - `variants`: See type `Variants` section below.
 - `waitImages`: Deprecated. Use `waitAssets`. If set true, Storycap waits until `<img>` in the story are loaded.
+- `omitBackground`: If set true, Storycap omits the background of the page allowing for transparent screenshots. Note the storybook theme will need to be transparent as well.
 
 ### type `Variants`
 
