@@ -1,12 +1,10 @@
-import { configure, addDecorator, addParameters } from '@storybook/react';
 import { withScreenshot } from 'storycap';
 
-function loadStories() {
-  require('../src/stories');
-}
+export const decorators = [
+  withScreenshot,
+];
 
-addDecorator(withScreenshot);
-addParameters({
+export const parameters = {
   screenshot: {
     viewports: {
       LARGE: {
@@ -21,6 +19,4 @@ addParameters({
       },
     },
   },
-});
-
-configure(loadStories, module);
+};
