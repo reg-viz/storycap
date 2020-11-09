@@ -105,28 +105,38 @@ $ storycap https://storybookjs-next.now.sh/vue-kitchen-sink
 
 If you want to control how stories are captured (timing or size or etc...), use managed mode.
 
-First, register storycap addon.
+First, add `storycap` to your Storybook config file:
 
 ```js
-/* .storybook/addons.js */
+/* .storybook/main.js */
 
-// Other addons...
-import 'storycap/register';
+module.exports = {
+  stories: ['../src/**/*.stories.@(js|mdx)'],
+  addons: [
+    '@storybook/addon-actions',
+    '@storybook/addon-links',
+    'storycap', // <-- Add storycap
+  ],
+};
 ```
 
 Next, use `withScreenshot` decorator to tell how Storycap captures your stories.
 
 ```js
-/* .storybook/config.js */
-import { addDecorator, addParameters } from '@storybook/react';
+/* .storybook/preview.js */
+
 import { withScreenshot } from 'storycap';
 
-addDecorator(withScreenshot);
-addParameters({
+export const decorators = [
+  withScreenshot, // Registration the decorator is required
+];
+
+export const parameters = {
+  // Global parameter is optional.
   screenshot: {
-    // Some screenshot options...
+    // Put global screenshot parameters(e.g. viewport)
   },
-});
+};
 ```
 
 **Note:** You can set configuration of screenshot with `addParameters` and `screenshot` key.
