@@ -152,7 +152,7 @@ export abstract class BaseBrowser {
   private async setupDebugInput() {
     if (this.opt.launchOptions && this.opt.launchOptions.headless === false) {
       const resetInput: () => void = () =>
-        (this.debugInputPromise = new Promise(res => (this.debugInputResolver = res)).then(() => {
+        (this.debugInputPromise = new Promise<void>(res => (this.debugInputResolver = res)).then(() => {
           setTimeout(() => resetInput(), 10);
           return;
         }));

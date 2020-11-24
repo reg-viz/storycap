@@ -187,7 +187,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
             this.currentStory.kind,
             this.currentStory.story,
           );
-          resolve();
+          resolve(undefined);
           return;
         }
         reject(new ScreenshotTimeoutError(this.opt.captureTimeout, this.currentStory));
@@ -386,9 +386,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     await this.waitForResources(mergedScreenshotOptions);
     await this.waitBrowserMetricsStable('postEmit');
 
-    await this.page.evaluate(
-      () => new Promise(res => (window as any).requestIdleCallback(() => res(), { timeout: 3000 })),
-    );
+    await this.page.evaluate(() => new Promise(res => (window as any).requestIdleCallback(res, { timeout: 3000 })));
 
     // Get PNG image buffer
     const buffer = await this.page.screenshot({

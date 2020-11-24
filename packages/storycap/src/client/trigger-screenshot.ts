@@ -57,7 +57,7 @@ function waitUserFunction(waitFor: undefined | null | string | (() => Promise<an
 }
 
 function waitForNextIdle(win: StorycapWindow) {
-  return new Promise(res => win.requestIdleCallback(() => res(), { timeout: 3000 }));
+  return new Promise(res => win.requestIdleCallback(res, { timeout: 3000 }));
 }
 
 function pushOptions(win: StorycapWindow, storyKey: string | undefined, opt: Partial<ScreenshotOptions>) {

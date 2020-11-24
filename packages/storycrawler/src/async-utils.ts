@@ -33,7 +33,7 @@ export async function runParallel<T, S>(tasks: () => AsyncGenerator<Task<T, S>, 
   await Promise.all(
     [...new Array(p).keys()].map(
       i =>
-        new Promise((res, rej) => {
+        new Promise<void>((res, rej) => {
           async function next(): Promise<void> {
             const { done, value: task } = await generator.next();
             if (done || !task) return res();
