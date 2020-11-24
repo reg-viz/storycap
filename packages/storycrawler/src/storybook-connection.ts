@@ -8,7 +8,7 @@ function waitServer(url: string, timeout: number) {
     throw new InvalidUrlError(url);
   }
   const resource = url.startsWith('https') ? url.replace(/^https/, 'https-get') : url.replace(/^http/, 'http-get');
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     waitOn({ resources: [resource], timeout }, err => {
       if (err) {
         if (err.message === 'Timeout') {
