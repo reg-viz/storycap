@@ -60,12 +60,14 @@ export class StoriesBrowser extends BaseBrowser {
         waitUntil: 'domcontentloaded',
       },
     );
-    await this.page.waitForFunction(() => (window as ExposedWindow).__STORYBOOK_CLIENT_API__);
+    await this.page.waitForFunction(() => (window as ExposedWindow).__STORYBOOK_CLIENT_API__, {
+      timeout: 60_000,
+    });
     const result = await this.page.evaluate(
       () =>
         new Promise<{ stories: V5Story[] | null; oldStories: StoryKind[] | null; timeout: boolean }>(res => {
           const getStories = (count = 0) => {
-            const MAX_CONFIGURE_WAIT_COUNT = 100;
+            const MAX_CONFIGURE_WAIT_COUNT = 4_000;
             const { __STORYBOOK_CLIENT_API__: api } = window as ExposedWindow;
             if (api.raw) {
               // for Storybook v6
