@@ -1,6 +1,6 @@
 import { BaseBrowser, BaseBrowserOptions } from './base-browser';
 import { Logger } from '../logger';
-import { NoStoriesError } from '../errors';
+import { NoStoriesError, StoriesTimeoutError } from '../errors';
 import { Story, StoryKind, V5Story } from '../story-types';
 import { flattenStories } from '../flatten-stories';
 import { StorybookConnection } from '../storybook-connection';
@@ -16,8 +16,6 @@ interface API {
 type ExposedWindow = typeof window & {
   __STORYBOOK_CLIENT_API__: API;
 };
-
-const MAX_CONFIGURE_WAIT_COUNT = 100;
 
 /**
  *
@@ -65,30 +63,38 @@ export class StoriesBrowser extends BaseBrowser {
     await this.page.waitForFunction(() => (window as ExposedWindow).__STORYBOOK_CLIENT_API__);
     const result = await this.page.evaluate(
       () =>
-        new Promise<{ stories: V5Story[] | null; oldStories: StoryKind[] | null }>(res => {
+        new Promise<{ stories: V5Story[] | null; oldStories: StoryKind[] | null; timeout: boolean }>(res => {
           const getStories = (count = 0) => {
+            const MAX_CONFIGURE_WAIT_COUNT = 100;
             const { __STORYBOOK_CLIENT_API__: api } = window as ExposedWindow;
             if (api.raw) {
               // for Storybook v6
               const configuring = api.store && api.store()._configuring;
-              if (configuring && count < MAX_CONFIGURE_WAIT_COUNT) {
-                setTimeout(() => getStories(++count), 16);
+              if (configuring) {
+                if (count < MAX_CONFIGURE_WAIT_COUNT) {
+                  setTimeout(() => getStories(++count), 16);
+                } else {
+                  res({ stories: null, oldStories: null, timeout: true });
+                }
                 return;
               }
               // for Storybook v5
               const stories = api.raw().map(_ => ({ id: _.id, kind: _.kind, story: _.name, version: 'v5' } as V5Story));
-              res({ stories, oldStories: null });
+              res({ stories, oldStories: null, timeout: false });
             } else {
               // for Storybook v4
               const oldStories = api
                 .getStorybook()
                 .map(({ kind, stories }) => ({ kind, stories: stories.map(s => s.name) }));
-              res({ stories: null, oldStories });
+              res({ stories: null, oldStories, timeout: false });
             }
           };
           getStories();
         }),
     );
+    if (result.timeout) {
+      throw new StoriesTimeoutError();
+    }
     stories = result.stories;
     oldStories = result.oldStories;
     if (oldStories) {
