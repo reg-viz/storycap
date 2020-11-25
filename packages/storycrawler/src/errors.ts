@@ -20,6 +20,15 @@ export class NoStoriesError extends Error {
   name = 'NoStoriesError';
 }
 
+export class StoriesTimeoutError extends Error {
+  name = 'StoriesTimeoutError';
+
+  constructor() {
+    super();
+    this.message = `Getting stories was failed. Make sure that your Storybook is rendered correctly.`;
+  }
+}
+
 export class ChromiumNotFoundError extends Error {
   name = 'ChromiumNotFoundError';
 }
