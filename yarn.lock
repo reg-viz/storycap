@@ -7632,49 +7632,49 @@ reg-gh-app-interface@^1.1.0:
   resolved "https://registry.yarnpkg.com/reg-gh-app-interface/-/reg-gh-app-interface-1.1.0.tgz#a71c80acad06944d21fa5d4fb3d1bf7545a8eb42"
   integrity sha512-hTUJVbmV/67xdqXE+Z/vFpoo+1QdNlQDcrynlKc3d+7mY2trff3n70ETOwhtrxMwSzLxtCTcnHRSIqMeW4AnaQ==
 
-reg-keygen-git-hash-plugin@0.10.8:
-  version "0.10.8"
-  resolved "https://registry.yarnpkg.com/reg-keygen-git-hash-plugin/-/reg-keygen-git-hash-plugin-0.10.8.tgz#0735c0cde652175502cd420f07138a3ece2baec6"
-  integrity sha512-YeKp6ZwWGnBB0FL05UDA1cvK0EZpOv1TKlX9xXzOsDp+QxZDINJeA8LFMHslT3ki3PAftRaB/79gFQuDA+q3yQ==
+reg-keygen-git-hash-plugin@0.10.9:
+  version "0.10.9"
+  resolved "https://registry.yarnpkg.com/reg-keygen-git-hash-plugin/-/reg-keygen-git-hash-plugin-0.10.9.tgz#6d614b488052def6bc82be636527b914b072d0cc"
+  integrity sha512-1hU+fXFJ7RZY4UrFtIzE3MSDh/0af39ymTsJ6kj/8l+/ZdPkR7DF9PvSMyxOuKNJ4hVe+cZYA7gJ8OrolB+ipQ==
   dependencies:
-    reg-suit-util "^0.10.8"
+    reg-suit-util "^0.10.9"
 
-reg-notify-github-plugin@0.10.8:
-  version "0.10.8"
-  resolved "https://registry.yarnpkg.com/reg-notify-github-plugin/-/reg-notify-github-plugin-0.10.8.tgz#ba962043d1530e1758175b1fa0441564d6ff1b7f"
-  integrity sha512-Y3b64rkztandAO2OD8OnqivoLEAou8kB7FLWom9u4lfR0ICa9QgU+6jmA6azveu4HzplIFH1fvBKrugPpitaZw==
+reg-notify-github-plugin@0.10.9:
+  version "0.10.9"
+  resolved "https://registry.yarnpkg.com/reg-notify-github-plugin/-/reg-notify-github-plugin-0.10.9.tgz#aa280ff319e924657bf52e62f0a459995e1a8353"
+  integrity sha512-aeuq+UJSqtBiS6tI1Cx9y+XN4VwjdTzABMXNlBf8g6TsxvENtrkheBZ1fjnZYrx9f4m/9o5pGzE6TlhkwkUWpQ==
   dependencies:
     open "^7.2.1"
     reg-gh-app-interface "^1.1.0"
-    reg-suit-util "^0.10.8"
+    reg-suit-util "^0.10.9"
     request "^2.88.2"
     request-promise "^4.2.6"
     tiny-commit-walker "^1.1.2"
 
-reg-publish-s3-plugin@0.10.8:
-  version "0.10.8"
-  resolved "https://registry.yarnpkg.com/reg-publish-s3-plugin/-/reg-publish-s3-plugin-0.10.8.tgz#22b846fbf16679807c182e263cd01fea33eceba1"
-  integrity sha512-ig+IsMUVTi2XvYhlY/qX2Lz+BHA8e0D/C168Yq0ZzGqs/oBJCL7E0eMETBH85PjpDdXwV5k1JqcA4Ux5KRKicw==
+reg-publish-s3-plugin@0.10.9:
+  version "0.10.9"
+  resolved "https://registry.yarnpkg.com/reg-publish-s3-plugin/-/reg-publish-s3-plugin-0.10.9.tgz#fbddd4dbaa61e6abcb8ba15d4e5d55a939b34e79"
+  integrity sha512-+QLOuxD7KjQMSR0BvDDsAVaR3tOKFC0cwWfBoADGi2AUOknrNC7092TIdMnWhmp/iRzWbyF3uy1ArcIqMM6kOA==
   dependencies:
     aws-sdk "^2.755.0"
     mkdirp "^1.0.4"
-    reg-suit-util "^0.10.8"
+    reg-suit-util "^0.10.9"
     uuid "^8.3.0"
 
-reg-suit-core@^0.10.8:
-  version "0.10.8"
-  resolved "https://registry.yarnpkg.com/reg-suit-core/-/reg-suit-core-0.10.8.tgz#af0634c5cc91bba6eefe88b8b7cf57abe1160ee4"
-  integrity sha512-zDvecmG7HWOVbAUGYN46ZtFX4lNx/S+dSsmBai17ygaHoOAH6Mu5X79Gaaztuhaah6VM2VE5DcdreEZf9XDimA==
+reg-suit-core@^0.10.9:
+  version "0.10.9"
+  resolved "https://registry.yarnpkg.com/reg-suit-core/-/reg-suit-core-0.10.9.tgz#bc3e327f8fc3123ca8902c2863250b18570b9d8c"
+  integrity sha512-tHcA0TI9pzsanx/f74whkb9GZeuNq6T2jcZ8t4l/adRt04hD7Hiwh1T3k1O5oL4fsZaX3Z/Sp8WagCTB8i2g2Q==
   dependencies:
     cpx "^1.5.0"
     reg-cli "^0.16.2"
-    reg-suit-util "^0.10.8"
+    reg-suit-util "^0.10.9"
     rimraf "^3.0.2"
 
-reg-suit-util@^0.10.8:
-  version "0.10.8"
-  resolved "https://registry.yarnpkg.com/reg-suit-util/-/reg-suit-util-0.10.8.tgz#82ee9e92848ecdc09b7eb60f2b0aab4b6b36479a"
-  integrity sha512-eVJ11zsWD9F90Wl27f0H09Let+e6102ZSUDPchHLmBjdsfzajipvUbmjDbuuHi179mmsUtw7qDtb1SoghTDzpQ==
+reg-suit-util@^0.10.9:
+  version "0.10.9"
+  resolved "https://registry.yarnpkg.com/reg-suit-util/-/reg-suit-util-0.10.9.tgz#48611c8ffcfe9278a494bd9eb17491a92f6cf6ba"
+  integrity sha512-v9TsC8JFzb2buwlKtQsbGaKqV1nvGDoFAkvyTM4JrLu9UPr3pLC4N5XgMzuYSHFQu5gRa4DqruXHoRGeLW/+Vg==
   dependencies:
     "@types/cli-progress" "^3.8.0"
     "@types/cli-spinner" "^0.2.0"
@@ -7690,17 +7690,17 @@ reg-suit-util@^0.10.8:
     mime-types "^2.1.27"
     mkdirp "^1.0.4"
 
-reg-suit@0.10.8:
-  version "0.10.8"
-  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.10.8.tgz#12d4127448c306935d18b331dbc2b2f396ed0760"
-  integrity sha512-d++Pc1UmMSkhEbT8SI2y9I/grJZNXgVqAXy+VuTbrlGXX98MmB1nk4k/SHua8dKg4bVWB3uwvItlM7R/VY8X+g==
+reg-suit@0.10.9:
+  version "0.10.9"
+  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.10.9.tgz#18abc0a3e253496fd4b5743fce7d051fffc45a56"
+  integrity sha512-gQfpNEBL9MG8jFXo2HcZLaycoeExCWxlta8qp90dtqrk7x2Y1mszS583hdv5O20NCl1CCLalEgs8QptRI0Pawg==
   dependencies:
     cp-file "9.0.0"
     ignore "5.1.8"
     inquirer "7.3.3"
-    reg-suit-core "^0.10.8"
-    reg-suit-util "^0.10.8"
-    yargs "16.1.0"
+    reg-suit-core "^0.10.9"
+    reg-suit-util "^0.10.9"
+    yargs "16.1.1"
 
 regenerator-runtime@^0.11.0:
   version "0.11.1"
@@ -9404,7 +9404,7 @@ y18n@^5.0.1:
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-5.0.1.tgz#1ad2a7eddfa8bce7caa2e1f6b5da96c39d99d571"
   integrity sha512-/jJ831jEs4vGDbYPQp4yGKDYPSCCEQ45uZWJHE1AoYBzqdZi8+LDWas0z4HrmJXmKdpFsTiowSHXdxyFhpmdMg==
 
-y18n@^5.0.2:
+y18n@^5.0.5:
   version "5.0.5"
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-5.0.5.tgz#8769ec08d03b1ea2df2500acef561743bbb9ab18"
   integrity sha512-hsRUr4FFrvhhRH12wOdfs38Gy7k2FFzB9qgN9v3aLykRq0dRcdcpz5C9FxdS2NuhOrI/628b/KSTJ3rwHysYSg==
@@ -9458,17 +9458,17 @@ yargs-parser@^20.2.2:
   resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-20.2.3.tgz#92419ba867b858c868acf8bae9bf74af0dd0ce26"
   integrity sha512-emOFRT9WVHw03QSvN5qor9QQT9+sw5vwxfYweivSMHTcAXPefwVae2FjO7JJjj8hCE4CzPOPeFM83VwT29HCww==
 
-yargs@16.1.0:
-  version "16.1.0"
-  resolved "https://registry.yarnpkg.com/yargs/-/yargs-16.1.0.tgz#fc333fe4791660eace5a894b39d42f851cd48f2a"
-  integrity sha512-upWFJOmDdHN0syLuESuvXDmrRcWd1QafJolHskzaw79uZa7/x53gxQKiR07W59GWY1tFhhU/Th9DrtSfpS782g==
+yargs@16.1.1:
+  version "16.1.1"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-16.1.1.tgz#5a4a095bd1ca806b0a50d0c03611d38034d219a1"
+  integrity sha512-hAD1RcFP/wfgfxgMVswPE+z3tlPFtxG8/yWUrG2i17sTWGCGqWnxKcLTF4cUKDUK8fzokwsmO9H0TDkRbMHy8w==
   dependencies:
     cliui "^7.0.2"
     escalade "^3.1.1"
     get-caller-file "^2.0.5"
     require-directory "^2.1.1"
     string-width "^4.2.0"
-    y18n "^5.0.2"
+    y18n "^5.0.5"
     yargs-parser "^20.2.2"
 
 yargs@^14.2.2:
