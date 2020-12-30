@@ -7649,10 +7649,10 @@ reg-gh-app-interface@^1.1.0:
   resolved "https://registry.yarnpkg.com/reg-gh-app-interface/-/reg-gh-app-interface-1.1.0.tgz#a71c80acad06944d21fa5d4fb3d1bf7545a8eb42"
   integrity sha512-hTUJVbmV/67xdqXE+Z/vFpoo+1QdNlQDcrynlKc3d+7mY2trff3n70ETOwhtrxMwSzLxtCTcnHRSIqMeW4AnaQ==
 
-reg-keygen-git-hash-plugin@0.10.10:
-  version "0.10.10"
-  resolved "https://registry.yarnpkg.com/reg-keygen-git-hash-plugin/-/reg-keygen-git-hash-plugin-0.10.10.tgz#8a3291bf42c12bccdc9f919de3dcbc64bbbe6f53"
-  integrity sha512-4brTdg32djBAXyqSZdXTWLcloZqt4Xh9XOiQV1nlScQXL+gVQFSidoDcsZR5vUKDQVINEjjlU0C2584SYTMN6g==
+reg-keygen-git-hash-plugin@0.10.11:
+  version "0.10.11"
+  resolved "https://registry.yarnpkg.com/reg-keygen-git-hash-plugin/-/reg-keygen-git-hash-plugin-0.10.11.tgz#93bb0f2ac7f101e1d5fe8af2da2257f61125f4f2"
+  integrity sha512-G73GYAsHwJ2S57d4TT5FxI3VLd/egGURYvzBcqRtrpUOKvSUkIecSH6nG/dbkbl3IMYvWDojGmjkGyaCxL2DoA==
   dependencies:
     reg-suit-util "^0.10.10"
 
