@@ -9033,10 +9033,10 @@ typedoc-default-themes@0.12.0:
   resolved "https://registry.yarnpkg.com/typedoc-default-themes/-/typedoc-default-themes-0.12.0.tgz#42451948e55a148c1350eb2aa68829be5c2b06b3"
   integrity sha512-0hHBxwmfxE0rkIslOiO39fJyYwaScQEhUIxcpqx3uS1BL3zhFW5oQfUaPx2cv2XLL/GXhYFxhdFLoVmNptbxEQ==
 
-typedoc@0.20.10:
-  version "0.20.10"
-  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.20.10.tgz#013eac8ece7b7f6201a06a83d4ddf3d93e89d7f9"
-  integrity sha512-1Bqbmf/1pwRiUkd1j1tvL7GIlBOFANFcjC+W5cZ02R0CKgUN+fIIl2Z2OhuaM7MVytKq6snF1KYVIwBvplO37g==
+typedoc@0.20.13:
+  version "0.20.13"
+  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.20.13.tgz#9d56df76d0b421a71a33336dc64b1a466dc8f2fd"
+  integrity sha512-SJVFn6NJd5bWJHMPgEkDUrKIEfMbja6ftIJv/tgd0xQZp5cWxGTdEnmRr56+egIQZkAJFB39eDvmNV4Lqqy4Gw==
   dependencies:
     colors "^1.4.0"
     fs-extra "^9.0.1"
