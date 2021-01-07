@@ -312,6 +312,26 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     }
   }
 
+  private async scrollToBottom(screenshotOptions: StrictScreenshotOptions) {
+    if (!screenshotOptions.waitAssets && !screenshotOptions.waitImages) return;
+    if (!this.viewport) return;
+    await this.page.evaluate(function(viewportHeight){
+      return new Promise(function(resolve){
+          let totalHeight = 0;
+          const scrollHeight = document.body.scrollHeight;
+          const timer = setInterval(function(){
+              window.scrollBy(0, viewportHeight);
+              totalHeight += viewportHeight;
+
+              if(totalHeight >= scrollHeight){
+                  clearInterval(timer);
+                  resolve(undefined);
+              }
+          }, 100);
+      });
+    }, this.viewport.height);
+  }
+
   /**
    * Captures screenshot as a PNG image buffer from a story.
    *
@@ -383,6 +403,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     await this.waitIfTouched();
 
     // Wait until browser main thread gets stable.
+    await this.scrollToBottom(mergedScreenshotOptions);
     await this.waitForResources(mergedScreenshotOptions);
     await this.waitBrowserMetricsStable('postEmit');
 
