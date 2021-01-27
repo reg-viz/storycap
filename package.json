@@ -57,7 +57,7 @@
     "reg-keygen-git-hash-plugin": "0.10.12",
     "reg-notify-github-plugin": "0.10.12",
     "reg-publish-s3-plugin": "0.10.10",
-    "reg-suit": "0.10.12",
+    "reg-suit": "0.10.13",
     "typescript": "4.1.3",
     "typescript-eslint-language-service": "4.1.3"
   },

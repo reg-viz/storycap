@@ -7775,10 +7775,10 @@ reg-suit-util@^0.10.10:
     mime-types "^2.1.27"
     mkdirp "^1.0.4"
 
-reg-suit@0.10.12:
-  version "0.10.12"
-  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.10.12.tgz#8be54134e465ba5da0da783d100e5870fb703472"
-  integrity sha512-DtdFzqB3GV/ug24stFqpzYLmxV8yFjIF7Z/ZFKFheLBdTYZggWgsQRUNyADyS22vT1CwZdCj8YDeBANi/AjiQA==
+reg-suit@0.10.13:
+  version "0.10.13"
+  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.10.13.tgz#8dd3c22103c44f1e17299bfbf568f118da4d526b"
+  integrity sha512-Hi9/HumUDfbwQtVc55MLcdFJyAn6lhpPBsbCw7lU34u3Wyc4N/Xal932duAUzB71UopNQnwR4+99y4cLODdjhw==
   dependencies:
     cp-file "9.0.0"
     ignore "5.1.8"
