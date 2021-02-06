@@ -6134,7 +6134,7 @@ markdown-toc@1.2.0:
     repeat-string "^1.6.1"
     strip-color "^0.1.0"
 
-marked@^1.2.8:
+marked@^1.2.9:
   version "1.2.9"
   resolved "https://registry.yarnpkg.com/marked/-/marked-1.2.9.tgz#53786f8b05d4c01a2a5a76b7d1ec9943d29d72dc"
   integrity sha512-H8lIX2SvyitGX+TRdtS06m1jHMijKN/XjfH6Ooii9fvxMlh8QdqBfBDkGUpMWH2kQNrtixjzYUa3SH8ROTgRRw==
@@ -8242,29 +8242,12 @@ shellwords@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/shellwords/-/shellwords-0.1.1.tgz#d6b9181c1a48d397324c84871efbcfc73fc0654b"
 
-shiki-languages@^0.2.7:
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/shiki-languages/-/shiki-languages-0.2.7.tgz#7230b675b96d37a36ac1bf995525375ce69f3924"
-  integrity sha512-REmakh7pn2jCn9GDMRSK36oDgqhh+rSvJPo77sdWTOmk44C5b0XlYPwJZcFOMJWUZJE0c7FCbKclw4FLwUKLRw==
-  dependencies:
-    vscode-textmate "^5.2.0"
-
-shiki-themes@^0.2.7:
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/shiki-themes/-/shiki-themes-0.2.7.tgz#6e04451d832152e0fc969876a7bd926b3963c1f2"
-  integrity sha512-ZMmboDYw5+SEpugM8KGUq3tkZ0vXg+k60XX6NngDK7gc1Sv6YLUlanpvG3evm57uKJvfXsky/S5MzSOTtYKLjA==
-  dependencies:
-    json5 "^2.1.0"
-    vscode-textmate "^5.2.0"
-
-shiki@^0.2.7:
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/shiki/-/shiki-0.2.7.tgz#d2547548ed8742673730e1e4bbe792a77c445540"
-  integrity sha512-bwVc7cdtYYHEO9O+XJ8aNOskKRfaQd5Y4ovLRfbQkmiLSUaR+bdlssbZUUhbQ0JAFMYcTcJ5tjG5KtnufttDHQ==
+shiki@^0.9.2:
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/shiki/-/shiki-0.9.2.tgz#b9e660b750d38923275765c4dc4c92b23877b115"
+  integrity sha512-BjUCxVbxMnvjs8jC4b+BQ808vwjJ9Q8NtLqPwXShZ307HdXiDFYP968ORSVfaTNNSWYDBYdMnVKJ0fYNsoZUBA==
   dependencies:
     onigasm "^2.2.5"
-    shiki-languages "^0.2.7"
-    shiki-themes "^0.2.7"
     vscode-textmate "^5.2.0"
 
 signal-exit@^3.0.0, signal-exit@^3.0.2:
@@ -9045,21 +9028,21 @@ typedoc-default-themes@^0.12.7:
   resolved "https://registry.yarnpkg.com/typedoc-default-themes/-/typedoc-default-themes-0.12.7.tgz#d44f68d40a3e90a19b5ea7be4cc6ed949afe768d"
   integrity sha512-0XAuGEqID+gon1+fhi4LycOEFM+5Mvm2PjwaiVZNAzU7pn3G2DEpsoXnFOPlLDnHY6ZW0BY0nO7ur9fHOFkBLQ==
 
-typedoc@0.20.21:
-  version "0.20.21"
-  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.20.21.tgz#e83a5d599173ae4bbc6402c9a510e1f0a85c1972"
-  integrity sha512-KAXRnKyyhdA5Wgd96QMdld7gvlL/izUaJi2FAf6KoGuRNgYIUVHQy4KExl9enMt24l/y4LgTFqR6aw3P8NGiZg==
+typedoc@0.20.23:
+  version "0.20.23"
+  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.20.23.tgz#963fcb53b4e0f28c50b2e155721766cf53196105"
+  integrity sha512-RBXuM0MJ2V/7eGg4YrDEmV1bn/ypa3Wx6AO1B0mUBHEQJaOIKEEnNI0Su75J6q7dkB5ksZvGNgsGjvfWL8Myjg==
   dependencies:
     colors "^1.4.0"
     fs-extra "^9.1.0"
     handlebars "^4.7.6"
     lodash "^4.17.20"
     lunr "^2.3.9"
-    marked "^1.2.8"
+    marked "^1.2.9"
     minimatch "^3.0.0"
     progress "^2.0.3"
     shelljs "^0.8.4"
-    shiki "^0.2.7"
+    shiki "^0.9.2"
     typedoc-default-themes "^0.12.7"
 
 typescript-eslint-language-service@4.1.3:
