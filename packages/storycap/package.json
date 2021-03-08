@@ -61,7 +61,7 @@
     "@types/minimatch": "^3.0.3",
     "@types/mkdirp": "^1.0.0",
     "@types/node": "^12.6.8",
-    "@types/puppeteer-core": "^2.0.0",
+    "@types/puppeteer-core": "^5.0.0",
     "@types/rimraf": "^3.0.0",
     "@types/wait-on": "^5.0.0",
     "@types/yargs": "^15.0.0",
