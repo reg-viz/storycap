@@ -1,4 +1,4 @@
-import type { Browser as PuppeteerBrowser, Page, LaunchOptions } from 'puppeteer-core';
+import type { Browser as PuppeteerBrowser, Page, LaunchOptions, BrowserLaunchArgumentOptions } from 'puppeteer-core';
 import { sleep } from '../async-utils';
 import { findChrome } from '../find-chrome';
 import { ChromiumNotFoundError } from '../errors';
@@ -20,7 +20,7 @@ export interface BaseBrowserOptions {
    * Options to launch Puppeteer Browser instance.
    *
    **/
-  launchOptions?: LaunchOptions;
+  launchOptions?: LaunchOptions & BrowserLaunchArgumentOptions;
 
   /**
    *
