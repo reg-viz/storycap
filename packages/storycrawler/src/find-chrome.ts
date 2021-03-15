@@ -74,8 +74,8 @@ function localPuppeteer() {
   } catch {
     return;
   }
-  const p = require('puppeteer') as typeof import('puppeteer');
-  return p.executablePath();
+  const p = require('puppeteer');
+  return p.executablePath() as string;
 }
 
 function darwin(canary = false): string | undefined {
