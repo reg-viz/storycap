@@ -1741,27 +1741,6 @@
   resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.0.0.tgz#dc85454b953178cc6043df5208b9e949b54a3bc4"
   integrity sha512-/rM+sWiuOZ5dvuVzV37sUuklsbg+JPOP8d+nNFlo2ZtfpzPiPvh1/gc8liWOLBqe+sR+ZM7guPaIcTt6UZTo7Q==
 
-"@types/puppeteer-core@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@types/puppeteer-core/-/puppeteer-core-2.0.0.tgz#3b7fbbac53d56b566f5ef096116e1d60d504aa45"
-  integrity sha512-JvoEb7KgEkUet009ZDrtpUER3hheXoHgQByuYpJZ5WWT7LWwMH+0NTqGQXGgoOKzs+G5NA1T4DZwXK79Bhnejw==
-  dependencies:
-    "@types/puppeteer" "*"
-
-"@types/puppeteer@*":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@types/puppeteer/-/puppeteer-3.0.2.tgz#20085220593b560c7332b6d46aecaf81ae263540"
-  integrity sha512-JRuHPSbHZBadOxxFwpyZPeRlpPTTeMbQneMdpFd8LXdyNfFSiX950CGewdm69g/ipzEAXAmMyFF1WOWJOL/nKw==
-  dependencies:
-    "@types/node" "*"
-
-"@types/puppeteer@5.4.3":
-  version "5.4.3"
-  resolved "https://registry.yarnpkg.com/@types/puppeteer/-/puppeteer-5.4.3.tgz#cdca84aa7751d77448d8a477dbfa0af1f11485f2"
-  integrity sha512-3nE8YgR9DIsgttLW+eJf6mnXxq8Ge+27m5SU3knWmrlfl6+KOG0Bf9f7Ua7K+C4BnaTMAh3/UpySqdAYvrsvjg==
-  dependencies:
-    "@types/node" "*"
-
 "@types/rimraf@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/rimraf/-/rimraf-3.0.0.tgz#b9d03f090ece263671898d57bb7bb007023ac19f"
@@ -1941,10 +1920,12 @@ agent-base@4:
   dependencies:
     es6-promisify "^5.0.0"
 
-agent-base@5:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/agent-base/-/agent-base-5.1.1.tgz#e8fb3f242959db44d63be665db7a8e739537a32c"
-  integrity sha512-TMeqbNl2fMW0nMjTEPOwe3J/PRFP4vqeoNuQMG0HlMrtm5QxKqdvAkZ1pRBQ/ulIyDD5Yq0nJ7YbdD8ey0TO3g==
+agent-base@6:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/agent-base/-/agent-base-6.0.2.tgz#49fff58577cfee3f37176feab4c22e00f86d7f77"
+  integrity sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==
+  dependencies:
+    debug "4"
 
 agent-base@^4.1.0, agent-base@~4.2.1:
   version "4.2.1"
@@ -3384,10 +3365,10 @@ detect-newline@^3.0.0:
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-3.1.0.tgz#576f5dfc63ae1a192ff192d8ad3af6308991b651"
   integrity sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
 
-devtools-protocol@0.0.818844:
-  version "0.0.818844"
-  resolved "https://registry.yarnpkg.com/devtools-protocol/-/devtools-protocol-0.0.818844.tgz#d1947278ec85b53e4c8ca598f607a28fa785ba9e"
-  integrity sha512-AD1hi7iVJ8OD0aMLQU5VK0XH9LDlA1+BcPIgrAxPfaibx2DbWucuyOhc4oyQCbnvDDO68nN6/LcKfqTP343Jjg==
+devtools-protocol@0.0.854822:
+  version "0.0.854822"
+  resolved "https://registry.yarnpkg.com/devtools-protocol/-/devtools-protocol-0.0.854822.tgz#eac3a5260a6b3b4e729a09fdc0c77b0d322e777b"
+  integrity sha512-xd4D8kHQtB0KtWW0c9xBZD5LVtm9chkMOfs/3Yn01RhT/sFIsVtzTtypfKoFfWBaL+7xCYLxjOLkhwPXaX/Kcg==
 
 dezalgo@^1.0.0:
   version "1.0.3"
@@ -4661,12 +4642,12 @@ https-proxy-agent@^2.2.1:
     agent-base "^4.1.0"
     debug "^3.1.0"
 
-https-proxy-agent@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-4.0.0.tgz#702b71fb5520a132a66de1f67541d9e62154d82b"
-  integrity sha512-zoDhWrkR3of1l9QAL8/scJZyLu8j/gBkcwcaQOZh7Gyh/+uJQzGVETdgT30akuwkpL8HTRfssqI3BZuV18teDg==
+https-proxy-agent@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-5.0.0.tgz#e2a90542abb68a762e0a0850f6c9edadfd8506b2"
+  integrity sha512-EkYm5BcKUGiduxzSt3Eppko+PiNWNEpa4ySk9vTC6wDsQJW9rHSa+UhGNJoRYp7bz6Ht1eaRIa6QaJqO5rCFbA==
   dependencies:
-    agent-base "5"
+    agent-base "6"
     debug "4"
 
 human-signals@^1.1.1:
@@ -7373,9 +7354,10 @@ protoduck@^5.0.1:
   dependencies:
     genfun "^5.0.0"
 
-proxy-from-env@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/proxy-from-env/-/proxy-from-env-1.0.0.tgz#33c50398f70ea7eb96d21f7b817630a55791c7ee"
+proxy-from-env@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/proxy-from-env/-/proxy-from-env-1.1.0.tgz#e102f16ca355424865755d2c9e8ea4f24d58c3e2"
+  integrity sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==
 
 pseudomap@^1.0.2:
   version "1.0.2"
@@ -7425,37 +7407,37 @@ punycode@^2.1.0, punycode@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
 
-puppeteer-core@5.5.0:
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-5.5.0.tgz#dfb6266efe5a933cbf1a368d27025a6fd4f5a884"
-  integrity sha512-tlA+1n+ziW/Db03hVV+bAecDKse8ihFRXYiEypBe9IlLRvOCzYFG6qrCMBYK34HO/Q/Ecjc+tvkHRAfLVH+NgQ==
+puppeteer-core@8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-8.0.0.tgz#4f56cc24675a8e993b0610a284f064a84910f4ec"
+  integrity sha512-kRTiGh42+4eiw9tl489p//8Zpg3LWmz0K3mOpv0qj5PsCV7jE43SLIi0E50suLh8OghXsFhJFoE98vEmXUnDew==
   dependencies:
     debug "^4.1.0"
-    devtools-protocol "0.0.818844"
+    devtools-protocol "0.0.854822"
     extract-zip "^2.0.0"
-    https-proxy-agent "^4.0.0"
+    https-proxy-agent "^5.0.0"
     node-fetch "^2.6.1"
     pkg-dir "^4.2.0"
     progress "^2.0.1"
-    proxy-from-env "^1.0.0"
+    proxy-from-env "^1.1.0"
     rimraf "^3.0.2"
     tar-fs "^2.0.0"
     unbzip2-stream "^1.3.3"
     ws "^7.2.3"
 
-puppeteer@5.5.0:
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-5.5.0.tgz#331a7edd212ca06b4a556156435f58cbae08af00"
-  integrity sha512-OM8ZvTXAhfgFA7wBIIGlPQzvyEETzDjeRa4mZRCRHxYL+GNH5WAuYUQdja3rpWZvkX/JKqmuVgbsxDNsDFjMEg==
+puppeteer@8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-8.0.0.tgz#a236669118aa795331c2d0ca19877159e7664705"
+  integrity sha512-D0RzSWlepeWkxPPdK3xhTcefj8rjah1791GE82Pdjsri49sy11ci/JQsAO8K2NRukqvwEtcI+ImP5F4ZiMvtIQ==
   dependencies:
     debug "^4.1.0"
-    devtools-protocol "0.0.818844"
+    devtools-protocol "0.0.854822"
     extract-zip "^2.0.0"
-    https-proxy-agent "^4.0.0"
+    https-proxy-agent "^5.0.0"
     node-fetch "^2.6.1"
     pkg-dir "^4.2.0"
     progress "^2.0.1"
-    proxy-from-env "^1.0.0"
+    proxy-from-env "^1.1.0"
     rimraf "^3.0.2"
     tar-fs "^2.0.0"
     unbzip2-stream "^1.3.3"
