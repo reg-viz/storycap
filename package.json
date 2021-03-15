@@ -20,16 +20,12 @@
     "regression": "reg-suit run",
     "deploy:ci": "lerna run clean && yarn build && lerna publish --yes from-package",
     "deploy:manual": "lerna run clean && yarn build && lerna publish",
-    "deploy:pages": "gh-pages -d dist-pages -m \"[ci skip]\""
+    "deploy:pages": "gh-pages -d dist-pages -m \"[ci skip]\"",
+    "postinstall": "husky install"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/reg-viz/storycap.git"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
   },
   "author": "tsuyoshiwada",
   "contributors": [
