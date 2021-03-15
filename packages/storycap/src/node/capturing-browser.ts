@@ -389,10 +389,15 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     await this.page.evaluate(() => new Promise(res => (window as any).requestIdleCallback(res, { timeout: 3000 })));
 
     // Get PNG image buffer
-    const buffer = await this.page.screenshot({
+    const rawBuffer = await this.page.screenshot({
       fullPage: emittedScreenshotOptions.fullPage,
       omitBackground: emittedScreenshotOptions.omitBackground,
     });
+
+    let buffer: Buffer | null = null;
+    if (Buffer.isBuffer(rawBuffer)) {
+      buffer = rawBuffer;
+    }
 
     // We should reset elements state(e.g. focusing, hovering) for future screenshot for this story.
     await this.resetIfTouched();
