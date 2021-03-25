@@ -45,7 +45,10 @@
     "chrome",
     "screenshot",
     "capture",
-    "visual-testing"
+    "visual-testing",
+    "storybook-addon",
+    "testing",
+    "test"
   ],
   "devDependencies": {
     "@types/jest": "26.0.21",
