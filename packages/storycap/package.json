@@ -46,7 +46,9 @@
     "screenshot",
     "capture",
     "visual-testing",
-    "storybook-addon"
+    "storybook-addon",
+    "testing",
+    "test"
   ],
   "devDependencies": {
     "@types/jest": "26.0.21",
