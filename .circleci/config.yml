@@ -34,7 +34,7 @@ jobs:
 
   deploy:
     docker:
-      - image: node:12
+      - image: node:16
     working_directory: ~/repo
     steps:
       - checkout
