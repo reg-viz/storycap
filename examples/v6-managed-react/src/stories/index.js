@@ -7,6 +7,7 @@ import { isScreenshot } from 'storycap';
 import MyButton from '../MyButton';
 import MyInputText from '../MyInputText';
 import ImageButton from '../ImageButton';
+import ClickableButton from '../ClickableButton';
 
 storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
 storiesOf('Welcome_override', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />, {
@@ -60,3 +61,9 @@ storiesOf('MyButton', module).add('default', () => <MyButton />, {
 });
 
 storiesOf('ImageButton', module).add('default', () => <ImageButton />);
+
+storiesOf('ClickableButton', module).add('default', () => <ClickableButton />, {
+  screenshot: {
+    click: 'button.clickable',
+  },
+});
