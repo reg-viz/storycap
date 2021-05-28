@@ -69,26 +69,27 @@ export function createScreenshotService({
   const service = createExecutionService(
     workers,
     stories.map(story => createRequest({ story })),
-    ({ rid, story, variantKey, count }, { push }) => async worker => {
-      // Delegate the request to the worker.
-      const [result, elapsedTime] = await time(worker.screenshot(rid, story, variantKey, count));
+    ({ rid, story, variantKey, count }, { push }) =>
+      async worker => {
+        // Delegate the request to the worker.
+        const [result, elapsedTime] = await time(worker.screenshot(rid, story, variantKey, count));
 
-      const { succeeded, buffer, variantKeysToPush, defaultVariantSuffix } = result;
+        const { succeeded, buffer, variantKeysToPush, defaultVariantSuffix } = result;
 
-      // Queue retry request if the request was not succeeded.
-      // Worker throws `ScreenshotTimeoutError` if the queued request continues failed and the count exceeds the threhold.
-      if (!succeeded) return push(createRequest({ story, variantKey, count: count + 1 }));
+        // Queue retry request if the request was not succeeded.
+        // Worker throws `ScreenshotTimeoutError` if the queued request continues failed and the count exceeds the threhold.
+        if (!succeeded) return push(createRequest({ story, variantKey, count: count + 1 }));
 
-      // Queue screenshot requests for additional variants.
-      variantKeysToPush.forEach(variantKey => push(createRequest({ story, variantKey })));
+        // Queue screenshot requests for additional variants.
+        variantKeysToPush.forEach(variantKey => push(createRequest({ story, variantKey })));
 
-      if (buffer) {
-        const suffix = variantKey.isDefault && defaultVariantSuffix ? [defaultVariantSuffix] : variantKey.keys;
-        const path = await fileSystem.save(story.kind, story.story, suffix, buffer);
-        logger.log(`Screenshot stored: ${logger.color.magenta(path)} in ${elapsedTime} msec.`);
-        return true;
-      }
-    },
+        if (buffer) {
+          const suffix = variantKey.isDefault && defaultVariantSuffix ? [defaultVariantSuffix] : variantKey.keys;
+          const path = await fileSystem.save(story.kind, story.story, suffix, buffer);
+          logger.log(`Screenshot stored: ${logger.color.magenta(path)} in ${elapsedTime} msec.`);
+          return true;
+        }
+      },
   );
   return {
     execute: () => service.execute().then(captured => captured.filter(c => !!c).length),

@@ -48,7 +48,7 @@
     "husky": "6.0.0",
     "lerna": "4.0.0",
     "markdown-toc": "1.2.0",
-    "prettier": "2.2.1",
+    "prettier": "2.3.0",
     "pretty-quick": "3.1.0",
     "reg-keygen-git-hash-plugin": "0.10.15",
     "reg-notify-github-plugin": "0.10.15",
