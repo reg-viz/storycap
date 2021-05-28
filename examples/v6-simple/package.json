@@ -29,11 +29,11 @@
   ],
   "devDependencies": {
     "@babel/core": "^7.4.0",
-    "@storybook/addon-actions": "^6.0.0",
-    "@storybook/addon-links": "^6.0.0",
-    "@storybook/addons": "^6.0.0",
-    "@storybook/cli": "^6.0.0",
-    "@storybook/react": "^6.0.0",
+    "@storybook/addon-actions": "^6.2.0",
+    "@storybook/addon-links": "^6.2.0",
+    "@storybook/addons": "^6.2.0",
+    "@storybook/cli": "^6.2.0",
+    "@storybook/react": "^6.2.0",
     "babel-loader": "^8.0.5",
     "rimraf": "^2.6.3"
   }
