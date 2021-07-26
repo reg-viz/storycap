@@ -96,7 +96,7 @@ $ storycap --serverCmd "npx http-server dist-storybook -p 9001" http://localhost
 Also, Storycap can crawls built and hosted Storybook pages:
 
 ```sh
-$ storycap https://storybookjs-next.now.sh/vue-kitchen-sink
+$ storycap https://next--storybookjs.netlify.app/vue-kitchen-sink/
 ```
 
 ### Managed mode
