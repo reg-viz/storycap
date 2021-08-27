@@ -55,7 +55,7 @@
     "reg-publish-s3-plugin": "0.10.16",
     "reg-suit": "0.10.16",
     "typescript": "4.3.3",
-    "typescript-eslint-language-service": "4.1.4"
+    "typescript-eslint-language-service": "4.1.5"
   },
   "workspaces": [
     "packages/*"
