@@ -20,6 +20,7 @@ export interface ScreenshotOptionFragments {
   fullPage?: boolean;
   hover?: string;
   focus?: string;
+  click?: string;
   skip?: boolean;
   omitBackground?: boolean;
 }
