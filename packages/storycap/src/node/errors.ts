@@ -3,7 +3,7 @@ export class ScreenshotTimeoutError extends Error {
 
   constructor(msec: number, target: { kind?: string; story?: string }) {
     super();
-    this.message = `Screenshot timeout exceeded. 'capture' function is not triggerd in ${msec} ms. Target story: ${target.kind}/${target.story}`;
+    this.message = `Screenshot timeout exceeded. 'capture' function is not triggered in ${msec} ms. Target story: ${target.kind}/${target.story}`;
   }
 }
 
