@@ -2,7 +2,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
 const copyDir = require('copy-dir');
 const cpy = require('cpy');
 const rimraf = require('rimraf');
@@ -19,7 +18,6 @@ const argv = minimist(process.argv.slice(2));
  *
  * This script does:
  *
- * - build storycap
  * - emulate to `npm i storycap` under the Storybook example project
  *   - copy package.json
  *   - copy built javascripts
@@ -40,7 +38,6 @@ async function main() {
     console.error(`target dir shold not be "${prjDir}".`);
     return 1;
   }
-  execSync('npm run build', { cwd: prjDir });
   rimraf.sync(dist);
   mkdirp.sync(dist);
   copyDir.sync(`${path.join(prjDir, 'lib')}`, path.join(dist, 'lib'), {});

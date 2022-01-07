@@ -1,7 +1,10 @@
 #!/bin/bash
 
+set -e
+
 function run() {
   pushd $1
+  echo "Start $1"
   yarn --pure-lockfile
   yarn clear
   yarn storycap:all
@@ -14,7 +17,11 @@ function run() {
   mv __screenshots__ ../../__screenshots__/$1
   popd > /dev/null
   echo "Success $1"
+  echo ""
 }
+
+total=${CIRCLE_NODE_TOTAL:-1}
+current_idx=${CIRCLE_NODE_INDEX:-0}
 
 rm -rf __screenshots__
 mkdir -p __screenshots__/examples
@@ -25,11 +32,15 @@ if [ -n "$1" ]; then
     exit 1
   fi
 else
+  i=0
   for x in $(ls examples); do
-    run examples/${x}
-    if [ "$?" -gt 0 ]; then
-      exit 1
+    if [ "$(expr $i % $total)"  -eq "$current_idx" ]; then
+      run examples/${x}
+      if [ "$?" -gt 0 ]; then
+        exit 1
+      fi
     fi
+    i=$(expr $i + 1)
   done
 fi
 
