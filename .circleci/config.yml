@@ -1,34 +1,67 @@
-version: 2
-jobs:
-  build:
-    docker:
-      - image: regviz/node-xcb
-        auth:
-          username: $DOCKERHUB_USERNAME
-          password: $DOCKERHUB_PASSWORD
+version: 2.1
 
-    working_directory: ~/repo
-
+workflows:
+  version: 2
+  build_pipeline:
+    jobs:
+      - build
+      - unit_test:
+          requires:
+            - build
+      - integrated_test:
+          requires:
+            - unit_test
+      - deploy:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+commands:
+  bootstrap:
     steps:
-      - checkout
-
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "yarn.lock" }}
             - v1-dependencies-
-
       - run: yarn install --frozen-lockfile
       - run: yarn bootstrap
-
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "yarn.lock" }}
 
-      - run: yarn build
+jobs:
+  build:
+    docker:
+      - image: node:16
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - bootstrap
       - run: yarn format:check
+      - run: yarn build
       - run: yarn lint
+
+  unit_test:
+    docker:
+      - image: node:16
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - bootstrap
       - run: yarn test
+
+  integrated_test:
+    docker:
+      - image: regviz/node-xcb
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - bootstrap
       - run: yarn e2e
   #     - run: yarn regression
 
@@ -38,11 +71,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - npm-cache-{{ checksum "yarn.lock" }}
-            - npm-cache
-      - run: yarn install --frozen-lockfile
+      - bootstrap
       - run:
           name: Login npm
           command: |
@@ -52,15 +81,3 @@ jobs:
           name: Publish
           command: |
             yarn deploy:ci
-
-workflows:
-  version: 2
-  build_pipeline:
-    jobs:
-      - build
-      - deploy:
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
