@@ -47,7 +47,7 @@ jobs:
 
   integrated_test:
     docker:
-      - image: regviz/node-xcb
+      - image: regviz/node-xcb:node-16
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
