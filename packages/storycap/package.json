@@ -52,7 +52,7 @@
   ],
   "devDependencies": {
     "@types/jest": "27.4.0",
-    "jest": "27.4.5",
+    "jest": "27.4.7",
     "minimist": "1.2.5",
     "puppeteer": "10.4.0",
     "ts-jest": "27.1.2",
