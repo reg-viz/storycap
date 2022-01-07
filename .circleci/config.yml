@@ -5,12 +5,9 @@ workflows:
   build_pipeline:
     jobs:
       - build
-      - unit_test:
-          requires:
-            - build
       - integrated_test:
           requires:
-            - unit_test
+            - build
       - deploy:
           filters:
             tags:
@@ -21,15 +18,19 @@ commands:
   bootstrap:
     steps:
       - restore_cache:
+          name: Restore npm packages
           keys:
-            - v1-dependencies-{{ checksum "yarn.lock" }}
-            - v1-dependencies-
-      - run: yarn install --frozen-lockfile
-      - run: yarn bootstrap
+            - dependencies-{{ checksum "yarn.lock" }}
+      - run:
+          name: Bootstrap workspaces
+          command: |
+            yarn install --frozen-lockfile
+            yarn bootstrap
       - save_cache:
+          name: Store npm packages
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "yarn.lock" }}
+          key: dependencies-{{ checksum "yarn.lock" }}
 
 jobs:
   build:
@@ -42,14 +43,6 @@ jobs:
       - run: yarn format:check
       - run: yarn build
       - run: yarn lint
-
-  unit_test:
-    docker:
-      - image: node:16
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - bootstrap
       - run: yarn test
 
   integrated_test:
@@ -59,9 +52,11 @@ jobs:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
     working_directory: ~/repo
+    parallelism: 4
     steps:
       - checkout
       - bootstrap
+      - run: yarn build
       - run: yarn e2e
   #     - run: yarn regression
 
