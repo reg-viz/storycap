@@ -1,4 +1,3 @@
-import React from 'react';
 import { linkTo } from '@storybook/addon-links';
 import { Welcome } from '@storybook/react/demo';
 
@@ -7,6 +6,8 @@ export default {
   component: Welcome,
 };
 
-export const toStorybook = {
-  render: () => <Welcome showApp={linkTo('Button')} />,
+export const ToStorybook = {
+  args: {
+    showApp: linkTo('Button'),
+  },
 };
