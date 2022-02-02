@@ -11,6 +11,7 @@ const defaultScreenshotOptions = {
   click: '',
   variants: {},
   omitBackground: false,
+  captureBeyondViewport: true,
 } as const;
 
 /**

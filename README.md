@@ -236,6 +236,7 @@ interface ScreenshotOptions {
   variants?: Variants;
   waitImages?: boolean;                     // default true
   omitBackground?: boolean;                 // default false
+  captureBeyondViewport?: boolean;          // default true
 }
 ```
 
