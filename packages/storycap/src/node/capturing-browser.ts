@@ -402,6 +402,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     const rawBuffer = await this.page.screenshot({
       fullPage: emittedScreenshotOptions.fullPage,
       omitBackground: emittedScreenshotOptions.omitBackground,
+      captureBeyondViewport: emittedScreenshotOptions.captureBeyondViewport,
     });
 
     let buffer: Buffer | null = null;
