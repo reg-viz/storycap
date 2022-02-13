@@ -67,7 +67,7 @@
     "@types/wait-on": "^5.0.0",
     "@types/yargs": "^16.0.0",
     "core-js": "^3.2.1",
-    "minimatch": "^3.0.4",
+    "minimatch": "^4.0.0",
     "mkdirp": "^1.0.0",
     "puppeteer-core": "13.3.1",
     "rimraf": "^3.0.0",
