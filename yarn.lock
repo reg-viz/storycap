@@ -7602,10 +7602,10 @@ punycode@^2.1.0, punycode@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
 
-puppeteer-core@13.3.1:
-  version "13.3.1"
-  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-13.3.1.tgz#2337320e0f19774a83460a732adf4a7198857c31"
-  integrity sha512-II9uo5MFh+otoJSoYp/kfY3jf1iWt0ySKyK8vFVfdbn3rl+k3SLh9nQRdINyoO1Kt6Tk4dPp6GZipD9jgU9wmw==
+puppeteer-core@13.3.2:
+  version "13.3.2"
+  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-13.3.2.tgz#03b47c776fea881df69e7a55559848434f8110f3"
+  integrity sha512-9T8deXmLWf55/RvDpl32vP68stTufqvtj6fc9hH09ZwCLh5IwnN9Z0MWHfDMTLiW6MUpW2Flx5CQWt1SCUT47g==
   dependencies:
     cross-fetch "3.1.5"
     debug "4.3.3"
