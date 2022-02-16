@@ -47,11 +47,13 @@ export async function main(mainOptions: MainOptions) {
 
   // Wait for connection to Storybook server.
   const connection = await new StorybookConnection(mainOptions.serverOptions, logger).connect();
+  logger.debug('Created to connection.');
 
   // Launch Puppeteer process and fetch names of all stories.
   const storiesBrowser = await new StoriesBrowser(connection, mainOptions, logger).boot();
   logger.log('Executable Chromium path:', logger.color.magenta(storiesBrowser.executablePath));
   const allStories = await storiesBrowser.getStories();
+  logger.debug('Ended to fetch stories metadata.');
 
   // Mode(simple / managed) deteciton.
   const mode = await detectRunMode(storiesBrowser, mainOptions);
@@ -67,10 +69,12 @@ export async function main(mainOptions: MainOptions) {
 
   // Launce Puppeteer processes to capture each story.
   const { workers, closeWorkers } = await bootCapturingBrowserAsWorkers(connection, mainOptions, mode);
+  logger.debug('Created workers.');
 
   try {
     // Execution caputuring procedure.
     return await createScreenshotService({ workers, stories, fileSystem, logger }).execute();
+    logger.debug('Ended ScreenshotService execution.');
   } catch (error) {
     if (error instanceof ChromiumNotFoundError) {
       throw new Error(
@@ -80,7 +84,9 @@ export async function main(mainOptions: MainOptions) {
     throw error;
   } finally {
     // Shutdown workers and dispose connection.
-    await closeWorkers();
+    closeWorkers();
+    logger.debug('Ended to dispose workers.');
     connection.disconnect();
+    logger.debug('Ended to dispose connection.');
   }
 }

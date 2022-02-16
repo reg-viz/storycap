@@ -16,7 +16,7 @@
     "storybook": "start-storybook -p 9004 -s public",
     "build-storybook": "build-storybook -s public",
     "prestorybook": "../../scripts/e2e-prestorybook.js .",
-    "storycap:all": "yarn prestorybook && storycap --server-timeout 100000 --server-cmd \"start-storybook -p 9004 -s public\" \"http://localhost:9004\""
+    "storycap:all": "yarn prestorybook && storycap --verbose --server-timeout 100000 --server-cmd \"start-storybook -p 9004 -s public\" \"http://localhost:9004\""
   },
   "eslintConfig": {
     "extends": "react-app"
