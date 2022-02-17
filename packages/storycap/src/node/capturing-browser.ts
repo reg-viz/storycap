@@ -243,8 +243,13 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     if (!this.viewport || JSON.stringify(this.viewport) !== JSON.stringify(nextViewport)) {
       this.debug('Change viewport', JSON.stringify(nextViewport));
       await this.page.setViewport(nextViewport);
+
+      // Setting isMobile or hasTouch properties will reload the page.
+      // See also https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pagesetviewportviewport
+      const willBeReloaded =
+        nextViewport.isMobile !== this.viewport?.isMobile || nextViewport.hasTouch !== this.viewport?.hasTouch;
       this.viewport = nextViewport;
-      if (this.opt.reloadAfterChangeViewport) {
+      if (willBeReloaded || this.opt.reloadAfterChangeViewport) {
         this.processedStories.delete(this.currentRequestId);
         await Promise.all([this.page.reload(), this.waitForOptionsFromBrowser()]);
       } else {
