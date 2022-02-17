@@ -54,6 +54,7 @@ export class ResourceWatcher {
       if (request.method() !== 'GET') return;
       // Ignore the following resource types because they might create HTTP request never completed
       if (['media', 'texttrack', 'websocket', 'eventsource', 'other'].includes(request.resourceType())) return;
+      if (!url.startsWith('http')) return;
       this.requestedAssetUrls.add(url);
       if (this.resolvedAssetsMap.has(url)) return;
       let resolve: () => void = () => {};
