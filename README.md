@@ -171,25 +171,34 @@ small.story = {
 };
 ```
 
-Of course Storycap works well with `storiesOf` notation:
+Of course Storycap works well with CSF 3.0 notation.
 
 ```js
 import React from 'react';
 import MyComponent from './MyComponent';
-import { storiesOf } from '@storybook/react';
 
-storiesOf('MyComponent')
-  .addParameters({
+export default {
+  title: 'MyComponent',
+  component: MyComponent,
+  parameters: {
     screenshot: {
       delay: 200,
     },
-  })
-  .add('normal', () => <MyComponent />)
-  .add('small', () => <MyComponent text="small" />, {
+  },
+};
+
+export const Normal = {};
+
+export const Small = {
+  args: {
+    text: 'small',
+  },
+  parameters: {
     screenshot: {
       viewport: 'iPhone 5',
     },
-  });
+  },
+};
 ```
 
 #### Run `storycap` Command
