@@ -252,6 +252,7 @@ interface ScreenshotOptions {
 - `variants`: See type `Variants` section below.
 - `waitImages`: Deprecated. Use `waitAssets`. If set true, Storycap waits until `<img>` in the story are loaded.
 - `omitBackground`: If set true, Storycap omits the background of the page allowing for transparent screenshots. Note the storybook theme will need to be transparent as well.
+- `captureBeyondViewport`: If set true, Storycap captures screenshot beyond the viewport. See also [Puppeteer API docs](https://github.com/puppeteer/puppeteer/blob/v13.1.3/docs/api.md#pagescreenshotoptions).
 
 ### type `Variants`
 
@@ -271,6 +272,8 @@ type Variants = {
     skip?: boolean;
     viewport?: Viewport;
     waitImages?: boolean;
+    omitBackground?: boolean;
+    captureBeyondViewport?: boolean;
   };
 };
 ```
