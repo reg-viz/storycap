@@ -1,6 +1,6 @@
 {
   "name": "storycrawler",
-  "version": "3.1.2",
+  "version": "3.1.4",
   "description": "Utilities to build Storybook crawling tools with Puppeteer",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
