@@ -9,9 +9,11 @@
       "require": "./lib/index.js",
       "browser": "./lib-esm/index.js",
       "default": "./lib/index.js"
-    }
+    },
+    "./register": "./register.js"
   },
   "sideEffects": [
+    "./register.js",
     "./lib/client/register.js",
     "./lib-esm/client/register.js"
   ],
