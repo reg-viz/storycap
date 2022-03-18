@@ -4,14 +4,7 @@ import { Logger } from '../logger';
 import { sleep } from '../async-utils';
 import { StorybookConnection } from '../storybook-connection';
 
-const dummyV4Story: Story = {
-  version: 'v4',
-  id: '__dummy__/__dummy__',
-  kind: '__dummy__',
-  story: '__dummy__',
-};
-
-const dummyV5Story: Story = {
+const dummyStory: Story = {
   version: 'v5',
   id: '__dummy__--__dummy__',
   kind: '__dummy__',
@@ -79,17 +72,10 @@ export class StoryPreviewBrowser extends BaseBrowser {
    **/
   async setCurrentStory(story: Story, opt: { forceRerender?: boolean } = {}) {
     if (this._currentStory && this._currentStory.id === story.id && !!opt.forceRerender) {
-      if (story.version === 'v4') {
-        await this.page.evaluate(
-          (d: any) => window.postMessage(JSON.stringify(d), '*'),
-          this.createPostmessageData(dummyV4Story),
-        );
-      } else {
-        await this.page.evaluate(
-          (d: any) => window.postMessage(JSON.stringify(d), '*'),
-          this.createPostmessageData(dummyV5Story),
-        );
-      }
+      await this.page.evaluate(
+        (d: any) => window.postMessage(JSON.stringify(d), '*'),
+        this.createPostmessageData(dummyStory),
+      );
       await sleep(50);
     }
     this._currentStory = story;
@@ -110,34 +96,17 @@ export class StoryPreviewBrowser extends BaseBrowser {
   private createPostmessageData(story: Story) {
     // REMARKS
     // This uses storybook post message channel, which is Storybook internal API.
-    switch (story.version) {
-      case 'v4':
-        return {
-          key: 'storybook-channel',
-          event: {
-            type: 'setCurrentStory',
-            args: [
-              {
-                kind: story.kind,
-                story: story.story,
-              },
-            ],
-            from: 'storycap',
+    return {
+      key: 'storybook-channel',
+      event: {
+        type: 'setCurrentStory',
+        args: [
+          {
+            storyId: story.id,
           },
-        };
-      case 'v5':
-        return {
-          key: 'storybook-channel',
-          event: {
-            type: 'setCurrentStory',
-            args: [
-              {
-                storyId: story.id,
-              },
-            ],
-            from: 'storycap',
-          },
-        };
-    }
+        ],
+        from: 'storycap',
+      },
+    };
   }
 }
