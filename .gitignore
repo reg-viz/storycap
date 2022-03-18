@@ -78,8 +78,10 @@ typings/
 
 
 # End of https://www.gitignore.io/api/node
+*.tsbuildinfo
 .DS_Store
 lib/
+lib-esm/
 __screenshot__
 __screenshots__
 .reg
