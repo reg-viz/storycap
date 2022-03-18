@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
-    "clean": "rimraf lib",
+    "clean": "rimraf lib \"*.tsbuildinfo\"",
     "build": "tsc -p tsconfig.build.json",
     "jest": "jest",
     "test": "npm run jest",
@@ -53,7 +53,7 @@
   "jest": {
     "globals": {
       "ts-jest": {
-        "tsConfig": "tsconfig.build.json"
+        "diagnostics": false
       }
     },
     "moduleFileExtensions": [

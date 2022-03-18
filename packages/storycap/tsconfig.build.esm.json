@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "module": "es2015",
+    "rootDir": "./src",
+    "outDir": "./lib-esm"
+  },
+  "exclude": ["node_modules", "src/node/cli.ts", "lib"]
+}
