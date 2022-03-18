@@ -3,13 +3,27 @@
   "version": "3.1.9",
   "description": "A Storybook addon, Save the screenshot image of your stories! via puppeteer.",
   "main": "lib/index.js",
+  "module": "lib-esm/index.js",
+  "exports": {
+    ".": {
+      "require": "./lib/index.js",
+      "browser": "./lib-esm/index.js",
+      "default": "./lib/index.js"
+    }
+  },
+  "sideEffects": [
+    "./lib/client/register.js",
+    "./lib-esm/client/register.js"
+  ],
   "typings": "lib/index.d.ts",
   "bin": {
     "storycap": "lib/node/cli.js"
   },
   "scripts": {
-    "clean": "rimraf lib",
-    "build": "tsc --p tsconfig.build.json && tsc -p tsconfig.client.json",
+    "clean": "rimraf lib lib-esm \"*.tsbuildinfo\"",
+    "build": "yarn build:cjs && yarn build:esm",
+    "build:cjs": "tsc --p tsconfig.build.cjs.json",
+    "build:esm": "tsc --p tsconfig.build.esm.json",
     "prepare": "yarn clean && yarn build",
     "test": "jest",
     "typedoc": "typedoc --out \"../../dist-pages/typedoc/storycap\" --ignoreCompilerErrors --tsconfig tsconfig.build.json src"
@@ -29,6 +43,7 @@
   "homepage": "https://github.com/reg-viz/storycap#readme",
   "files": [
     "lib",
+    "lib-esm",
     "assets",
     "CHANGELOG.md",
     "CONTRIBUTING.md",
@@ -77,7 +92,7 @@
   "jest": {
     "globals": {
       "ts-jest": {
-        "tsConfig": "tsconfig.build.json"
+        "diagnostics": false
       }
     },
     "moduleFileExtensions": [
