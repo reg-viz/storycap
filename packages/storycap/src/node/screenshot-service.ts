@@ -1,5 +1,3 @@
-import 'core-js/es/symbol/async-iterator'; // for Node 8
-
 import { Story, createExecutionService, time } from 'storycrawler';
 import { CapturingBrowser } from './capturing-browser';
 import { FileSystem } from './file';
