@@ -2,6 +2,7 @@
   "name": "storycap-root",
   "private": true,
   "scripts": {
+    "clean": "lerna run clean",
     "bootstrap": "lerna bootstrap",
     "doc:clihelp": "node scripts/cli-help.js",
     "doc:toc": "node scripts/add-toc.js",
