@@ -124,6 +124,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     await this.page.hover('body');
     await this.page.focus('body');
     await this.page.click('body');
+    await this.page.$eval('body', (e: unknown) => (e as HTMLElement)?.blur());
 
     this.touched = false;
 
