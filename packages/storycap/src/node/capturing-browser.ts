@@ -114,18 +114,21 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     await sleep(this.opt.stateChangeDelay);
   }
 
-  private async resetIfTouched() {
+  private async resetIfTouched(screenshotOptions: StrictScreenshotOptions) {
     const story = this.currentStory;
     if (!this.touched || !story) return;
     this.debug('Reset story because page state got dirty in this request.', this.currentRequestId);
     await this.setCurrentStory(story, { forceRerender: true });
 
-    // Clear the browser state.
-    await this.page.hover('body');
-    await this.page.focus('body');
-    await this.page.click('body');
-    await this.page.$eval('body', (e: unknown) => (e as HTMLElement)?.blur());
-
+    // Clear the browser's mouse state.
+    if (screenshotOptions.click) {
+      await this.page.$eval(screenshotOptions.click, (e: unknown) => (e as HTMLElement)?.blur());
+    }
+    if (screenshotOptions.focus) {
+      await this.page.$eval(screenshotOptions.focus, (e: unknown) => (e as HTMLElement)?.blur());
+    }
+    await this.page.mouse.move(0, 0);
+    await this.page.mouse.click(0, 0);
     this.touched = false;
 
     return;
@@ -416,8 +419,8 @@ export class CapturingBrowser extends StoryPreviewBrowser {
       buffer = rawBuffer;
     }
 
-    // We should reset elements state(e.g. focusing, hovering) for future screenshot for this story.
-    await this.resetIfTouched();
+    // We should reset elements state(e.g. focusing, hovering, clicking) for future screenshot for this story.
+    await this.resetIfTouched(mergedScreenshotOptions);
 
     await this.waitForDebugInput();
 
