@@ -3,6 +3,8 @@ import { CapturingBrowser } from './capturing-browser';
 import { FileSystem } from './file';
 import { Logger } from './logger';
 import { VariantKey } from '../shared/types';
+import { JSCoverageEntry } from 'puppeteer-core';
+import mergeCoverages from './coverage';
 
 function createRequest({
   story,
@@ -64,6 +66,7 @@ export function createScreenshotService({
   stories,
   workers,
 }: ScreenshotServiceOptions): ScreenshotService {
+  const coverages: JSCoverageEntry[] = [];
   const service = createExecutionService(
     workers,
     stories.map(story => createRequest({ story })),
@@ -72,7 +75,7 @@ export function createScreenshotService({
         // Delegate the request to the worker.
         const [result, elapsedTime] = await time(worker.screenshot(rid, story, variantKey, count));
 
-        const { succeeded, buffer, variantKeysToPush, defaultVariantSuffix } = result;
+        const { succeeded, buffer, coverage, variantKeysToPush, defaultVariantSuffix } = result;
 
         // Queue retry request if the request was not succeeded.
         // Worker throws `ScreenshotTimeoutError` if the queued request continues failed and the count exceeds the threhold.
@@ -80,6 +83,10 @@ export function createScreenshotService({
 
         // Queue screenshot requests for additional variants.
         variantKeysToPush.forEach(variantKey => push(createRequest({ story, variantKey })));
+
+        if (coverage) {
+          coverages.push(...coverage);
+        }
 
         if (buffer) {
           const suffix = variantKey.isDefault && defaultVariantSuffix ? [defaultVariantSuffix] : variantKey.keys;
@@ -90,6 +97,17 @@ export function createScreenshotService({
       },
   );
   return {
-    execute: () => service.execute().then(captured => captured.filter(c => !!c).length),
+    execute: () =>
+      service
+        .execute()
+        .then(async captured => {
+          if (coverages.length) {
+            logger.log(`coverage data stored: ${logger.color.magenta('coverage.json')} msec.`);
+            const buffer = Buffer.from(JSON.stringify(mergeCoverages(coverages)));
+            await fileSystem.saveFile('coverage.json', buffer);
+          }
+          return captured;
+        })
+        .then(captured => captured.filter(c => !!c).length),
   };
 }
