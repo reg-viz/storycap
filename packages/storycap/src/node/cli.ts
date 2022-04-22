@@ -84,7 +84,7 @@ function createOptions(): MainOptions {
       default: '{ "args": ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"] }',
       description: 'JSON string of launch config for Puppeteer.',
     })
-    .option('coverage', { boolean: true, default: true })
+    .option('coverage', { string: true, default: '', description: 'Path to enrich screenshots with coverage data' })
     .example('storycap http://localshot:9009', '')
     .example('storycap http://localshot:9009 -V 1024x768 -V 320x568', '')
     .example('storycap http://localshot:9009 -i "some-kind/a-story"', '')

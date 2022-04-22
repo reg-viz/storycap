@@ -434,7 +434,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     let coverage: JSCoverageEntry[] | undefined;
     if (this.opt.coverage) {
       coverage = await this.page.coverage.stopJSCoverage();
-      coverage = coverage.filter(entry => entry.url.includes('main.iframe.bundle.js'));
+      coverage = coverage.filter(entry => !entry.url.includes('.html'));
     }
 
     return {

@@ -50,6 +50,7 @@ export type ScreenshotServiceOptions = {
   workers: CapturingBrowser[];
   fileSystem: FileSystem;
   stories: Story[];
+  coverage: string;
 };
 
 /**
@@ -65,6 +66,7 @@ export function createScreenshotService({
   logger,
   stories,
   workers,
+  coverage: coveragePath,
 }: ScreenshotServiceOptions): ScreenshotService {
   const coverages: JSCoverageEntry[] = [];
   const service = createExecutionService(
@@ -101,9 +103,10 @@ export function createScreenshotService({
       service
         .execute()
         .then(async captured => {
-          if (coverages.length) {
-            logger.log(`coverage data stored: ${logger.color.magenta('coverage.json')} msec.`);
-            const buffer = Buffer.from(JSON.stringify(mergeCoverages(coverages)));
+          if (coveragePath && coverages.length) {
+            logger.log(`coverage data stored: ${logger.color.magenta('coverage.json')}.`);
+            const merged = await mergeCoverages(coverages, coveragePath);
+            const buffer = Buffer.from(JSON.stringify(merged));
             await fileSystem.saveFile('coverage.json', buffer);
           }
           return captured;
