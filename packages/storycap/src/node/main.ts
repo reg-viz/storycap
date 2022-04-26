@@ -41,8 +41,9 @@ async function collectCoverage(workers: CapturingBrowser[]) {
   let coverage: JSCoverageEntry[] | undefined;
   for (const worker of workers) {
     try {
-      coverage = await worker.page.coverage.stopJSCoverage();
-      coverage = coverage.filter(entry => !entry.url.includes('.html'));
+      let rawCoverage = await worker.page.coverage.stopJSCoverage();
+      rawCoverage = rawCoverage.filter(entry => !entry.url.includes('.html'));
+      coverage = coverage ? coverage.concat(rawCoverage) : rawCoverage;
     } catch (e) {}
   }
   return coverage;
