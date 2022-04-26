@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import path from 'path';
-import type { JSCoverageEntry, Viewport } from 'puppeteer-core';
+import type { Viewport } from 'puppeteer-core';
 import {
   Story,
   StorybookConnection,
@@ -38,7 +38,6 @@ interface ScreenshotResult {
   succeeded: boolean;
   variantKeysToPush: VariantKey[];
   defaultVariantSuffix?: string;
-  coverage?: JSCoverageEntry[];
 }
 
 /**
@@ -357,12 +356,6 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     let emittedScreenshotOptions: ScreenshotOptions | undefined;
     this.resourceWatcher.clear();
 
-    if (this.opt.coverage) {
-      await this.page.coverage.startJSCoverage({
-        includeRawScriptCoverage: true,
-      });
-    }
-
     await this.setCurrentStory(story, { forceRerender: true });
 
     if (this.mode === 'managed') {
@@ -431,18 +424,11 @@ export class CapturingBrowser extends StoryPreviewBrowser {
 
     await this.waitForDebugInput();
 
-    let coverage: JSCoverageEntry[] | undefined;
-    if (this.opt.coverage) {
-      coverage = await this.page.coverage.stopJSCoverage();
-      coverage = coverage.filter(entry => !entry.url.includes('.html'));
-    }
-
     return {
       buffer,
       succeeded: true,
       variantKeysToPush,
       defaultVariantSuffix: emittedScreenshotOptions.defaultVariantSuffix,
-      coverage,
     };
   }
 }
