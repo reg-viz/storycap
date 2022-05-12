@@ -9,6 +9,11 @@ interface API {
   store?: () => {
     _configuring?: boolean; // available SB v6 or later
   };
+  storyStore?: {
+    // available SB v6.4 or later
+    cacheAllCSFFiles: () => Promise<void>;
+    cachedCSFFiles?: Record<string, unknown>;
+  };
   raw?: () => { id: string; kind: string; name: string }[]; // available SB v5 or later
   getStorybook(): { kind: string; stories: { name: string }[] }[]; // for legacy (SB v4) API
 }
@@ -63,6 +68,10 @@ export class StoriesBrowser extends BaseBrowser {
     await this.page.waitForFunction(() => (window as ExposedWindow).__STORYBOOK_CLIENT_API__, {
       timeout: 60_000,
     });
+    await this.page.evaluate(() => {
+      const { __STORYBOOK_CLIENT_API__: api } = window as ExposedWindow;
+      api.storyStore && api.storyStore.cacheAllCSFFiles();
+    });
     const result = await this.page.evaluate(
       () =>
         new Promise<{ stories: V5Story[] | null; oldStories: StoryKind[] | null; timeout: boolean }>(res => {
@@ -72,7 +81,10 @@ export class StoriesBrowser extends BaseBrowser {
             if (api.raw) {
               // for Storybook v6
               const configuring = api.store && api.store()._configuring;
-              if (configuring) {
+              // for Storybook v6 and 'storyStoreV7' option
+              const configuringV7store = api.storyStore && !api.storyStore.cachedCSFFiles;
+
+              if (configuring || configuringV7store) {
                 if (count < MAX_CONFIGURE_WAIT_COUNT) {
                   setTimeout(() => getStories(++count), 16);
                 } else {
