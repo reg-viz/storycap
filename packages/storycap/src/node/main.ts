@@ -4,6 +4,8 @@ import { CapturingBrowser } from './capturing-browser';
 import { MainOptions, RunMode } from './types';
 import { FileSystem } from './file';
 import { createScreenshotService } from './screenshot-service';
+import { JSCoverageEntry } from 'puppeteer-core';
+import mergeCoverages from './coverage';
 
 async function detectRunMode(storiesBrowser: StoriesBrowser, opt: MainOptions) {
   // Reuse `storiesBrowser` instance to avoid cost of re-launching another Puppeteer process.
@@ -25,6 +27,26 @@ async function bootCapturingBrowserAsWorkers(connection: StorybookConnection, op
   );
   opt.logger.debug(`Started ${browsers.length} capture browsers`);
   return { workers: browsers, closeWorkers: () => Promise.all(browsers.map(b => b.close.bind(b))) };
+}
+
+async function startCoverage(workers: CapturingBrowser[]) {
+  for (const worker of workers) {
+    await worker.page.coverage.startJSCoverage({
+      includeRawScriptCoverage: true,
+    });
+  }
+}
+
+async function collectCoverage(workers: CapturingBrowser[]) {
+  let coverage: JSCoverageEntry[] | undefined;
+  for (const worker of workers) {
+    try {
+      let rawCoverage = await worker.page.coverage.stopJSCoverage();
+      rawCoverage = rawCoverage.filter(entry => !entry.url.includes('.html'));
+      coverage = coverage ? coverage.concat(rawCoverage) : rawCoverage;
+    } catch (e) {}
+  }
+  return coverage;
 }
 
 function filterStories(flatStories: Story[], include: string[], exclude: string[]): Story[] {
@@ -72,9 +94,27 @@ export async function main(mainOptions: MainOptions) {
   logger.debug('Created workers.');
 
   try {
+    if (mainOptions.coverage) {
+      await startCoverage(workers);
+    }
     // Execution caputuring procedure.
-    return await createScreenshotService({ workers, stories, fileSystem, logger }).execute();
-    logger.debug('Ended ScreenshotService execution.');
+    const result = await createScreenshotService({
+      workers,
+      stories,
+      fileSystem,
+      logger,
+    }).execute();
+
+    if (mainOptions.coverage) {
+      const coverages = await collectCoverage(workers);
+      if (coverages?.length) {
+        logger.log(`coverage data stored: ${logger.color.magenta('coverage.json')}.`);
+        const merged = await mergeCoverages(coverages, mainOptions.coverage);
+        const buffer = Buffer.from(JSON.stringify(merged));
+        await fileSystem.saveFile('coverage.json', buffer);
+      }
+    }
+    return result;
   } catch (error) {
     if (error instanceof ChromiumNotFoundError) {
       throw new Error(

@@ -7,6 +7,17 @@ import sanitize from 'sanitize-filename';
 export class FileSystem {
   constructor(private opt: MainOptions) {}
 
+  saveFile(filename: string, buffer: Buffer) {
+    const filePath = path.join(this.opt.outDir, filename);
+    return new Promise<string>((resolve, reject) => {
+      mkdirp.sync(path.dirname(filePath));
+      fs.writeFile(filePath, buffer, err => {
+        if (err) reject(err);
+        resolve(filePath);
+      });
+    });
+  }
+
   /**
    *
    * Save captured buffer as a PNG image.
@@ -27,13 +38,6 @@ export class FileSystem {
           .join('/') +
         '/' +
         sanitize(story);
-    const filePath = path.join(this.opt.outDir, name + (suffix.length ? `_${suffix.join('_')}` : '') + '.png');
-    return new Promise<string>((resolve, reject) => {
-      mkdirp.sync(path.dirname(filePath));
-      fs.writeFile(filePath, buffer, err => {
-        if (err) reject(err);
-        resolve(filePath);
-      });
-    });
+    return this.saveFile(name + (suffix.length ? `_${suffix.join('_')}` : '') + '.png', buffer);
   }
 }
