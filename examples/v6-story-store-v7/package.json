@@ -1,0 +1,40 @@
+{
+  "name": "v6-story-store-v7",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-scripts": "2.1.8"
+  },
+  "scripts": {
+    "clear": "rimraf __screenshots__",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "storybook": "start-storybook -p 9007",
+    "build-storybook": "build-storybook",
+    "prestorybook": "../../scripts/e2e-prestorybook.js .",
+    "storycap:all": "yarn prestorybook && storycap --verbose --server-timeout 100000 --server-cmd \"start-storybook -p 9007\" \"http://localhost:9007\" -V \"iPad\" -V \"iPhone 6\""
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.4.0",
+    "@storybook/addon-actions": "^6.4.0",
+    "@storybook/addon-links": "^6.4.0",
+    "@storybook/addons": "^6.4.0",
+    "@storybook/cli": "^6.4.0",
+    "@storybook/react": "^6.4.0",
+    "babel-loader": "^8.0.5",
+    "rimraf": "^2.6.3"
+  }
+}
