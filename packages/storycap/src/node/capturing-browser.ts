@@ -109,6 +109,12 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     Object.entries(exposed).forEach(([k, f]) => this.page.exposeFunction(k, f));
   }
 
+  private async reload() {
+    await this.page.reload();
+    await sleep(this.opt.viewportDelay);
+    await this.addStyles();
+  }
+
   private async waitIfTouched() {
     if (!this.touched) return;
     await sleep(this.opt.stateChangeDelay);
@@ -255,7 +261,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
       this.viewport = nextViewport;
       if (willBeReloaded || this.opt.reloadAfterChangeViewport) {
         this.processedStories.delete(this.currentRequestId);
-        await Promise.all([this.page.reload(), this.waitForOptionsFromBrowser()]);
+        await Promise.all([this.reload(), this.waitForOptionsFromBrowser()]);
       } else {
         await sleep(this.opt.viewportDelay);
       }
