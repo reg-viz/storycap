@@ -56,7 +56,7 @@
     "reg-notify-github-plugin": "0.11.1",
     "reg-publish-s3-plugin": "0.11.0",
     "reg-suit": "0.11.1",
-    "typescript": "4.6.4",
+    "typescript": "4.7.4",
     "typescript-eslint-language-service": "5.0.0"
   },
   "workspaces": [

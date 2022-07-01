@@ -41,7 +41,7 @@
     "jest": "28.1.2",
     "ts-jest": "28.0.5",
     "typedoc": "0.22.15",
-    "typescript": "4.6.4"
+    "typescript": "4.7.4"
   },
   "dependencies": {
     "@types/node": "^16.0.0",
