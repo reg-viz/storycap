@@ -1,6 +1,6 @@
 {
-  "name": "storycap",
-  "version": "3.1.9",
+  "name": "@remix/storycap",
+  "version": "1.0.0",
   "description": "A Storybook addon, Save the screenshot image of your stories! via puppeteer.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/reg-viz/storycap.git"
+    "url": "git+https://github.com/remix/storycap.git"
   },
   "author": "tsuyoshiwada",
   "contributors": [
@@ -24,9 +24,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/reg-viz/storycap/issues"
+    "url": "https://github.com/remix/storycap/issues"
   },
-  "homepage": "https://github.com/reg-viz/storycap#readme",
+  "homepage": "https://github.com/remix/storycap#readme",
   "files": [
     "lib",
     "assets",
