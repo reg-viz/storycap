@@ -419,6 +419,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
       fullPage: emittedScreenshotOptions.fullPage,
       omitBackground: emittedScreenshotOptions.omitBackground,
       captureBeyondViewport: emittedScreenshotOptions.captureBeyondViewport,
+      clip: emittedScreenshotOptions.clip ?? undefined,
     });
 
     let buffer: Buffer | null = null;
