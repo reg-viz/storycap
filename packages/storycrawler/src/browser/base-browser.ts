@@ -31,10 +31,17 @@ export interface BaseBrowserOptions {
 
   /**
    *
-   * User defind Chromium execuatable binary path
+   * User defined Chromium executable binary path
    *
    **/
   chromiumPath?: string;
+
+  /**
+   *
+   * User defined additional setting query for example knobs
+   *
+   **/
+  additionalQuery?: string;
 }
 
 /**

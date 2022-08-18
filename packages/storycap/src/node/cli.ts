@@ -84,11 +84,21 @@ function createOptions(): MainOptions {
       default: '{ "args": ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"] }',
       description: 'JSON string of launch config for Puppeteer.',
     })
+    .options('additionalQuery', {
+      string: true,
+      default: '',
+      description: 'Additional query string for extra setting specific story',
+      alias: 'aq',
+    })
     .example('storycap http://localshot:9009', '')
     .example('storycap http://localshot:9009 -V 1024x768 -V 320x568', '')
     .example('storycap http://localshot:9009 -i "some-kind/a-story"', '')
     .example('storycap http://example.com/your-storybook -e "**/default" -V iPad', '')
-    .example('storycap --serverCmd "start-storybook -p 3000" http://localshot:3000', '');
+    .example('storycap --serverCmd "start-storybook -p 3000" http://localshot:3000', '')
+    .example(
+      'storycap http://localshot:9009 -aq "knobs-primary=true&knobs-show-lines=true" -i "Global/Components/CodeBlock/Code Block Story"',
+      '',
+    );
   let storybookUrl;
 
   if (!setting.argv._.length) {
