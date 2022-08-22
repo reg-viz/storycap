@@ -1,4 +1,4 @@
-import { time, ChromeChannel } from '../../../storycrawler';
+import { time, ChromeChannel } from 'storycrawler';
 import { main } from '../../src/node/main';
 import { MainOptions } from '../../src/node/types';
 import { Logger } from '../../src/node/logger';

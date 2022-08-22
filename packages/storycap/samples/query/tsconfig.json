@@ -5,7 +5,8 @@
     "strict": true,
     "baseUrl": "./",
     "paths": {
-      "storycrawler": ["../../src/index.ts"]
+      "storycrawler": ["../../../storycrawler/src/index.ts"],
+      "storycap": ["../../src/index.ts"]
     },
     "esModuleInterop": true
   },
