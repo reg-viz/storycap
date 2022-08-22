@@ -6,5 +6,5 @@
     "rootDir": "./src",
     "outDir": "./lib"
   },
-  "exclude": ["node_modules", "lib", "src/node"]
+  "exclude": ["node_modules", "lib", "src/node", "samples"]
 }

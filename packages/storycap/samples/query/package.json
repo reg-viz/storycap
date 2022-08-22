@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "name": "knobs-test",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "devDependencies": {
+    "ts-node": "10.8.1",
+    "typescript": "4.7.4"
+  }
+}

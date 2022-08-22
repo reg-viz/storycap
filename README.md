@@ -374,7 +374,7 @@ Options:
       --chromiumPath               Executable Chromium path.                                      [string] [default: ""]
       --puppeteerLaunchConfig      JSON string of launch config for Puppeteer.
                [string] [default: "{ "args": ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"] }"]
-      --additionalQuery, --aq      Additional query string for extra setting specific story       [string] [default: ""]
+  -q, --additionalQuery            Additional query string for extra setting specific story       [string] [default: ""]
 
 Examples:
   storycap http://localshot:9009

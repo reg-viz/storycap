@@ -59,7 +59,9 @@ export class StoriesBrowser extends BaseBrowser {
     let stories: Story[] | null = null;
     let oldStories: StoryKind[] | null = null;
     await this.page.goto(
-      this.connection.url + '/iframe.html?selectedKind=story-crawler-kind&selectedStory=story-crawler-story',
+      this.connection.url +
+        '/iframe.html?selectedKind=story-crawler-kind&selectedStory=story-crawler-story' +
+        (this.opt.additionalQuery || ''),
       {
         timeout: 60_000,
         waitUntil: 'domcontentloaded',
