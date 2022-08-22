@@ -20,12 +20,12 @@
     "start": "react-scripts start",
     "clear": "rimraf __screenshots__",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --setupFiles ./setupFile.js",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
     "prestorybook": "../../scripts/e2e-prestorybook.js .",
-    "storycap:all": "storycap --verbose --server-timeout 100000 --server-cmd \"start-storybook -p 9008\" \"http://localhost:9008\" -aq \"&args=primary:false\" -i \"Example/Button/Primary\""
+    "storycap:all": "yarn prestorybook && yarn test && storycap --verbose --server-timeout 100000 --server-cmd \"start-storybook -p 9008\" \"http://localhost:9008\" -aq \"path=/story/example-button--primary&args=primary:false\" -i \"Example/Button/Primary\""
   },
   "eslintConfig": {
     "extends": [
@@ -66,8 +66,10 @@
     "@storybook/preset-create-react-app": "^4.1.2",
     "@storybook/react": "^6.5.10",
     "@storybook/testing-library": "^0.0.13",
+    "@storybook/testing-react": "^1.3.0",
     "babel-plugin-named-exports-order": "^0.0.2",
     "prop-types": "^15.8.1",
+    "rimraf": "^2.6.3",
     "webpack": "^5.74.0"
   }
 }
