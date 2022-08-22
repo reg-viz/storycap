@@ -25,7 +25,8 @@
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
     "prestorybook": "../../scripts/e2e-prestorybook.js .",
-    "storycap:all": "yarn prestorybook && yarn test && storycap --verbose --server-timeout 100000 --server-cmd \"start-storybook -p 9008\" \"http://localhost:9008\" -aq \"path=/story/example-button--primary&args=primary:false\" -i \"Example/Button/Primary\""
+    "storycap": "yarn prestorybook && yarn test && storycap --verbose \"http://localhost:6006\" -q \"path=/story/example-button--primary&args=primary:false\" -i \"Example/Button/Primary\"",
+    "storycap:all": "yarn prestorybook && yarn test && storycap --verbose --server-timeout 100000 --server-cmd \"start-storybook -p 6006\" \"http://localhost:6006\" -q \"path=/story/example-button--primary&args=primary:false\" -i \"Example/Button/Primary\" --captureTimeout 10000"
   },
   "eslintConfig": {
     "extends": [
