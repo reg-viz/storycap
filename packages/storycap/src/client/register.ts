@@ -1,4 +1,4 @@
-import addons from '@storybook/addons';
+import { addons } from '@storybook/addons';
 
 (window as any).__STORYCAP_MANAGED_MODE_REGISTERED__ = true;
 
