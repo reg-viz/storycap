@@ -106,7 +106,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
       getCurrentVariantKey: () => this.currentVariantKey,
       waitBrowserMetricsStable: () => this.waitBrowserMetricsStable('preEmit'),
     };
-    Object.entries(exposed).forEach(([k, f]) => this.page.exposeFunction(k, f));
+    await Promise.all(Object.entries(exposed).map(([k, f]) => this.page.exposeFunction(k, f)));
   }
 
   private async reload() {
