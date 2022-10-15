@@ -32,6 +32,7 @@ It is primarily responsible for image generation necessary for Visual Testing su
 - [Multiple PNGs from 1 story](#multiple-pngs-from-1-story)
   - [Basic usage](#basic-usage)
   - [Variants composition](#variants-composition)
+  - [Parallelisation across multiple computers](#parallelisation-across-multiple-computers)
 - [Tips](#tips)
   - [Run with Docker](#run-with-docker)
   - [Full control the screenshot timing](#full-control-the-screenshot-timing)
@@ -362,6 +363,9 @@ Options:
       --verbose                                                                               [boolean] [default: false]
       --serverCmd                  Command line to launch Storybook server.                       [string] [default: ""]
       --serverTimeout              Timeout [msec] for starting Storybook server.               [number] [default: 20000]
+      --shard                      The sharding options for this run. In the format <shardNumber>/<totalShards>.
+                                   <shardNumber> is a number between 1 and <totalShards>. <totalShards> is the total
+                                   number of computers working.                                [string] [default: "1/1"]
       --captureTimeout             Timeout [msec] for capture a story.                          [number] [default: 5000]
       --captureMaxRetryCount       Number of count to retry to capture.                            [number] [default: 3]
       --metricsWatchRetryCount     Number of count to retry until browser metrics stable.       [number] [default: 1000]
@@ -455,6 +459,16 @@ The above example generates the following:
 - `MyButton/normal_small_hovered.png` (derived from the `hovered` and `small` variant
 
 **Note:** You can extend some viewports with keys of `viewports` option because the `viewports` field is expanded to variants internally.
+
+### Parallelisation across multiple computers
+
+To process more stories in parallel across multiple computers, the `shard` argument can be used.
+
+The `shard` argument is a string of the format: `<shardNumber>/<totalShards>`. `<shardNumber>` is a number between 1 and `<totalShards>`, inclusive. `<totalShards>` is the total number of computers running the execution.
+
+For example, a run with `--shard 1/1` would be considered the default behaviour on a single computer. Two computers each running `--shard 1/2` and `--shard 2/2` respectively would split the stories across two computers.
+
+Stories are distributed across shards in a round robin fashion when ordered by their ID. If a series of stories 'close together' are slower to screenshot than others, they should be distributed evenly.
 
 ## Tips
 

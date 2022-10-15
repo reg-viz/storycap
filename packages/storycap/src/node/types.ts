@@ -11,6 +11,16 @@ export type RunMode = 'simple' | 'managed';
 
 /**
  *
+ * Parameters for sharding.
+ *
+ **/
+export type ShardOptions = {
+  shardNumber: number;
+  totalShards: number;
+};
+
+/**
+ *
  * Parameters for main procedure.
  * Almost all of fields are dericed CLI options.
  *
@@ -31,6 +41,7 @@ export interface MainOptions extends BaseBrowserOptions {
   disableCssAnimation: boolean;
   disableWaitAssets: boolean;
   parallel: number;
+  shard: ShardOptions;
   metricsWatchRetryCount: number;
   chromiumChannel: ChromeChannel;
   chromiumPath: string;
