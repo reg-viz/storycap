@@ -201,14 +201,6 @@ describe(shardStories, () => {
     const shardedStoriesC = shardStories(sortedStories, 3, 4);
     const shardedStoriesD = shardStories(sortedStories, 4, 4);
 
-    console.log(
-      shardedStoriesA.length,
-      shardedStoriesB.length,
-      shardedStoriesC.length,
-      shardedStoriesD.length,
-      sortedStories.length,
-    );
-
     expect(shardedStoriesA.length + shardedStoriesB.length + shardedStoriesC.length + shardedStoriesD.length).toBe(
       sortedStories.length,
     );
