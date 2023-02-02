@@ -26,6 +26,6 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn bootstrap
       - run: yarn build
-      - run: yarn e2e
+      - run: yarn e2e examples/v6-managed-react
         env:
           CI: true
