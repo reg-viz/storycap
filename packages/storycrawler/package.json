@@ -1,11 +1,14 @@
 {
   "name": "storycrawler",
-  "version": "3.1.8",
+  "version": "4.0.0-alpha.2",
   "description": "Utilities to build Storybook crawling tools with Puppeteer",
+  "engines": {
+    "node": ">=14.13"
+  },
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
-    "clean": "rimraf lib",
+    "clean": "rimraf lib \"*.tsbuildinfo\"",
     "build": "tsc -p tsconfig.build.json",
     "jest": "jest",
     "test": "npm run jest",
@@ -53,7 +56,7 @@
   "jest": {
     "globals": {
       "ts-jest": {
-        "tsConfig": "tsconfig.build.json"
+        "diagnostics": false
       }
     },
     "moduleFileExtensions": [

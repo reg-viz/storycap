@@ -39,7 +39,7 @@ function createOptions(): MainOptions {
     .option('serverCmd', { string: true, default: '', description: 'Command line to launch Storybook server.' })
     .option('serverTimeout', {
       number: true,
-      default: 20_000,
+      default: 60_000,
       description: 'Timeout [msec] for starting Storybook server.',
     })
     .option('shard', {
