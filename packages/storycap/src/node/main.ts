@@ -4,6 +4,7 @@ import { CapturingBrowser } from './capturing-browser';
 import { MainOptions, RunMode } from './types';
 import { FileSystem } from './file';
 import { createScreenshotService } from './screenshot-service';
+import { shardStories, sortStories } from './shard-utilities';
 
 async function detectRunMode(storiesBrowser: StoriesBrowser, opt: MainOptions) {
   // Reuse `storiesBrowser` instance to avoid cost of re-launching another Puppeteer process.
@@ -60,12 +61,31 @@ export async function main(mainOptions: MainOptions) {
   storiesBrowser.close();
 
   const stories = filterStories(allStories, mainOptions.include, mainOptions.exclude);
+
   if (stories.length === 0) {
     logger.warn('There is no matched story. Check your include/exclude options.');
     return 0;
   }
 
-  logger.log(`Found ${logger.color.green(stories.length + '')} stories.`);
+  const sortedStories = sortStories(stories);
+  const shardedStories = shardStories(sortedStories, mainOptions.shard.shardNumber, mainOptions.shard.totalShards);
+
+  if (shardedStories.length === 0) {
+    logger.log('This shard has no stories to screenshot.');
+    return 0;
+  }
+
+  if (mainOptions.shard.totalShards === 1) {
+    logger.log(`Found ${logger.color.green(String(stories.length))} stories.`);
+  } else {
+    logger.log(
+      `Found ${logger.color.green(String(stories.length))} stories. ${logger.color.green(
+        String(shardedStories.length),
+      )} are being processed by this shard (number ${mainOptions.shard.shardNumber} of ${
+        mainOptions.shard.totalShards
+      }).`,
+    );
+  }
 
   // Launce Puppeteer processes to capture each story.
   const { workers, closeWorkers } = await bootCapturingBrowserAsWorkers(connection, mainOptions, mode);
@@ -73,8 +93,9 @@ export async function main(mainOptions: MainOptions) {
 
   try {
     // Execution caputuring procedure.
-    return await createScreenshotService({ workers, stories, fileSystem, logger }).execute();
+    const captured = await createScreenshotService({ workers, stories: shardedStories, fileSystem, logger }).execute();
     logger.debug('Ended ScreenshotService execution.');
+    return captured;
   } catch (error) {
     if (error instanceof ChromiumNotFoundError) {
       throw new Error(

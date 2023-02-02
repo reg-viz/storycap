@@ -2,9 +2,10 @@
 
 import { time, ChromeChannel, getDeviceDescriptors } from 'storycrawler';
 import { main } from './main';
-import { MainOptions } from './types';
+import { MainOptions, ShardOptions } from './types';
 import yargs from 'yargs';
 import { Logger } from './logger';
+import { parseShardOptions } from './shard-utilities';
 
 function showDevices(logger: Logger) {
   getDeviceDescriptors().map(device => logger.log(device.name, JSON.stringify(device.viewport)));
@@ -40,6 +41,12 @@ function createOptions(): MainOptions {
       number: true,
       default: 60_000,
       description: 'Timeout [msec] for starting Storybook server.',
+    })
+    .option('shard', {
+      string: true,
+      default: '1/1',
+      description:
+        'The sharding options for this run. In the format <shardNumber>/<totalShards>. <shardNumber> is a number between 1 and <totalShards>. <totalShards> is the total number of computers working.',
     })
     .option('captureTimeout', { number: true, default: 5_000, description: 'Timeout [msec] for capture a story.' })
     .option('captureMaxRetryCount', { number: true, default: 3, description: 'Number of count to retry to capture.' })
@@ -109,6 +116,7 @@ function createOptions(): MainOptions {
     verbose,
     serverTimeout,
     serverCmd,
+    shard,
     captureTimeout,
     captureMaxRetryCount,
     metricsWatchRetryCount,
@@ -141,6 +149,14 @@ function createOptions(): MainOptions {
     throw error;
   }
 
+  let shardOptions: ShardOptions;
+  try {
+    shardOptions = parseShardOptions(shard);
+  } catch (error) {
+    logger.error(error);
+    throw error;
+  }
+
   const opt = {
     serverOptions: {
       storybookUrl,
@@ -154,6 +170,7 @@ function createOptions(): MainOptions {
     delay,
     viewports: viewport,
     parallel,
+    shard: shardOptions,
     captureTimeout,
     captureMaxRetryCount,
     metricsWatchRetryCount,
