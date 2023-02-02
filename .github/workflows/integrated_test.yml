@@ -8,13 +8,14 @@ on:
   pull_request:
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
-    # strategy:
-    #   matrix:
-    #     os: [ubuntu-latest, windows-latest]
-    #     node-version: [18.x]
+    strategy:
+      matrix:
+        example_dir:
+          - examples/v6-simple
+          - examples/v6-managed-react
 
     steps:
       - uses: actions/checkout@v3
@@ -26,6 +27,6 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn bootstrap
       - run: yarn build
-      - run: yarn e2e examples/v6-managed-react
+      - run: yarn e2e ${{ matrix.example_dir }}
         env:
           CI: true
