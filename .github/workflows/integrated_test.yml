@@ -7,6 +7,10 @@ on:
       - next
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}--${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -14,8 +18,12 @@ jobs:
     strategy:
       matrix:
         example_dir:
-          - examples/v6-simple
+          - examples/v5-managed-react-legacy-decorator
+          - examples/v5-managed-vue
+          - examples/v5-simple
           - examples/v6-managed-react
+          - examples/v6-simple
+          - examples/v6-story-store-v7
 
     steps:
       - uses: actions/checkout@v3
