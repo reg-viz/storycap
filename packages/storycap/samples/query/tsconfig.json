@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es2019",
+    "module": "commonjs",
+    "strict": true,
+    "baseUrl": "./",
+    "paths": {
+      "storycrawler": ["../../../storycrawler/src/index.ts"],
+      "storycap": ["../../src/index.ts"]
+    },
+    "esModuleInterop": true
+  },
+  "ts-node": {
+    "transpileOnly": true
+  }
+}

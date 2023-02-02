@@ -373,6 +373,7 @@ Options:
       --chromiumPath               Executable Chromium path.                                      [string] [default: ""]
       --puppeteerLaunchConfig      JSON string of launch config for Puppeteer.
                [string] [default: "{ "args": ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"] }"]
+  -q, --additionalQuery            Additional query string for extra setting specific story       [string] [default: ""]
 
 Examples:
   storycap http://localshot:9009
@@ -380,6 +381,8 @@ Examples:
   storycap http://localshot:9009 -i "some-kind/a-story"
   storycap http://example.com/your-storybook -e "**/default" -V iPad
   storycap --serverCmd "start-storybook -p 3000" http://localshot:3000
+  storycap http://localshot:9009 -aq "knobs-primary=true&knobs-show-lines=true" -i "Global/Components/CodeBlock/Code
+  Block Story"
 
 ```
 

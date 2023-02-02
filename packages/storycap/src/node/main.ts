@@ -73,8 +73,8 @@ export async function main(mainOptions: MainOptions) {
 
   try {
     // Execution caputuring procedure.
-    return await createScreenshotService({ workers, stories, fileSystem, logger }).execute();
     logger.debug('Ended ScreenshotService execution.');
+    return await createScreenshotService({ workers, stories, fileSystem, logger }).execute();
   } catch (error) {
     if (error instanceof ChromiumNotFoundError) {
       throw new Error(
