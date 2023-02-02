@@ -6,7 +6,6 @@
 ![DEMO](https://raw.githubusercontent.com/reg-viz/storycap/artwork/demo_v2.gif)
 
 [![npm](https://img.shields.io/npm/v/storycap.svg?style=flat-square)](https://www.npmjs.com/package/storycap)
-[![CircleCI](https://circleci.com/gh/reg-viz/storycap.svg?style=svg)](https://circleci.com/gh/reg-viz/storycap)
 
 > A [Storybook][storybook] Addon, Save the screenshot image of your stories :camera: via [Puppeteer][puppeteer].
 
@@ -530,11 +529,9 @@ You can change search channel with `--chromiumChannel` option or set executable 
 Storycap is tested with the followings versions:
 
 - Simple mode:
-  - [x] Storybook v4.x
   - [x] Storybook v5.x
   - [x] Storybook v6.x
 - Managed mode:
-  - [x] Storybook v4.x
   - [x] Storybook v5.x
   - [x] Storybook v6.x
 

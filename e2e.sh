@@ -20,8 +20,8 @@ function run() {
   echo ""
 }
 
-total=${CIRCLE_NODE_TOTAL:-1}
-current_idx=${CIRCLE_NODE_INDEX:-0}
+total=${NODE_TOTAL:-1}
+current_idx=${NODE_INDEX:-0}
 
 rm -rf __screenshots__
 mkdir -p __screenshots__/examples
