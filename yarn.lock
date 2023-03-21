@@ -2081,18 +2081,21 @@
   integrity sha512-RJJrrySY7A8havqpGObOB4W92QXKJo63/jFLLgpvOtsGUqbQZ9Sbgl35KMm1DjC6j7AvmmU2bIno+3IyEaemaw==
 
 "@types/wait-on@^5.0.0":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@types/wait-on/-/wait-on-5.2.0.tgz#f9096b7bd0c9c03052d6d402ae5cd51714480b2d"
-  integrity sha512-3+jsMyPm8aot1mqDUDLOl+dejPvpysUUoUXD6CCRY20MNNhcjEfvdcBnGdnk7DEYs9Hr16ubGJA/9/QW0Df/9g==
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/@types/wait-on/-/wait-on-5.3.1.tgz#bc5520d1d8b90b9caab1bef23315685ded73320d"
+  integrity sha512-2FFOKCF/YydrMUaqg+fkk49qf0e5rDgwt6aQsMzFQzbS419h2gNOXyiwp/o2yYy27bi/C1z+HgfncryjGzlvgQ==
+  dependencies:
+    "@types/node" "*"
 
 "@types/yargs-parser@*":
-  version "13.1.0"
-  resolved "https://registry.yarnpkg.com/@types/yargs-parser/-/yargs-parser-13.1.0.tgz#c563aa192f39350a1d18da36c5a8da382bbd8228"
+  version "21.0.0"
+  resolved "https://registry.yarnpkg.com/@types/yargs-parser/-/yargs-parser-21.0.0.tgz#0c60e537fa790f5f9472ed2776c2b71ec117351b"
+  integrity sha512-iO9ZQHkZxHn4mSakYV0vFHAVDyEOIJQrV2uZ06HxEPcx+mt8swXoZHIbaaJ2crJYFfErySgktuTZ3BeLz+XmFA==
 
 "@types/yargs@^16.0.0":
-  version "16.0.0"
-  resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-16.0.0.tgz#0e033b23452da5d61b6c44747612cb80ac528751"
-  integrity sha512-2nN6AGeMwe8+O6nO9ytQfbMQOJy65oi1yK2y/9oReR08DaXSGtMsrLyCM1ooKqfICpCx4oITaR4LkOmdzz41Ww==
+  version "16.0.5"
+  resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-16.0.5.tgz#12cc86393985735a283e387936398c2f9e5f88e3"
+  integrity sha512-AxO/ADJOBFJScHbWhq2xAhlWP24rY4aCEG/NFaMvbT3X2MgRsLjhjQwsn0Zi5zn0LG9jUhCCZMeX9Dkuw6k+vQ==
   dependencies:
     "@types/yargs-parser" "*"
 
