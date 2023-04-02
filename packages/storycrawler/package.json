@@ -60,7 +60,7 @@
       "js"
     ],
     "transform": {
-      "^.+\\.ts$": [
+      "^.+\\.tsx?$": [
         "ts-jest",
         {
           "diagnostics": false
