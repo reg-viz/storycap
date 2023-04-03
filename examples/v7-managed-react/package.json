@@ -1,0 +1,42 @@
+{
+  "name": "v7-managed-react",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-scripts": "^5.0.0"
+  },
+  "scripts": {
+    "clear": "rimraf __screenshots__",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --setupFiles ./setupFile.js",
+    "eject": "react-scripts eject",
+    "storybook": "start-storybook -p 9008",
+    "build-storybook": "build-storybook",
+    "prestorybook": "../../scripts/e2e-prestorybook.js .",
+    "storycap:all": "yarn prestorybook && yarn test && storycap --verbose --server-timeout 100000 --server-cmd \"start-storybook -p 9008\" \"http://localhost:9008\""
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.4.0",
+    "@storybook/addon-actions": "^6.4.0",
+    "@storybook/addon-links": "^6.4.0",
+    "@storybook/addons": "^6.4.0",
+    "@storybook/cli": "^6.4.0",
+    "@storybook/react": "^6.4.0",
+    "@storybook/testing-react": "^1.2.3",
+    "@testing-library/react": "^12.1.3",
+    "babel-loader": "^8.0.5",
+    "rimraf": "^2.6.3"
+  }
+}
