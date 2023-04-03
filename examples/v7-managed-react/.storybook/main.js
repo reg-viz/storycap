@@ -1,7 +1,7 @@
 module.exports = {
   stories: ['../src/**/*.stories.@(js|jsx|mdx)'],
   addons: [
-    '@storybook/addon-actions',
+    '@storybook/addon-essentials',
     '@storybook/addon-links',
     'storycap',
     '@storybook/addon-mdx-gfm',
