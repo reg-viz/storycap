@@ -13,7 +13,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --setupFiles ./setupFile.js",
     "eject": "react-scripts eject",
-    "storybook": "start-storybook -p 9008",
+    "storybook": "start-storybook -p 9009",
     "build-storybook": "build-storybook",
     "prestorybook": "../../scripts/e2e-prestorybook.js .",
     "storycap:all": "yarn prestorybook && yarn test && storycap --verbose --server-timeout 100000 --server-cmd \"start-storybook -p 9008\" \"http://localhost:9008\""
