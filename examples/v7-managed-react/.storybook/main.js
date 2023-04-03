@@ -4,7 +4,6 @@ module.exports = {
     '@storybook/addon-essentials',
     '@storybook/addon-links',
     'storycap',
-    '@storybook/addon-mdx-gfm',
     '@storybook/preset-create-react-app',
   ],
   framework: {

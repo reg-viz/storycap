@@ -31,7 +31,6 @@
     "@storybook/addon-actions": "^7.0.2",
     "@storybook/addon-essentials": "^7.0.2",
     "@storybook/addon-links": "^7.0.2",
-    "@storybook/addon-mdx-gfm": "^7.0.2",
     "@storybook/addons": "^7.0.2",
     "@storybook/cli": "^7.0.2",
     "@storybook/preset-create-react-app": "^7.0.2",
