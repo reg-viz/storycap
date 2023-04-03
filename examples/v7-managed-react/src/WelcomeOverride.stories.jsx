@@ -1,5 +1,5 @@
 import { linkTo } from '@storybook/addon-links';
-import { Welcome } from '@storybook/react/demo';
+import { Welcome } from './Welcome';
 
 export default {
   title: 'Welcome Override',
