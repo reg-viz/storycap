@@ -2631,13 +2631,6 @@
     nanoid "^3.3.1"
     read-pkg-up "^7.0.1"
 
-"@storybook/testing-react@^2.0.0-next.1":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@storybook/testing-react/-/testing-react-2.0.0.tgz#f5d855726e25af5ac6da7c74e9a3b0f150752716"
-  integrity sha512-xpjULCHN368+3+vC56tZ232EwgmG8F+1hOa17zqLFlADWNbFr/19ko0raMIdXiik9Fn6JAErJNKH7OhO0ni8qA==
-  dependencies:
-    "@storybook/csf" "^0.1.0"
-
 "@storybook/theming@7.0.2":
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/@storybook/theming/-/theming-7.0.2.tgz#a7df6c6cd5533804a9435c2be2181c7605537285"
