@@ -1853,7 +1853,7 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@storybook/addon-actions@7.0.2", "@storybook/addon-actions@^7.0.0":
+"@storybook/addon-actions@7.0.2", "@storybook/addon-actions@^7.0.2":
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/@storybook/addon-actions/-/addon-actions-7.0.2.tgz#720d764ec77e395a92be50f0cd0a1baa75a58518"
   integrity sha512-rcj39u9MrmzsrDWYt1zsoVxrogZ1Amrv9xkEofEY/QKUr2R3xpHhTALveY9BKIlG1GoE8zLlLoP2k4nz3sNNwQ==
@@ -1964,7 +1964,7 @@
     "@storybook/global" "^5.0.0"
     "@storybook/preview-api" "7.0.2"
 
-"@storybook/addon-links@^7.0.0":
+"@storybook/addon-links@^7.0.2":
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/@storybook/addon-links/-/addon-links-7.0.2.tgz#149e3af921ecb7e4db63bdd9aabcf0e2167bdfab"
   integrity sha512-lPtfy2MqrcI9YjupBM2eRKGPdFKVPCz7WgO/JQQakGugORJTEGCyJrNJNtWY9jDenv8ynLZ40OxtPBZi54Sr6Q==
@@ -1980,7 +1980,7 @@
     prop-types "^15.7.2"
     ts-dedent "^2.0.0"
 
-"@storybook/addon-mdx-gfm@^7.0.0":
+"@storybook/addon-mdx-gfm@^7.0.2":
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/@storybook/addon-mdx-gfm/-/addon-mdx-gfm-7.0.2.tgz#b99b9ffc71bbf54b4a44a4a98001cc44213f3661"
   integrity sha512-MS4K7cG99gmLogKzsks6t8OejzX0I23MX9niiXFuhe2s1pL2MkBRdkoJ3Bulc8HO8dgnMy7qrkFWy+KFUDn8FA==
@@ -2042,7 +2042,7 @@
     memoizerific "^1.11.3"
     prop-types "^15.7.2"
 
-"@storybook/addons@7.0.2", "@storybook/addons@^7.0.0":
+"@storybook/addons@7.0.2", "@storybook/addons@^7.0.2":
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/@storybook/addons/-/addons-7.0.2.tgz#3dce0b58c85578c2d20a6fbd346502c2467cc13f"
   integrity sha512-2+amBRcmJ5kD2ZNeftiyp9Or9Kd7oVjwycZZX5SBB4EFQvRNKyM0w4GVgwbeJAdx5uuw7tJFtQgnakb39mxAgA==
@@ -2185,7 +2185,7 @@
   resolved "https://registry.yarnpkg.com/@storybook/channels/-/channels-7.0.2.tgz#2eb124d14fff50d4686888dca88f130c5aee358d"
   integrity sha512-qkI8mFy9c8mxN2f01etayKhCaauL6RAsxRzbX1/pKj6UqhHWqqUbtHwymrv4hG5qDYjV1e9pd7ae5eNF8Kui0g==
 
-"@storybook/cli@7.0.2", "@storybook/cli@^7.0.0":
+"@storybook/cli@7.0.2", "@storybook/cli@^7.0.2":
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/@storybook/cli/-/cli-7.0.2.tgz#f96c42e7660b8f8f14595483036b3b5ef6724dc9"
   integrity sha512-xMM2QdXNGg09wuXzAGroKrbsnaHSFPmtmefX1XGALhHuKVwxOoC2apWMpek6gY/9vh5EIRTog2Dvfd2BzNrT6Q==
@@ -2483,7 +2483,7 @@
   resolved "https://registry.yarnpkg.com/@storybook/postinstall/-/postinstall-7.0.2.tgz#cccbecb5a52ef0797d72fd919f024d785b1fb8d6"
   integrity sha512-Hhiu3+N3ZDcbrhOCBJTDJbn/mC4l0v3ziyAP3yalq/2ZR9R5kfsEHHakKmswsKKV+ey0gNGijFTy3soU5oSs+A==
 
-"@storybook/preset-create-react-app@^7.0.0":
+"@storybook/preset-create-react-app@^7.0.2":
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/@storybook/preset-create-react-app/-/preset-create-react-app-7.0.2.tgz#c01daa827854cb20cb0ce5c9f8a9b694cc79fcc5"
   integrity sha512-TrDYByWwwbl0e8tytlLt53DCKiz3HQbxC1waM9DqrMg//ZHk77nmah6MCb8n/e+QLx5Xb8eKR5Qr0vmci3uQYQ==
@@ -2562,7 +2562,7 @@
   resolved "https://registry.yarnpkg.com/@storybook/react-dom-shim/-/react-dom-shim-7.0.2.tgz#50ca149ad76c226301d273d7870bb2f94d380ce6"
   integrity sha512-fMl0aV7mJ3wyQKvt6z+rZuiIiSd9YinS77IJ1ETHqVZ4SxWriOS0GFKP6sZflrlpShoZBh+zl1lDPG7ZZdrQGw==
 
-"@storybook/react-webpack5@^7.0.0":
+"@storybook/react-webpack5@^7.0.2":
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/@storybook/react-webpack5/-/react-webpack5-7.0.2.tgz#eb6f63a8911268dfdb5ae80077329ebe5029661d"
   integrity sha512-vEjg9L0MS1ZYBj5oQJBykbBYqFhX0KegugxN0l0DXLMI1zo3LLGMMEAv6SE+kpZIa/0ooFMkHKR+wSDRbF0UuA==
@@ -2572,7 +2572,7 @@
     "@storybook/react" "7.0.2"
     "@types/node" "^16.0.0"
 
-"@storybook/react@7.0.2", "@storybook/react@^7.0.0":
+"@storybook/react@7.0.2", "@storybook/react@^7.0.2":
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/@storybook/react/-/react-7.0.2.tgz#64f13f8280275ada53684708c8e08f99512f27a7"
   integrity sha512-2P7Oju1XKWMyn75dO0vjL4gthzBL/lLiCBRyAHKXZJ1H2eNdWjXkOOtH1HxnbRcXjWSU4tW96dqKY8m0iR9zAA==
@@ -10904,7 +10904,7 @@ store2@^2.14.2:
   resolved "https://registry.yarnpkg.com/store2/-/store2-2.14.2.tgz#56138d200f9fe5f582ad63bc2704dbc0e4a45068"
   integrity sha512-siT1RiqlfQnGqgT/YzXVUNsom9S0H1OX+dpdGN1xkyYATo4I6sep5NmsRD/40s3IIOvlCq6akxkqG82urIZW1w==
 
-storybook@^7.0.0:
+storybook@^7.0.2:
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/storybook/-/storybook-7.0.2.tgz#b12f4214cb0b0307d944d5d820b8855f89396159"
   integrity sha512-/XBLhT9Vb14yNBcA9rlW15y+C6IsCA3kx5PKvK9kL10sKCi8invcY94UfCSisXe8HqsO3u6peumo2xpYucKMjw==
