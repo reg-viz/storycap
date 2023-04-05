@@ -93,18 +93,18 @@
     "yargs": "^16.0.0"
   },
   "jest": {
-    "globals": {
-      "ts-jest": {
-        "diagnostics": false
-      }
-    },
     "moduleFileExtensions": [
       "ts",
       "tsx",
       "js"
     ],
     "transform": {
-      "^.+\\.ts$": "ts-jest"
+      "^.+\\.tsx?$": [
+        "ts-jest",
+        {
+          "diagnostics": false
+        }
+      ]
     },
     "testMatch": [
       "**/__tests__/*.(ts|tsx)",
@@ -117,6 +117,8 @@
       "\\.d\\.ts$",
       "lib/.*"
     ],
-    "testURL": "http://localhost"
+    "testEnvironmentOptions": {
+      "url": "http://localhost"
+    }
   }
 }
