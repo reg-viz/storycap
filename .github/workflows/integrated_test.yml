@@ -19,6 +19,7 @@ jobs:
           - examples/v6-managed-react
           - examples/v6-simple
           - examples/v6-story-store-v7
+          - examples/v7-managed-react
 
     steps:
       - uses: actions/checkout@v3
