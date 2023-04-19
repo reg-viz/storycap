@@ -12,6 +12,7 @@ const defaultScreenshotOptions = {
   variants: {},
   omitBackground: false,
   captureBeyondViewport: true,
+  clip: null,
 } as const;
 
 /**

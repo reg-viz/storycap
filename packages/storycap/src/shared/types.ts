@@ -24,6 +24,7 @@ export interface ScreenshotOptionFragments {
   skip?: boolean;
   omitBackground?: boolean;
   captureBeyondViewport?: boolean;
+  clip?: { x: number; y: number; width: number; height: number } | null;
 }
 
 export interface ScreenshotOptionFragmentsForVariant extends ScreenshotOptionFragments {
