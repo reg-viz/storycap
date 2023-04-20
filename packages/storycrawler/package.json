@@ -8,7 +8,7 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
-    "clean": "rimraf lib \"*.tsbuildinfo\"",
+    "clean": "rimraf -g lib \"*.tsbuildinfo\"",
     "build": "tsc -p tsconfig.build.json",
     "jest": "jest",
     "test": "npm run jest",

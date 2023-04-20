@@ -25,7 +25,7 @@
     "storycap": "lib/node/cli.js"
   },
   "scripts": {
-    "clean": "rimraf lib lib-esm \"*.tsbuildinfo\"",
+    "clean": "rimraf -g lib lib-esm \"*.tsbuildinfo\"",
     "build": "yarn build:cjs && yarn build:esm",
     "build:cjs": "tsc --p tsconfig.build.cjs.json",
     "build:esm": "tsc --p tsconfig.build.esm.json",
