@@ -1,4 +1,4 @@
-import { isMatch } from 'nanomatch';
+import minimatch from 'minimatch';
 import { StorybookConnection, StoriesBrowser, Story, sleep, ChromiumNotFoundError } from 'storycrawler';
 import { CapturingBrowser } from './capturing-browser';
 import { MainOptions, RunMode } from './types';
@@ -30,8 +30,8 @@ async function bootCapturingBrowserAsWorkers(connection: StorybookConnection, op
 
 function filterStories(flatStories: Story[], include: string[], exclude: string[]): Story[] {
   const conbined = flatStories.map(s => ({ ...s, name: s.kind + '/' + s.story }));
-  const included = include.length ? conbined.filter(s => include.some(rule => isMatch(s.name, rule))) : conbined;
-  const excluded = exclude.length ? included.filter(s => !exclude.some(rule => isMatch(s.name, rule))) : included;
+  const included = include.length ? conbined.filter(s => include.some(rule => minimatch(s.name, rule))) : conbined;
+  const excluded = exclude.length ? included.filter(s => !exclude.some(rule => minimatch(s.name, rule))) : included;
   return excluded;
 }
 
