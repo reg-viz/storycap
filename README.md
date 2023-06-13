@@ -382,11 +382,11 @@ Options:
                [string] [default: "{ "args": ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"] }"]
 
 Examples:
-  storycap http://localshot:9009
-  storycap http://localshot:9009 -V 1024x768 -V 320x568
-  storycap http://localshot:9009 -i "some-kind/a-story"
+  storycap http://localhost:9009
+  storycap http://localhost:9009 -V 1024x768 -V 320x568
+  storycap http://localhost:9009 -i "some-kind/a-story"
   storycap http://example.com/your-storybook -e "**/default" -V iPad
-  storycap --serverCmd "start-storybook -p 3000" http://localshot:3000
+  storycap --serverCmd "start-storybook -p 3000" http://localhost:3000
 
 ```
 
