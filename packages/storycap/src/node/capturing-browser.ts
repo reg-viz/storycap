@@ -128,9 +128,15 @@ export class CapturingBrowser extends StoryPreviewBrowser {
 
     // Clear the browser's mouse state.
     if (screenshotOptions.click) {
+      // Workaround for an issue where puppeteer fails to find a matching element.
+      // https://github.com/reg-viz/storycap/issues/712
+      await this.page.evaluate(() => {});
       await this.page.$eval(screenshotOptions.click, (e: unknown) => (e as HTMLElement)?.blur());
     }
     if (screenshotOptions.focus) {
+      // Workaround for an issue where puppeteer fails to find a matching element.
+      // https://github.com/reg-viz/storycap/issues/712
+      await this.page.evaluate(() => {});
       await this.page.$eval(screenshotOptions.focus, (e: unknown) => (e as HTMLElement)?.blur());
     }
     await this.page.mouse.move(0, 0);
