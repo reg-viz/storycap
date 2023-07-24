@@ -363,6 +363,7 @@ Options:
       --disableWaitAssets          Disable waiting for requested assets                       [boolean] [default: false]
       --silent                                                                                [boolean] [default: false]
       --verbose                                                                               [boolean] [default: false]
+      --forwardConsoleLogs                                                                    [boolean] [default: false]
       --serverCmd                  Command line to launch Storybook server.                       [string] [default: ""]
       --serverTimeout              Timeout [msec] for starting Storybook server.               [number] [default: 60000]
       --shard                      The sharding options for this run. In the format <shardNumber>/<totalShards>.

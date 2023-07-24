@@ -48,6 +48,7 @@ export type ScreenshotServiceOptions = {
   workers: CapturingBrowser[];
   fileSystem: FileSystem;
   stories: Story[];
+  forwardConsoleLogs: boolean;
 };
 
 /**
@@ -63,6 +64,7 @@ export function createScreenshotService({
   logger,
   stories,
   workers,
+  forwardConsoleLogs,
 }: ScreenshotServiceOptions): ScreenshotService {
   const service = createExecutionService(
     workers,
@@ -70,7 +72,9 @@ export function createScreenshotService({
     ({ rid, story, variantKey, count }, { push }) =>
       async worker => {
         // Delegate the request to the worker.
-        const [result, elapsedTime] = await time(worker.screenshot(rid, story, variantKey, count));
+        const [result, elapsedTime] = await time(
+          worker.screenshot(rid, story, variantKey, count, logger, forwardConsoleLogs),
+        );
 
         const { succeeded, buffer, variantKeysToPush, defaultVariantSuffix } = result;
 

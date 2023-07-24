@@ -13,6 +13,7 @@ const defaultScreenshotOptions = {
   omitBackground: false,
   captureBeyondViewport: true,
   clip: null,
+  forwardConsoleLogs: false,
 } as const;
 
 /**
