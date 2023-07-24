@@ -36,7 +36,11 @@ function createOptions(): MainOptions {
     })
     .option('silent', { boolean: true, default: false })
     .option('verbose', { boolean: true, default: false })
-    .option('forwardConsoleLogs', { boolean: true, default: false })
+    .option('forwardConsoleLogs', {
+      boolean: true,
+      default: false,
+      description: "Forward in-page console logs to the user's console.",
+    })
     .option('serverCmd', { string: true, default: '', description: 'Command line to launch Storybook server.' })
     .option('serverTimeout', {
       number: true,
