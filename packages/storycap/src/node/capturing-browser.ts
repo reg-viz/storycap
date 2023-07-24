@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import path from 'path';
-import type { Viewport } from 'puppeteer-core';
+import type { ConsoleMessage, Viewport } from 'puppeteer-core';
 import {
   Story,
   StorybookConnection,
@@ -21,6 +21,7 @@ import {
   pickupWithVariantKey,
   InvalidVariantKeysReason,
 } from '../shared/screenshot-options-helper';
+import { Logger } from './logger';
 
 /**
  *
@@ -361,6 +362,8 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     story: Story,
     variantKey: VariantKey,
     retryCount: number,
+    logger: Logger,
+    forwardConsoleLogs: boolean,
   ): Promise<ScreenshotResult> {
     this.currentRequestId = requestId;
     this.currentVariantKey = variantKey;
@@ -368,80 +371,106 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     let emittedScreenshotOptions: ScreenshotOptions | undefined;
     this.resourceWatcher.clear();
 
-    await this.setCurrentStory(story, { forceRerender: true });
+    function onConsoleLog(msg: ConsoleMessage) {
+      const niceMessage = `From ${requestId} (${msg.type()}): ${msg.text()}`;
 
-    if (this.mode === 'managed') {
-      // Screenshot options are emitted form the browser process when managed mode.
-      emittedScreenshotOptions = await this.waitForOptionsFromBrowser();
-      if (!this.currentStory) {
-        throw new InvalidCurrentStoryStateError();
+      if (forwardConsoleLogs) {
+        switch (msg.type()) {
+          case 'warning':
+            logger.warn(niceMessage);
+            break;
+          case 'error':
+            logger.error(niceMessage);
+            break;
+          default:
+            logger.log(niceMessage);
+            break;
+        }
+      } else {
+        logger.debug(niceMessage);
       }
-      if (!emittedScreenshotOptions) {
-        // End this capturing process as failure of timeout if emitter don't resolve screenshot options.
-        return { buffer: null, succeeded: false, variantKeysToPush: [], defaultVariantSuffix: '' };
-      }
-    } else {
-      await sleep(this.opt.delay);
-      await this.waitBrowserMetricsStable('preEmit');
-      // Use only `baseScreenshotOptions` when simple mode.
-      emittedScreenshotOptions = pickupWithVariantKey(this.baseScreenshotOptions, this.currentVariantKey);
     }
 
-    const mergedScreenshotOptions = mergeScreenshotOptions(this.baseScreenshotOptions, emittedScreenshotOptions);
+    this.page.on('console', onConsoleLog);
 
-    // Get keys for variants included in the screenshot options in order to queue capturing them after this sequence.
-    const [invalidReason, keys] = extractVariantKeys(mergedScreenshotOptions);
-    const variantKeysToPush = this.currentVariantKey.isDefault ? keys : [];
-    this.logInvalidVariantKeysReason(invalidReason);
+    try {
+      await this.setCurrentStory(story, { forceRerender: true });
 
-    // End this capturing process as success if `skip` set true.
-    if (mergedScreenshotOptions.skip) {
+      if (this.mode === 'managed') {
+        // Screenshot options are emitted form the browser process when managed mode.
+        emittedScreenshotOptions = await this.waitForOptionsFromBrowser();
+        if (!this.currentStory) {
+          throw new InvalidCurrentStoryStateError();
+        }
+        if (!emittedScreenshotOptions) {
+          // End this capturing process as failure of timeout if emitter don't resolve screenshot options.
+          return { buffer: null, succeeded: false, variantKeysToPush: [], defaultVariantSuffix: '' };
+        }
+      } else {
+        await sleep(this.opt.delay);
+        await this.waitBrowserMetricsStable('preEmit');
+        // Use only `baseScreenshotOptions` when simple mode.
+        emittedScreenshotOptions = pickupWithVariantKey(this.baseScreenshotOptions, this.currentVariantKey);
+      }
+
+      const mergedScreenshotOptions = mergeScreenshotOptions(this.baseScreenshotOptions, emittedScreenshotOptions);
+
+      // Get keys for variants included in the screenshot options in order to queue capturing them after this sequence.
+      const [invalidReason, keys] = extractVariantKeys(mergedScreenshotOptions);
+      const variantKeysToPush = this.currentVariantKey.isDefault ? keys : [];
+      this.logInvalidVariantKeysReason(invalidReason);
+
+      // End this capturing process as success if `skip` set true.
+      if (mergedScreenshotOptions.skip) {
+        await this.waitForDebugInput();
+        return { buffer: null, succeeded: true, variantKeysToPush, defaultVariantSuffix: '' };
+      }
+
+      this.touched = false;
+
+      // Change browser's viewport if needed.
+      const vpChanged = await this.setViewport(mergedScreenshotOptions);
+      // Skip to capture if the viewport option is invalid.
+      if (!vpChanged) return { buffer: null, succeeded: true, variantKeysToPush: [], defaultVariantSuffix: '' };
+
+      // Modify elements state.
+      await this.setHover(mergedScreenshotOptions);
+      await this.setFocus(mergedScreenshotOptions);
+      await this.setClick(mergedScreenshotOptions);
+      await this.waitIfTouched();
+
+      // Wait until browser main thread gets stable.
+      await this.waitForResources(mergedScreenshotOptions);
+      await this.waitBrowserMetricsStable('postEmit');
+
+      await this.page.evaluate(() => new Promise(res => (window as any).requestIdleCallback(res, { timeout: 3000 })));
+
+      // Get PNG image buffer
+      const rawBuffer = await this.page.screenshot({
+        fullPage: emittedScreenshotOptions.fullPage,
+        omitBackground: emittedScreenshotOptions.omitBackground,
+        captureBeyondViewport: emittedScreenshotOptions.captureBeyondViewport,
+        clip: emittedScreenshotOptions.clip ?? undefined,
+      });
+
+      let buffer: Buffer | null = null;
+      if (Buffer.isBuffer(rawBuffer)) {
+        buffer = rawBuffer;
+      }
+
+      // We should reset elements state(e.g. focusing, hovering, clicking) for future screenshot for this story.
+      await this.resetIfTouched(mergedScreenshotOptions);
+
       await this.waitForDebugInput();
-      return { buffer: null, succeeded: true, variantKeysToPush, defaultVariantSuffix: '' };
+
+      return {
+        buffer,
+        succeeded: true,
+        variantKeysToPush,
+        defaultVariantSuffix: emittedScreenshotOptions.defaultVariantSuffix,
+      };
+    } finally {
+      this.page.off('console', onConsoleLog);
     }
-
-    this.touched = false;
-
-    // Change browser's viewport if needed.
-    const vpChanged = await this.setViewport(mergedScreenshotOptions);
-    // Skip to capture if the viewport option is invalid.
-    if (!vpChanged) return { buffer: null, succeeded: true, variantKeysToPush: [], defaultVariantSuffix: '' };
-
-    // Modify elements state.
-    await this.setHover(mergedScreenshotOptions);
-    await this.setFocus(mergedScreenshotOptions);
-    await this.setClick(mergedScreenshotOptions);
-    await this.waitIfTouched();
-
-    // Wait until browser main thread gets stable.
-    await this.waitForResources(mergedScreenshotOptions);
-    await this.waitBrowserMetricsStable('postEmit');
-
-    await this.page.evaluate(() => new Promise(res => (window as any).requestIdleCallback(res, { timeout: 3000 })));
-
-    // Get PNG image buffer
-    const rawBuffer = await this.page.screenshot({
-      fullPage: emittedScreenshotOptions.fullPage,
-      omitBackground: emittedScreenshotOptions.omitBackground,
-      captureBeyondViewport: emittedScreenshotOptions.captureBeyondViewport,
-      clip: emittedScreenshotOptions.clip ?? undefined,
-    });
-
-    let buffer: Buffer | null = null;
-    if (Buffer.isBuffer(rawBuffer)) {
-      buffer = rawBuffer;
-    }
-
-    // We should reset elements state(e.g. focusing, hovering, clicking) for future screenshot for this story.
-    await this.resetIfTouched(mergedScreenshotOptions);
-
-    await this.waitForDebugInput();
-
-    return {
-      buffer,
-      succeeded: true,
-      variantKeysToPush,
-      defaultVariantSuffix: emittedScreenshotOptions.defaultVariantSuffix,
-    };
   }
 }

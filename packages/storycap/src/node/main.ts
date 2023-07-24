@@ -93,7 +93,13 @@ export async function main(mainOptions: MainOptions) {
 
   try {
     // Execution caputuring procedure.
-    const captured = await createScreenshotService({ workers, stories: shardedStories, fileSystem, logger }).execute();
+    const captured = await createScreenshotService({
+      workers,
+      stories: shardedStories,
+      fileSystem,
+      logger,
+      forwardConsoleLogs: mainOptions.forwardConsoleLogs,
+    }).execute();
     logger.debug('Ended ScreenshotService execution.');
     return captured;
   } catch (error) {
