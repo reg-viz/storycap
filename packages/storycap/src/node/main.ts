@@ -99,6 +99,7 @@ export async function main(mainOptions: MainOptions) {
       fileSystem,
       logger,
       forwardConsoleLogs: mainOptions.forwardConsoleLogs,
+      trace: mainOptions.trace,
     }).execute();
     logger.debug('Ended ScreenshotService execution.');
     return captured;

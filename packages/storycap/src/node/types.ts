@@ -40,6 +40,7 @@ export interface MainOptions extends BaseBrowserOptions {
   exclude: string[];
   disableCssAnimation: boolean;
   disableWaitAssets: boolean;
+  trace: boolean;
   forwardConsoleLogs: boolean;
   parallel: number;
   shard: ShardOptions;

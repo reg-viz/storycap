@@ -361,6 +361,7 @@ Options:
   -V, --viewport                   Viewport.                                              [array] [default: ["800x600"]]
       --disableCssAnimation        Disable CSS animation and transition.                       [boolean] [default: true]
       --disableWaitAssets          Disable waiting for requested assets                       [boolean] [default: false]
+      --trace                      Emit Chromium trace files per screenshot.                  [boolean] [default: false]
       --silent                                                                                [boolean] [default: false]
       --verbose                                                                               [boolean] [default: false]
       --forwardConsoleLogs         Forward in-page console logs to the user's console.        [boolean] [default: false]
