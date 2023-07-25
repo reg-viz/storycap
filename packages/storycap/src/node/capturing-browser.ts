@@ -22,6 +22,7 @@ import {
   InvalidVariantKeysReason,
 } from '../shared/screenshot-options-helper';
 import { Logger } from './logger';
+import { FileSystem } from './file';
 
 /**
  *
@@ -349,6 +350,9 @@ export class CapturingBrowser extends StoryPreviewBrowser {
    * @param requestId - Represents an identifier for the screenshot
    * @param variantKey - Variant identifier for the screenshot
    * @param retryCount - The number which represents how many attempting to capture this story and variant
+   * @param logger - Logger instance
+   * @param forwardConsoleLogs - Whether to forward logs from the page to the user's console
+   * @param trace - Whether to record a CPU trace per screenshot
    *
    * @returns PNG buffer, whether the capturing process is succeeded or not, additional variant keys if they are emitted, and file name suffix for default the default variant.
    *
@@ -364,6 +368,8 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     retryCount: number,
     logger: Logger,
     forwardConsoleLogs: boolean,
+    trace: boolean,
+    fileSystem: FileSystem,
   ): Promise<ScreenshotResult> {
     this.currentRequestId = requestId;
     this.currentVariantKey = variantKey;
@@ -393,6 +399,14 @@ export class CapturingBrowser extends StoryPreviewBrowser {
 
     this.page.on('console', onConsoleLog);
 
+    if (trace) {
+      // Begin CPU trace, don't write to file, store it in memory
+      await this.page.tracing.start();
+    }
+
+    // Capture this outside so it can be used for the filePath generation for the trace
+    let defaultVariantSuffix: string | undefined;
+
     try {
       await this.setCurrentStory(story, { forceRerender: true });
 
@@ -412,6 +426,9 @@ export class CapturingBrowser extends StoryPreviewBrowser {
         // Use only `baseScreenshotOptions` when simple mode.
         emittedScreenshotOptions = pickupWithVariantKey(this.baseScreenshotOptions, this.currentVariantKey);
       }
+
+      // Set defaultVariantSuffix as soon as it's known
+      defaultVariantSuffix = emittedScreenshotOptions.defaultVariantSuffix;
 
       const mergedScreenshotOptions = mergeScreenshotOptions(this.baseScreenshotOptions, emittedScreenshotOptions);
 
@@ -467,10 +484,19 @@ export class CapturingBrowser extends StoryPreviewBrowser {
         buffer,
         succeeded: true,
         variantKeysToPush,
-        defaultVariantSuffix: emittedScreenshotOptions.defaultVariantSuffix,
+        defaultVariantSuffix,
       };
     } finally {
       this.page.off('console', onConsoleLog);
+
+      if (trace) {
+        // Finish CPU trace.
+        const traceBuffer = await this.page.tracing.stop();
+
+        // Calculate the suffix and save the trace to the file.
+        const suffix = variantKey.isDefault && defaultVariantSuffix ? [defaultVariantSuffix] : variantKey.keys;
+        await fileSystem.saveTrace(story.kind, story.story, suffix, traceBuffer);
+      }
     }
   }
 }

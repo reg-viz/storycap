@@ -34,6 +34,7 @@ function createOptions(): MainOptions {
       default: false,
       description: 'Disable waiting for requested assets',
     })
+    .option('trace', { boolean: true, default: false, description: 'Emit Chromium trace files per screenshot.' })
     .option('silent', { boolean: true, default: false })
     .option('verbose', { boolean: true, default: false })
     .option('forwardConsoleLogs', {
@@ -131,6 +132,7 @@ function createOptions(): MainOptions {
     stateChangeDelay,
     disableCssAnimation,
     disableWaitAssets,
+    trace,
     listDevices,
     chromiumChannel,
     chromiumPath,
@@ -185,6 +187,7 @@ function createOptions(): MainOptions {
     stateChangeDelay,
     disableCssAnimation,
     disableWaitAssets,
+    trace,
     forwardConsoleLogs,
     chromiumChannel: chromiumChannel as ChromeChannel,
     chromiumPath,
