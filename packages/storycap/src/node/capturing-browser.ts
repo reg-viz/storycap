@@ -126,23 +126,18 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     const story = this.currentStory;
     if (!this.touched || !story) return;
     this.debug('Reset story because page state got dirty in this request.', this.currentRequestId);
-    await this.setCurrentStory(story, { forceRerender: true });
 
     // Clear the browser's mouse state.
     if (screenshotOptions.click) {
-      // Workaround for an issue where puppeteer fails to find a matching element.
-      // https://github.com/reg-viz/storycap/issues/712
-      await this.page.evaluate(() => {});
       await this.page.$eval(screenshotOptions.click, (e: unknown) => (e as HTMLElement)?.blur());
     }
     if (screenshotOptions.focus) {
-      // Workaround for an issue where puppeteer fails to find a matching element.
-      // https://github.com/reg-viz/storycap/issues/712
-      await this.page.evaluate(() => {});
       await this.page.$eval(screenshotOptions.focus, (e: unknown) => (e as HTMLElement)?.blur());
     }
     await this.page.mouse.move(0, 0);
     await this.page.mouse.click(0, 0);
+
+    await this.setCurrentStory(story, { forceRerender: true });
     this.touched = false;
 
     return;
