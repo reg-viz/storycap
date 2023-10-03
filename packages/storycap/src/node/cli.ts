@@ -2,9 +2,10 @@
 
 import { time, ChromeChannel, getDeviceDescriptors } from 'storycrawler';
 import { main } from './main';
-import { MainOptions } from './types';
+import { MainOptions, ShardOptions } from './types';
 import yargs from 'yargs';
 import { Logger } from './logger';
+import { parseShardOptions } from './shard-utilities';
 
 function showDevices(logger: Logger) {
   getDeviceDescriptors().map(device => logger.log(device.name, JSON.stringify(device.viewport)));
@@ -33,13 +34,25 @@ function createOptions(): MainOptions {
       default: false,
       description: 'Disable waiting for requested assets',
     })
+    .option('trace', { boolean: true, default: false, description: 'Emit Chromium trace files per screenshot.' })
     .option('silent', { boolean: true, default: false })
     .option('verbose', { boolean: true, default: false })
+    .option('forwardConsoleLogs', {
+      boolean: true,
+      default: false,
+      description: "Forward in-page console logs to the user's console.",
+    })
     .option('serverCmd', { string: true, default: '', description: 'Command line to launch Storybook server.' })
     .option('serverTimeout', {
       number: true,
-      default: 20_000,
+      default: 60_000,
       description: 'Timeout [msec] for starting Storybook server.',
+    })
+    .option('shard', {
+      string: true,
+      default: '1/1',
+      description:
+        'The sharding options for this run. In the format <shardNumber>/<totalShards>. <shardNumber> is a number between 1 and <totalShards>. <totalShards> is the total number of computers working.',
     })
     .option('captureTimeout', { number: true, default: 5_000, description: 'Timeout [msec] for capture a story.' })
     .option('captureMaxRetryCount', { number: true, default: 3, description: 'Number of count to retry to capture.' })
@@ -84,11 +97,11 @@ function createOptions(): MainOptions {
       default: '{ "args": ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"] }',
       description: 'JSON string of launch config for Puppeteer.',
     })
-    .example('storycap http://localshot:9009', '')
-    .example('storycap http://localshot:9009 -V 1024x768 -V 320x568', '')
-    .example('storycap http://localshot:9009 -i "some-kind/a-story"', '')
+    .example('storycap http://localhost:9009', '')
+    .example('storycap http://localhost:9009 -V 1024x768 -V 320x568', '')
+    .example('storycap http://localhost:9009 -i "some-kind/a-story"', '')
     .example('storycap http://example.com/your-storybook -e "**/default" -V iPad', '')
-    .example('storycap --serverCmd "start-storybook -p 3000" http://localshot:3000', '');
+    .example('storycap --serverCmd "start-storybook -p 3000" http://localhost:3000', '');
   let storybookUrl;
 
   if (!setting.argv._.length) {
@@ -107,8 +120,10 @@ function createOptions(): MainOptions {
     parallel,
     silent,
     verbose,
+    forwardConsoleLogs,
     serverTimeout,
     serverCmd,
+    shard,
     captureTimeout,
     captureMaxRetryCount,
     metricsWatchRetryCount,
@@ -117,6 +132,7 @@ function createOptions(): MainOptions {
     stateChangeDelay,
     disableCssAnimation,
     disableWaitAssets,
+    trace,
     listDevices,
     chromiumChannel,
     chromiumPath,
@@ -141,6 +157,14 @@ function createOptions(): MainOptions {
     throw error;
   }
 
+  let shardOptions: ShardOptions;
+  try {
+    shardOptions = parseShardOptions(shard);
+  } catch (error) {
+    logger.error(error);
+    throw error;
+  }
+
   const opt = {
     serverOptions: {
       storybookUrl,
@@ -154,6 +178,7 @@ function createOptions(): MainOptions {
     delay,
     viewports: viewport,
     parallel,
+    shard: shardOptions,
     captureTimeout,
     captureMaxRetryCount,
     metricsWatchRetryCount,
@@ -162,6 +187,8 @@ function createOptions(): MainOptions {
     stateChangeDelay,
     disableCssAnimation,
     disableWaitAssets,
+    trace,
+    forwardConsoleLogs,
     chromiumChannel: chromiumChannel as ChromeChannel,
     chromiumPath,
     launchOptions: puppeteerLaunchConfig,

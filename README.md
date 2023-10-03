@@ -6,7 +6,6 @@
 ![DEMO](https://raw.githubusercontent.com/reg-viz/storycap/artwork/demo_v2.gif)
 
 [![npm](https://img.shields.io/npm/v/storycap.svg?style=flat-square)](https://www.npmjs.com/package/storycap)
-[![CircleCI](https://circleci.com/gh/reg-viz/storycap.svg?style=svg)](https://circleci.com/gh/reg-viz/storycap)
 
 > A [Storybook][storybook] Addon, Save the screenshot image of your stories :camera: via [Puppeteer][puppeteer].
 
@@ -32,6 +31,7 @@ It is primarily responsible for image generation necessary for Visual Testing su
 - [Multiple PNGs from 1 story](#multiple-pngs-from-1-story)
   - [Basic usage](#basic-usage)
   - [Variants composition](#variants-composition)
+  - [Parallelisation across multiple computers](#parallelisation-across-multiple-computers)
 - [Tips](#tips)
   - [Run with Docker](#run-with-docker)
   - [Full control the screenshot timing](#full-control-the-screenshot-timing)
@@ -246,6 +246,7 @@ interface ScreenshotOptions {
   waitImages?: boolean;                     // default true
   omitBackground?: boolean;                 // default false
   captureBeyondViewport?: boolean;          // default true
+  clip?: { x: number; y: number; width: number; height: number } | null; // default null
 }
 ```
 
@@ -262,6 +263,7 @@ interface ScreenshotOptions {
 - `waitImages`: Deprecated. Use `waitAssets`. If set true, Storycap waits until `<img>` in the story are loaded.
 - `omitBackground`: If set true, Storycap omits the background of the page allowing for transparent screenshots. Note the storybook theme will need to be transparent as well.
 - `captureBeyondViewport`: If set true, Storycap captures screenshot beyond the viewport. See also [Puppeteer API docs](https://github.com/puppeteer/puppeteer/blob/v13.1.3/docs/api.md#pagescreenshotoptions).
+- `clip`: If set, Storycap captures only the portion of the screen bounded by x/y/width/height.
 
 ### type `Variants`
 
@@ -283,6 +285,7 @@ type Variants = {
     waitImages?: boolean;
     omitBackground?: boolean;
     captureBeyondViewport?: boolean;
+    clip?: { x: number; y: number; width: number; height: number } | null;
   };
 };
 ```
@@ -358,10 +361,15 @@ Options:
   -V, --viewport                   Viewport.                                              [array] [default: ["800x600"]]
       --disableCssAnimation        Disable CSS animation and transition.                       [boolean] [default: true]
       --disableWaitAssets          Disable waiting for requested assets                       [boolean] [default: false]
+      --trace                      Emit Chromium trace files per screenshot.                  [boolean] [default: false]
       --silent                                                                                [boolean] [default: false]
       --verbose                                                                               [boolean] [default: false]
+      --forwardConsoleLogs         Forward in-page console logs to the user's console.        [boolean] [default: false]
       --serverCmd                  Command line to launch Storybook server.                       [string] [default: ""]
-      --serverTimeout              Timeout [msec] for starting Storybook server.               [number] [default: 20000]
+      --serverTimeout              Timeout [msec] for starting Storybook server.               [number] [default: 60000]
+      --shard                      The sharding options for this run. In the format <shardNumber>/<totalShards>.
+                                   <shardNumber> is a number between 1 and <totalShards>. <totalShards> is the total
+                                   number of computers working.                                [string] [default: "1/1"]
       --captureTimeout             Timeout [msec] for capture a story.                          [number] [default: 5000]
       --captureMaxRetryCount       Number of count to retry to capture.                            [number] [default: 3]
       --metricsWatchRetryCount     Number of count to retry until browser metrics stable.       [number] [default: 1000]
@@ -376,11 +384,11 @@ Options:
                [string] [default: "{ "args": ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"] }"]
 
 Examples:
-  storycap http://localshot:9009
-  storycap http://localshot:9009 -V 1024x768 -V 320x568
-  storycap http://localshot:9009 -i "some-kind/a-story"
+  storycap http://localhost:9009
+  storycap http://localhost:9009 -V 1024x768 -V 320x568
+  storycap http://localhost:9009 -i "some-kind/a-story"
   storycap http://example.com/your-storybook -e "**/default" -V iPad
-  storycap --serverCmd "start-storybook -p 3000" http://localshot:3000
+  storycap --serverCmd "start-storybook -p 3000" http://localhost:3000
 
 ```
 
@@ -456,6 +464,16 @@ The above example generates the following:
 
 **Note:** You can extend some viewports with keys of `viewports` option because the `viewports` field is expanded to variants internally.
 
+### Parallelisation across multiple computers
+
+To process more stories in parallel across multiple computers, the `shard` argument can be used.
+
+The `shard` argument is a string of the format: `<shardNumber>/<totalShards>`. `<shardNumber>` is a number between 1 and `<totalShards>`, inclusive. `<totalShards>` is the total number of computers running the execution.
+
+For example, a run with `--shard 1/1` would be considered the default behaviour on a single computer. Two computers each running `--shard 1/2` and `--shard 2/2` respectively would split the stories across two computers.
+
+Stories are distributed across shards in a round robin fashion when ordered by their ID. If a series of stories 'close together' are slower to screenshot than others, they should be distributed evenly.
+
 ## Tips
 
 ### Run with Docker
@@ -530,11 +548,9 @@ You can change search channel with `--chromiumChannel` option or set executable 
 Storycap is tested with the followings versions:
 
 - Simple mode:
-  - [x] Storybook v4.x
   - [x] Storybook v5.x
   - [x] Storybook v6.x
 - Managed mode:
-  - [x] Storybook v4.x
   - [x] Storybook v5.x
   - [x] Storybook v6.x
 

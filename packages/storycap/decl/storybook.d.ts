@@ -35,6 +35,5 @@ declare module '@storybook/addons' {
   // Storybook v4 does not export makeDecorator function.
   export const makeDecorator: MakeDecorator | undefined;
 
-  const addons: Addons;
-  export default addons;
+  export const addons: Addons;
 }

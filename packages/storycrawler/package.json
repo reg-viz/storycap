@@ -1,11 +1,14 @@
 {
   "name": "storycrawler",
-  "version": "3.1.8",
+  "version": "4.2.0",
   "description": "Utilities to build Storybook crawling tools with Puppeteer",
+  "engines": {
+    "node": ">=14.13"
+  },
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
-    "clean": "rimraf lib",
+    "clean": "rimraf -g lib \"*.tsbuildinfo\"",
     "build": "tsc -p tsconfig.build.json",
     "jest": "jest",
     "test": "npm run jest",
@@ -37,32 +40,32 @@
     "chrome"
   ],
   "devDependencies": {
-    "@types/jest": "28.1.4",
-    "jest": "28.1.2",
-    "ts-jest": "28.0.5",
-    "typedoc": "0.23.5",
-    "typescript": "4.7.4"
+    "@types/jest": "29.5.3",
+    "jest": "29.6.2",
+    "ts-jest": "29.1.1",
+    "typedoc": "0.24.8",
+    "typescript": "5.1.6"
   },
   "dependencies": {
-    "@types/node": "^16.0.0",
+    "@types/node": "^18.0.0",
     "@types/wait-on": "^5.0.0",
     "chalk": "^2.4.1",
     "puppeteer-core": "^9.0.0",
-    "wait-on": "^6.0.0"
+    "wait-on": "^7.0.0"
   },
   "jest": {
-    "globals": {
-      "ts-jest": {
-        "tsConfig": "tsconfig.build.json"
-      }
-    },
     "moduleFileExtensions": [
       "ts",
       "tsx",
       "js"
     ],
     "transform": {
-      "^.+\\.ts$": "ts-jest"
+      "^.+\\.tsx?$": [
+        "ts-jest",
+        {
+          "diagnostics": false
+        }
+      ]
     },
     "testMatch": [
       "**/__tests__/*.(ts|tsx)",

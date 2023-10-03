@@ -1,0 +1,37 @@
+name: Integrated Test
+
+on:
+  push:
+    branches:
+      - master
+      - next
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        example_dir:
+          - examples/v5-managed-react-legacy-decorator
+          - examples/v5-simple
+          - examples/v6-managed-react
+          - examples/v6-simple
+          - examples/v6-story-store-v7
+          - examples/v7-managed-react
+          - examples/v7-react18
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: 'yarn'
+      - run: yarn install --frozen-lockfile
+      - run: yarn bootstrap
+      - run: yarn build
+      - run: yarn e2e ${{ matrix.example_dir }}
+        env:
+          CI: true

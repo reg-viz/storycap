@@ -48,6 +48,8 @@ export type ScreenshotServiceOptions = {
   workers: CapturingBrowser[];
   fileSystem: FileSystem;
   stories: Story[];
+  forwardConsoleLogs: boolean;
+  trace: boolean;
 };
 
 /**
@@ -63,6 +65,8 @@ export function createScreenshotService({
   logger,
   stories,
   workers,
+  forwardConsoleLogs,
+  trace,
 }: ScreenshotServiceOptions): ScreenshotService {
   const service = createExecutionService(
     workers,
@@ -70,7 +74,9 @@ export function createScreenshotService({
     ({ rid, story, variantKey, count }, { push }) =>
       async worker => {
         // Delegate the request to the worker.
-        const [result, elapsedTime] = await time(worker.screenshot(rid, story, variantKey, count));
+        const [result, elapsedTime] = await time(
+          worker.screenshot(rid, story, variantKey, count, logger, forwardConsoleLogs, trace, fileSystem),
+        );
 
         const { succeeded, buffer, variantKeysToPush, defaultVariantSuffix } = result;
 
@@ -83,7 +89,7 @@ export function createScreenshotService({
 
         if (buffer) {
           const suffix = variantKey.isDefault && defaultVariantSuffix ? [defaultVariantSuffix] : variantKey.keys;
-          const path = await fileSystem.save(story.kind, story.story, suffix, buffer);
+          const path = await fileSystem.saveScreenshot(story.kind, story.story, suffix, buffer);
           logger.log(`Screenshot stored: ${logger.color.magenta(path)} in ${elapsedTime} msec.`);
           return true;
         }

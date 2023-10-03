@@ -1,9 +1,10 @@
-import minimatch from 'minimatch';
+import { isMatch } from 'nanomatch';
 import { StorybookConnection, StoriesBrowser, Story, sleep, ChromiumNotFoundError } from 'storycrawler';
 import { CapturingBrowser } from './capturing-browser';
 import { MainOptions, RunMode } from './types';
 import { FileSystem } from './file';
 import { createScreenshotService } from './screenshot-service';
+import { shardStories, sortStories } from './shard-utilities';
 
 async function detectRunMode(storiesBrowser: StoriesBrowser, opt: MainOptions) {
   // Reuse `storiesBrowser` instance to avoid cost of re-launching another Puppeteer process.
@@ -29,8 +30,8 @@ async function bootCapturingBrowserAsWorkers(connection: StorybookConnection, op
 
 function filterStories(flatStories: Story[], include: string[], exclude: string[]): Story[] {
   const conbined = flatStories.map(s => ({ ...s, name: s.kind + '/' + s.story }));
-  const included = include.length ? conbined.filter(s => include.some(rule => minimatch(s.name, rule))) : conbined;
-  const excluded = exclude.length ? included.filter(s => !exclude.some(rule => minimatch(s.name, rule))) : included;
+  const included = include.length ? conbined.filter(s => include.some(rule => isMatch(s.name, rule))) : conbined;
+  const excluded = exclude.length ? included.filter(s => !exclude.some(rule => isMatch(s.name, rule))) : included;
   return excluded;
 }
 
@@ -60,12 +61,31 @@ export async function main(mainOptions: MainOptions) {
   storiesBrowser.close();
 
   const stories = filterStories(allStories, mainOptions.include, mainOptions.exclude);
+
   if (stories.length === 0) {
     logger.warn('There is no matched story. Check your include/exclude options.');
     return 0;
   }
 
-  logger.log(`Found ${logger.color.green(stories.length + '')} stories.`);
+  const sortedStories = sortStories(stories);
+  const shardedStories = shardStories(sortedStories, mainOptions.shard.shardNumber, mainOptions.shard.totalShards);
+
+  if (shardedStories.length === 0) {
+    logger.log('This shard has no stories to screenshot.');
+    return 0;
+  }
+
+  if (mainOptions.shard.totalShards === 1) {
+    logger.log(`Found ${logger.color.green(String(stories.length))} stories.`);
+  } else {
+    logger.log(
+      `Found ${logger.color.green(String(stories.length))} stories. ${logger.color.green(
+        String(shardedStories.length),
+      )} are being processed by this shard (number ${mainOptions.shard.shardNumber} of ${
+        mainOptions.shard.totalShards
+      }).`,
+    );
+  }
 
   // Launce Puppeteer processes to capture each story.
   const { workers, closeWorkers } = await bootCapturingBrowserAsWorkers(connection, mainOptions, mode);
@@ -73,8 +93,16 @@ export async function main(mainOptions: MainOptions) {
 
   try {
     // Execution caputuring procedure.
-    return await createScreenshotService({ workers, stories, fileSystem, logger }).execute();
+    const captured = await createScreenshotService({
+      workers,
+      stories: shardedStories,
+      fileSystem,
+      logger,
+      forwardConsoleLogs: mainOptions.forwardConsoleLogs,
+      trace: mainOptions.trace,
+    }).execute();
     logger.debug('Ended ScreenshotService execution.');
+    return captured;
   } catch (error) {
     if (error instanceof ChromiumNotFoundError) {
       throw new Error(
