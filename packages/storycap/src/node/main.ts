@@ -1,4 +1,4 @@
-import { isMatch } from 'nanomatch';
+import { isMatch, MatchOptions } from 'nanomatch';
 import { StorybookConnection, StoriesBrowser, Story, sleep, ChromiumNotFoundError } from 'storycrawler';
 import { CapturingBrowser } from './capturing-browser';
 import { MainOptions, RunMode } from './types';
@@ -28,10 +28,19 @@ async function bootCapturingBrowserAsWorkers(connection: StorybookConnection, op
   return { workers: browsers, closeWorkers: () => Promise.all(browsers.map(b => b.close.bind(b))) };
 }
 
-function filterStories(flatStories: Story[], include: string[], exclude: string[]): Story[] {
+function filterStories(
+  flatStories: Story[],
+  include: string[],
+  exclude: string[],
+  matchOptions: MatchOptions,
+): Story[] {
   const conbined = flatStories.map(s => ({ ...s, name: s.kind + '/' + s.story }));
-  const included = include.length ? conbined.filter(s => include.some(rule => isMatch(s.name, rule))) : conbined;
-  const excluded = exclude.length ? included.filter(s => !exclude.some(rule => isMatch(s.name, rule))) : included;
+  const included = include.length
+    ? conbined.filter(s => include.some(rule => isMatch(s.name, rule, matchOptions)))
+    : conbined;
+  const excluded = exclude.length
+    ? included.filter(s => !exclude.some(rule => isMatch(s.name, rule, matchOptions)))
+    : included;
   return excluded;
 }
 
@@ -60,7 +69,9 @@ export async function main(mainOptions: MainOptions) {
   const mode = await detectRunMode(storiesBrowser, mainOptions);
   storiesBrowser.close();
 
-  const stories = filterStories(allStories, mainOptions.include, mainOptions.exclude);
+  const stories = filterStories(allStories, mainOptions.include, mainOptions.exclude, {
+    nocase: mainOptions.matchNocase,
+  });
 
   if (stories.length === 0) {
     logger.warn('There is no matched story. Check your include/exclude options.');
