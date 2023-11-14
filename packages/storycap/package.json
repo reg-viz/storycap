@@ -75,7 +75,7 @@
     "minimist": "1.2.8",
     "puppeteer": "19.11.1",
     "ts-jest": "29.1.1",
-    "typedoc": "0.24.8",
+    "typedoc": "0.25.3",
     "typescript": "5.1.6"
   },
   "dependencies": {
