@@ -390,7 +390,6 @@ Examples:
   storycap http://example.com/your-storybook -e "**/default" -V iPad
   storycap --serverCmd "start-storybook -p 3000" http://localhost:3000
   storycap --serverCmd "start dev -p 3000" http://localhost:3000 # For storybook v7
-  storycap --serverCmd "start dev -p 3000" http://localhost:3000 # For storybook v7
 ```
 
 <!-- endinject -->
