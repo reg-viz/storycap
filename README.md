@@ -294,7 +294,7 @@ type Variants = {
 
 ### type `Viewport`
 
-`Viewport` is compatible for [Puppeteer viewport interface](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagesetviewportviewport).
+`Viewport` is compatible for [Puppeteer viewport interface](https://github.com/puppeteer/puppeteer/blob/main/docs/api/puppeteer.viewport.md).
 
 ```ts
 type Viewport =
@@ -309,7 +309,7 @@ type Viewport =
     };
 ```
 
-**Note:** You should choose a valid [device name](https://github.com/puppeteer/puppeteer/blob/main/src/common/DeviceDescriptors.ts) if set string.
+**Note:** You should choose a valid [device name](https://github.com/puppeteer/puppeteer/blob/main/packages/puppeteer-core/src/common/Device.ts) if set string.
 
 `Viewport` values are available in `viewports` field such as:
 
