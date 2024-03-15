@@ -1,4 +1,11 @@
-import { StoryKind, makeDecorator } from '@storybook/addons';
+import type { StoryKind, MakeDecorator } from '@storybook/addons';
+let makeDecorator: MakeDecorator | undefined;
+try {
+  makeDecorator = require('@storybook/addons').makeDecorator;
+} catch {}
+try {
+  makeDecorator = require('@storybook/preview-api').makeDecorator;
+} catch {}
 
 import { ScreenshotOptions } from '../shared/types';
 import { triggerScreenshot } from './trigger-screenshot';
