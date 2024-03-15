@@ -119,14 +119,13 @@ export class StoriesBrowser extends BaseBrowser {
             }
             return;
           }
-          const version = isPreviewApi(api) ? 'v8' : 'v5';
           const stories = (
             isPreviewApi(api) && api.storyStoreValue
               ? Object.values(api.storyStoreValue.extract())
               : api.raw
               ? api.raw()
               : []
-          ).map(_ => ({ id: _.id, kind: _.kind, story: _.name, version } as Story));
+          ).map(_ => ({ id: _.id, kind: _.kind, story: _.name, version: 'v5' } as Story));
           res({ stories, timeout: false });
         };
         getStories();
