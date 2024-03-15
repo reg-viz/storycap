@@ -88,10 +88,9 @@ export class StoriesBrowser extends BaseBrowser {
       if (api === undefined) return;
 
       if (isPreviewApi(api)) {
-        api.storyStoreValue && api.storyStoreValue.cacheAllCSFFiles();
-        return;
+        return api.storyStoreValue && api.storyStoreValue.cacheAllCSFFiles();
       }
-      api.storyStore?.cacheAllCSFFiles && api.storyStore.cacheAllCSFFiles();
+      return api.storyStore?.cacheAllCSFFiles && api.storyStore.cacheAllCSFFiles();
     });
     const result = await this.page.evaluate(() => {
       function isPreviewApi(api: API | PreviewAPI): api is PreviewAPI {
