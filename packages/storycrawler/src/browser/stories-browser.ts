@@ -16,8 +16,18 @@ interface API {
   raw?: () => { id: string; kind: string; name: string }[]; // available SB v5 or later
 }
 
+interface PreviewAPI extends API {
+  storyStoreValue?: {
+    cacheAllCSFFiles: () => Promise<void>;
+    cachedCSFFiles?: Record<string, unknown>;
+    extract: () => Record<string, { id: string; kind: string; name: string }>; // available in SB v8
+  };
+}
+
 type ExposedWindow = typeof window & {
-  __STORYBOOK_CLIENT_API__: API;
+  __STORYBOOK_CLIENT_API__?: API;
+  // available SB v8 or later
+  __STORYBOOK_PREVIEW__?: PreviewAPI;
 };
 
 /**
@@ -62,41 +72,66 @@ export class StoriesBrowser extends BaseBrowser {
         waitUntil: 'domcontentloaded',
       },
     );
-    await this.page.waitForFunction(() => (window as ExposedWindow).__STORYBOOK_CLIENT_API__, {
-      timeout: 60_000,
-    });
-    await this.page.evaluate(() => {
-      const { __STORYBOOK_CLIENT_API__: api } = window as ExposedWindow;
-      api.storyStore && api.storyStore.cacheAllCSFFiles();
-    });
-    const result = await this.page.evaluate(
+    await this.page.waitForFunction(
       () =>
-        new Promise<{ stories: Story[] | null; timeout: boolean }>(res => {
-          const getStories = (count = 0) => {
-            const MAX_CONFIGURE_WAIT_COUNT = 4_000;
-            const { __STORYBOOK_CLIENT_API__: api } = window as ExposedWindow;
-            if (api.raw) {
-              // for Storybook v6
-              const configuring = api.store && api.store()._configuring;
-              // for Storybook v6 and 'storyStoreV7' option
-              const configuringV7store = api.storyStore && !api.storyStore.cachedCSFFiles;
-
-              if (configuring || configuringV7store) {
-                if (count < MAX_CONFIGURE_WAIT_COUNT) {
-                  setTimeout(() => getStories(++count), 16);
-                } else {
-                  res({ stories: null, timeout: true });
-                }
-                return;
-              }
-              // for Storybook v5
-              const stories = api.raw().map(_ => ({ id: _.id, kind: _.kind, story: _.name, version: 'v5' } as Story));
-              res({ stories, timeout: false });
-            }
-          };
-          getStories();
-        }),
+        (window as ExposedWindow).__STORYBOOK_CLIENT_API__ ||
+        (window as ExposedWindow).__STORYBOOK_PREVIEW__?.storyStoreValue,
+      {
+        timeout: 60_000,
+      },
     );
+    await this.page.evaluate(() => {
+      const api = (window as ExposedWindow).__STORYBOOK_CLIENT_API__ || (window as ExposedWindow).__STORYBOOK_PREVIEW__;
+      function isPreviewApi(api: API | PreviewAPI): api is PreviewAPI {
+        return (api as PreviewAPI).storyStoreValue !== undefined;
+      }
+      if (api === undefined) return;
+
+      if (isPreviewApi(api)) {
+        api.storyStoreValue && api.storyStoreValue.cacheAllCSFFiles();
+        return;
+      }
+      api.storyStore?.cacheAllCSFFiles && api.storyStore.cacheAllCSFFiles();
+    });
+    const result = await this.page.evaluate(() => {
+      function isPreviewApi(api: API | PreviewAPI): api is PreviewAPI {
+        return (api as PreviewAPI).storyStoreValue !== undefined;
+      }
+
+      return new Promise<{ stories: Story[] | null; timeout: boolean }>(res => {
+        const getStories = (count = 0) => {
+          const MAX_CONFIGURE_WAIT_COUNT = 4_000;
+          const api =
+            (window as ExposedWindow).__STORYBOOK_CLIENT_API__ || (window as ExposedWindow).__STORYBOOK_PREVIEW__;
+          if (api === undefined) return;
+
+          // for Storybook v6
+          const configuring = !isPreviewApi(api) && api.store && api.store()._configuring;
+          // for Storybook v6 and 'storyStoreV7' option
+          const configuringV7store = !isPreviewApi(api) && api.storyStore && !api.storyStore.cachedCSFFiles;
+          // for Storybook v8
+          const configuringV8store = isPreviewApi(api) && api.storyStoreValue && !api.storyStoreValue.cachedCSFFiles;
+
+          if (configuring || configuringV7store || configuringV8store) {
+            if (count < MAX_CONFIGURE_WAIT_COUNT) {
+              setTimeout(() => getStories(++count), 16);
+            } else {
+              res({ stories: null, timeout: true });
+            }
+            return;
+          }
+          const stories = (
+            isPreviewApi(api) && api.storyStoreValue
+              ? Object.values(api.storyStoreValue.extract())
+              : api.raw
+              ? api.raw()
+              : []
+          ).map(_ => ({ id: _.id, kind: _.kind, story: _.name, version: isPreviewApi(api) ? 'v8' : 'v5' } as Story));
+          res({ stories, timeout: false });
+        };
+        getStories();
+      });
+    });
     if (result.timeout) {
       throw new StoriesTimeoutError();
     }
