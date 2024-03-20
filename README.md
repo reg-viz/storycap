@@ -357,6 +357,8 @@ Options:
   -f, --flat                       Flatten output filename.                                   [boolean] [default: false]
   -i, --include                    Including stories name rule.                                    [array] [default: []]
   -e, --exclude                    Excluding stories name rule.                                    [array] [default: []]
+      --matchNocase                'include' and 'exclude' comparisons to be non case sensitive.
+                                                                                              [boolean] [default: false]
       --delay                      Waiting time [msec] before screenshot for each story.           [number] [default: 0]
   -V, --viewport                   Viewport.                                              [array] [default: ["800x600"]]
       --disableCssAnimation        Disable CSS animation and transition.                       [boolean] [default: true]

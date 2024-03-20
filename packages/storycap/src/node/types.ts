@@ -38,6 +38,7 @@ export interface MainOptions extends BaseBrowserOptions {
   flat: boolean;
   include: string[];
   exclude: string[];
+  matchNocase: boolean;
   disableCssAnimation: boolean;
   disableWaitAssets: boolean;
   trace: boolean;
