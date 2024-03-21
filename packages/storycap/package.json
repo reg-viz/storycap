@@ -84,7 +84,7 @@
     "@types/rimraf": "^3.0.0",
     "@types/wait-on": "^5.0.0",
     "@types/yargs": "^16.0.0",
-    "mkdirp": "^2.0.0",
+    "mkdirp": "^3.0.0",
     "nanomatch": "^1.2.13",
     "puppeteer-core": "^9.0.0",
     "rimraf": "^5.0.0",
