@@ -85,3 +85,5 @@ lib-esm/
 __screenshot__
 __screenshots__
 .reg
+
+storybook-static/
