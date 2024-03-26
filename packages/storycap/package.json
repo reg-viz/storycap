@@ -72,6 +72,11 @@
   ],
   "devDependencies": {
     "@types/jest": "29.5.12",
+    "@types/mkdirp": "^1.0.0",
+    "@types/node": "^18.0.0",
+    "@types/rimraf": "^3.0.0",
+    "@types/wait-on": "^5.0.0",
+    "@types/yargs": "^16.0.0",
     "jest": "29.7.0",
     "minimist": "1.2.8",
     "puppeteer": "19.11.1",
@@ -80,11 +85,6 @@
     "typescript": "5.4.2"
   },
   "dependencies": {
-    "@types/mkdirp": "^1.0.0",
-    "@types/node": "^18.0.0",
-    "@types/rimraf": "^3.0.0",
-    "@types/wait-on": "^5.0.0",
-    "@types/yargs": "^16.0.0",
     "mkdirp": "^2.0.0",
     "nanomatch": "^1.2.13",
     "puppeteer-core": "^9.0.0",
