@@ -1,5 +1,5 @@
 import { configure, addDecorator } from '@storybook/react';
-import { withScreenshot } from 'storycap';
+import { withScreenshot } from 'storycap/legacy-sb';
 
 function loadStories() {
   require('../src/stories');

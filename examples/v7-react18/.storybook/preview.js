@@ -1,4 +1,4 @@
-import { withScreenshot } from 'storycap';
+import { withScreenshot } from 'storycap/legacy-sb';
 
 export const decorators = [
   withScreenshot,

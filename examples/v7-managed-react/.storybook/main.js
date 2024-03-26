@@ -3,7 +3,7 @@ module.exports = {
   addons: [
     '@storybook/addon-essentials',
     '@storybook/addon-links',
-    'storycap',
+    'storycap/legacy-sb',
     '@storybook/preset-create-react-app',
   ],
   framework: {

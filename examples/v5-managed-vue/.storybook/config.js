@@ -1,5 +1,5 @@
 import { configure, addDecorator, addParameters } from '@storybook/vue';
-import { withScreenshot } from 'storycap';
+import { withScreenshot } from 'storycap/legacy-sb';
 
 addDecorator(withScreenshot);
 addParameters({
