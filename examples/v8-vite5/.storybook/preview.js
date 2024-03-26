@@ -1,4 +1,4 @@
-import { withScreenshot } from 'storycap/lib/client/with-screenshot'
+import { withScreenshot } from 'storycap'
 
 export const decorators = [
   withScreenshot,

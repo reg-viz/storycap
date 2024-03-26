@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from './Button';
 import { action } from '@storybook/addon-actions';
 
-import { isScreenshot } from 'storycap/lib/client/is-screenshot';
+import { isScreenshot } from 'storycap';
 
 export default {
   title: 'Button',

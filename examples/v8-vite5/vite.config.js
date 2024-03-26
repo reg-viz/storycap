@@ -9,7 +9,7 @@ export default defineConfig({
     alias: [
       {
         find: 'storycap', 
-        replacement: resolve(__dirname, 'node_modules', 'storycap')
+        replacement: resolve(__dirname, 'node_modules', 'storycap', 'lib')
       }
     ]
   },
