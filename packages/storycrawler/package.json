@@ -3,7 +3,7 @@
   "version": "4.3.1",
   "description": "Utilities to build Storybook crawling tools with Puppeteer",
   "engines": {
-    "node": ">=14.13"
+    "node": ">=18"
   },
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",

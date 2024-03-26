@@ -13,6 +13,7 @@ jobs:
 
     strategy:
       matrix:
+        node-version: [18.x]
         example_dir:
           - examples/v7-managed-react
           - examples/v7-simple-react
@@ -26,7 +27,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version || '18.x' }}
+          node-version: ${{ matrix.node-version }}
           cache: 'yarn'
       - run: yarn install --frozen-lockfile
       - run: yarn bootstrap
