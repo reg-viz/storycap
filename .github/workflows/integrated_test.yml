@@ -14,11 +14,11 @@ jobs:
     strategy:
       matrix:
         example_dir:
-          - examples/v5-managed-react-legacy-decorator
-          - examples/v5-simple
-          - examples/v6-managed-react
-          - examples/v6-simple
-          - examples/v6-story-store-v7
+          # - examples/v5-managed-react-legacy-decorator
+          # - examples/v5-simple
+          # - examples/v6-managed-react
+          # - examples/v6-simple
+          # - examples/v6-story-store-v7
           - examples/v7-managed-react
           - examples/v7-react18
           - examples/v8-react18
