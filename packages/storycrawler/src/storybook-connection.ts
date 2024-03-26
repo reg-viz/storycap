@@ -70,7 +70,10 @@ export class StorybookConnection {
    * @param logger Logger instance
    *
    **/
-  constructor(private opt: StorybookConnectionOptions, private logger: Logger = new Logger('silent')) {}
+  constructor(
+    private opt: StorybookConnectionOptions,
+    private logger: Logger = new Logger('silent'),
+  ) {}
 
   /**
    *
