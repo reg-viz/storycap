@@ -1,0 +1,40 @@
+{
+  "name": "v8-react18-vite-prod",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "clear": "rimraf __screenshots__",
+    "build": "react-scripts build",
+    "test": "react-scripts test --setupFiles ./setupFile.js",
+    "storybook": "storybook dev -p 9011",
+    "build-storybook": "storybook build",
+    "prestorybook": "../../scripts/e2e-prestorybook.js .",
+    "storycap:all": "yarn prestorybook && yarn build-storybook && storycap --verbose --server-timeout 100000 --server-cmd \"http-server -p 9011 storybook-static\" \"http://localhost:9011\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "resolutions": {
+    "jackspeak": "2.1.1"
+  },
+  "devDependencies": {
+    "@chromatic-com/storybook": "^1.2.25",
+    "@storybook/addon-essentials": "^8.0.4",
+    "@storybook/addon-interactions": "^8.0.4",
+    "@storybook/addon-links": "^8.0.4",
+    "@storybook/addon-onboarding": "^8.0.4",
+    "@storybook/blocks": "^8.0.4",
+    "@storybook/react": "^8.0.4",
+    "@storybook/react-vite": "^8.0.4",
+    "@storybook/test": "^8.0.4",
+    "http-server": "^14.1.1",
+    "prop-types": "^15.8.1",
+    "storybook": "^8.0.4",
+    "vite": "^5.2.6"
+  }
+}
