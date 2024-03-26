@@ -14,7 +14,7 @@
     "build-storybook": "storybook build",
     "prestorybook": "../../scripts/e2e-prestorybook.js .",
     "prebuild-storybook": "../../scripts/e2e-prestorybook.js .",
-    "storycap:all": "yarn prestorybook && yarn test && storycap --verbose --server-timeout 100000 --server-cmd \"storybook dev -p 9009\" \"http://localhost:9009\""
+    "storycap:all": "yarn build-storybook && yarn test && storycap --verbose --server-timeout 100000 --server-cmd \"http-server -p 9009 storybook-static\" \"http://127.0.0.1:9009\""
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -44,6 +44,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "eslint-plugin-storybook": "^0.8.0",
+    "http-server": "^14.1.1",
     "jsdom": "^24.0.0",
     "prop-types": "^15.8.1",
     "rimraf": "^2.6.3",
