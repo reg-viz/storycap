@@ -22,7 +22,10 @@ jobs:
           - examples/v7-managed-react
           - examples/v7-react18
           - examples/v8-react18
+          - examples/v8-react18-vite-prod
         include:
+          - example_dir: examples/v8-react18
+            node-version: 18.x
           - example_dir: examples/v8-react18
             node-version: 18.x
 
