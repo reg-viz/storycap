@@ -1,5 +1,5 @@
 {
-  "name": "v8-vite5",
+  "name": "v8-vite5-prod",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -14,7 +14,7 @@
     "build-storybook": "storybook build",
     "prestorybook": "../../scripts/e2e-prestorybook.js .",
     "prebuild-storybook": "../../scripts/e2e-prestorybook.js .",
-    "storycap:all": "yarn build-storybook && yarn test && storycap --verbose --server-timeout 100000 --server-cmd \"http-server -p 9009 storybook-static\" \"http://127.0.0.1:9009\""
+    "storycap:all": "yarn build-storybook && CI=true yarn test && storycap --verbose --server-timeout 100000 --server-cmd \"http-server -p 9009 storybook-static\" \"http://127.0.0.1:9009\""
   },
   "dependencies": {
     "react": "^18.2.0",
