@@ -41,6 +41,7 @@ async function main() {
   rimraf.sync(dist);
   mkdirp.sync(dist);
   copyDir.sync(`${path.join(prjDir, 'lib')}`, path.join(dist, 'lib'), {});
+  copyDir.sync(`${path.join(prjDir, 'lib-esm')}`, path.join(dist, 'lib-esm'), {});
   await cpy(['package.json', 'register.js'], dist, { cwd: prjDir });
   rimraf.sync(path.resolve(dist, '../.bin/storycap'));
   mkdirp(path.resolve(dist, '../.bin'));
