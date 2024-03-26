@@ -7,8 +7,8 @@ try {
   makeDecorator = require('@storybook/preview-api').makeDecorator;
 } catch {}
 
-import { ScreenshotOptions } from '../shared/types';
-import { triggerScreenshot } from './trigger-screenshot';
+import type { ScreenshotOptions } from '../shared/types';
+const { triggerScreenshot } = require('./trigger-screenshot');
 
 export interface WithScreenshot {
   /**
