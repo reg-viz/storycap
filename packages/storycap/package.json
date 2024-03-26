@@ -11,6 +11,7 @@
     ".": {
       "require": "./lib/index.js",
       "browser": "./lib-esm/index.js",
+      "import": "./lib-esm/index.js",
       "default": "./lib/index.js"
     },
     "./register": "./register.js"
