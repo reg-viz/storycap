@@ -73,7 +73,8 @@
     "README.md",
     "LICENSE",
     "package.json",
-    "register.js"
+    "register.js",
+    "legacy-sb.js"
   ],
   "keywords": [
     "storybook",
