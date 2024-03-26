@@ -124,9 +124,9 @@ export class StoriesBrowser extends BaseBrowser {
             isPreviewApi(api) && api.storyStoreValue
               ? Object.values(api.storyStoreValue.extract())
               : api.raw
-              ? api.raw()
-              : []
-          ).map(_ => ({ id: _.id, kind: _.kind, story: _.name, version: 'v5' } as Story));
+                ? api.raw()
+                : []
+          ).map(_ => ({ id: _.id, kind: _.kind, story: _.name, version: 'v5' }) as Story);
           res({ stories, timeout: false });
         };
         getStories();

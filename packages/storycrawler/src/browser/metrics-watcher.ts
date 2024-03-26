@@ -20,7 +20,10 @@ export class MetricsWatcher {
   private length = 3;
   private previous: Metrics[] = [];
 
-  constructor(private page: Page, private count: number = 1000) {}
+  constructor(
+    private page: Page,
+    private count: number = 1000,
+  ) {}
 
   /**
    *
