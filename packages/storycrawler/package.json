@@ -1,6 +1,6 @@
 {
   "name": "storycrawler",
-  "version": "4.3.1",
+  "version": "5.0.0-alpha.0",
   "description": "Utilities to build Storybook crawling tools with Puppeteer",
   "engines": {
     "node": ">=18"
