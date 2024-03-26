@@ -42,7 +42,7 @@ async function main() {
   mkdirp.sync(dist);
   copyDir.sync(`${path.join(prjDir, 'lib')}`, path.join(dist, 'lib'), {});
   copyDir.sync(`${path.join(prjDir, 'lib-esm')}`, path.join(dist, 'lib-esm'), {});
-  await cpy(['package.json', 'register.js'], dist, { cwd: prjDir });
+  await cpy(['package.json', 'register.js', 'legacy-sb.js'], dist, { cwd: prjDir });
   rimraf.sync(path.resolve(dist, '../.bin/storycap'));
   mkdirp(path.resolve(dist, '../.bin'));
   fs.symlinkSync(path.resolve(prjDir, 'lib/node/cli.js'), path.resolve(dist, '../.bin/storycap'));
