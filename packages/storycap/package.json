@@ -83,14 +83,14 @@
     "@types/node": "^18.0.0",
     "@types/rimraf": "^3.0.0",
     "@types/wait-on": "^5.0.0",
-    "@types/yargs": "^16.0.0",
+    "@types/yargs": "^17.0.0",
     "mkdirp": "^2.0.0",
     "nanomatch": "^1.2.13",
     "puppeteer-core": "^9.0.0",
     "rimraf": "^5.0.0",
     "sanitize-filename": "^1.6.3",
     "storycrawler": "^4.3.1",
-    "yargs": "^16.0.0"
+    "yargs": "^17.0.0"
   },
   "jest": {
     "moduleFileExtensions": [
