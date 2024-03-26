@@ -11,9 +11,27 @@
     ".": {
       "require": "./lib/index.js",
       "browser": "./lib-esm/index.js",
+      "import": "./lib-esm/index.js",
       "default": "./lib/index.js"
     },
-    "./register": "./register.js"
+    "./legacy-sb": {
+      "require": "./lib/index-legacy-sb.js",
+      "browser": "./lib-esm/index-legacy-sb.js",
+      "import": "./lib-esm/index-legacy-sb.js",
+      "default": "./lib/index-legacy-sb.js"
+    },
+    "./register": {
+      "require": "./lib/client/register.js",
+      "browser": "./lib-esm/client/register.js",
+      "import": "./lib-esm/client/register.js",
+      "default": "./lib/client/register.js"
+    },
+    "./legacy-sb/register": {
+      "require": "./lib/client/legacy-sb/register.js",
+      "browser": "./lib-esm/client/legacy-sb/register.js",
+      "import": "./lib-esm/client/legacy-sb/register.js",
+      "default": "./lib/client/legacy-sb/register.js"
+    }
   },
   "sideEffects": [
     "./register.js",
@@ -91,6 +109,18 @@
     "sanitize-filename": "^1.6.3",
     "storycrawler": "^4.3.0",
     "yargs": "^16.0.0"
+  },
+  "peerDependencies": {
+    "@storybook/manager-api": "^8.0.0",
+    "@storybook/preview-api": "^8.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@storybook/manager-api": {
+      "optional": true
+    },
+    "@storybook/preview-api": {
+      "optional": true
+    }
   },
   "jest": {
     "moduleFileExtensions": [
