@@ -14,27 +14,19 @@ jobs:
     strategy:
       matrix:
         example_dir:
-          - examples/v5-managed-react-legacy-decorator
-          - examples/v5-simple
-          - examples/v6-managed-react
-          - examples/v6-simple
-          - examples/v6-story-store-v7
           - examples/v7-managed-react
+          - examples/v7-simple-react
           - examples/v7-react18
-          - examples/v8-react18
-          - examples/v8-vite5
-        include:
-          - example_dir: examples/v8-react18
-            node-version: 18.x
-          - example_dir: examples/v8-vite5
-            node-version: 18.x
+          - examples/v8-managed-react
+          - examples/v8-simple-react
+          - examples/v8-vite5-prod
 
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version || '16.x' }}
+          node-version: ${{ matrix.node-version || '18.x' }}
           cache: 'yarn'
       - run: yarn install --frozen-lockfile
       - run: yarn bootstrap
