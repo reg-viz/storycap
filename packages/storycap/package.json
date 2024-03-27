@@ -93,6 +93,10 @@
     "storycrawler": "^5.0.0-alpha.0",
     "yargs": "^16.0.0"
   },
+  "peerDependencies": {
+    "@storybook/manager-api": "^7.0.0 || ^8.0.0",
+    "@storybook/preview-api": "^7.0.0 || ^8.0.0"
+  },
   "jest": {
     "moduleFileExtensions": [
       "ts",

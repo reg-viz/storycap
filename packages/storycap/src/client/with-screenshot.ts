@@ -6,7 +6,6 @@ const withScreenshotDecorator = makeDecorator({
   name: 'withScreenshot',
   parameterName: 'screenshot',
   skipIfNoParametersOrOptions: false,
-  allowDeprecatedUsage: true,
   wrapper: (getStory, context, { parameters, options }) => {
     if (typeof process !== 'undefined' && process?.env.JEST_WORKER_ID !== undefined) {
       return getStory(context);
