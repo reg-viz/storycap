@@ -5,11 +5,8 @@ import { Story } from '../story-types';
 import { StorybookConnection } from '../storybook-connection';
 
 interface API {
-  store?: () => {
-    _configuring?: boolean; // available SB v6 or later
-  };
   storyStore?: {
-    // available SB v6.4 or later
+    // available SB v7 or later
     cacheAllCSFFiles: () => Promise<void>;
     cachedCSFFiles?: Record<string, unknown>;
   };
@@ -105,14 +102,12 @@ export class StoriesBrowser extends BaseBrowser {
             (window as ExposedWindow).__STORYBOOK_CLIENT_API__ || (window as ExposedWindow).__STORYBOOK_PREVIEW__;
           if (api === undefined) return;
 
-          // for Storybook v6
-          const configuring = !isPreviewApi(api) && api.store && api.store()._configuring;
-          // for Storybook v6 and 'storyStoreV7' option
+          // for Storybook v7
           const configuringV7store = !isPreviewApi(api) && api.storyStore && !api.storyStore.cachedCSFFiles;
           // for Storybook v8
           const configuringV8store = isPreviewApi(api) && api.storyStoreValue && !api.storyStoreValue.cachedCSFFiles;
 
-          if (configuring || configuringV7store || configuringV8store) {
+          if (configuringV7store || configuringV8store) {
             if (count < MAX_CONFIGURE_WAIT_COUNT) {
               setTimeout(() => getStories(++count), 16);
             } else {
