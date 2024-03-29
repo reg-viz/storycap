@@ -1,6 +1,6 @@
 {
   "name": "storycap",
-  "version": "5.0.0-alpha.1",
+  "version": "5.0.0",
   "description": "A Storybook addon, Save the screenshot image of your stories! via puppeteer.",
   "engines": {
     "node": ">=18"
@@ -90,7 +90,7 @@
     "puppeteer-core": "^9.0.0",
     "rimraf": "^5.0.0",
     "sanitize-filename": "^1.6.3",
-    "storycrawler": "^5.0.0-alpha.0",
+    "storycrawler": "^5.0.0",
     "yargs": "^16.0.0"
   },
   "peerDependencies": {
