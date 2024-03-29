@@ -1,9 +1,9 @@
 {
   "name": "storycap",
-  "version": "4.3.1",
+  "version": "5.0.0-alpha.1",
   "description": "A Storybook addon, Save the screenshot image of your stories! via puppeteer.",
   "engines": {
-    "node": ">=14.13"
+    "node": ">=18"
   },
   "main": "lib/index.js",
   "module": "lib-esm/index.js",
@@ -11,6 +11,7 @@
     ".": {
       "require": "./lib/index.js",
       "browser": "./lib-esm/index.js",
+      "import": "./lib-esm/index.js",
       "default": "./lib/index.js"
     },
     "./register": "./register.js"
@@ -71,6 +72,11 @@
   ],
   "devDependencies": {
     "@types/jest": "29.5.12",
+    "@types/mkdirp": "^1.0.0",
+    "@types/node": "^18.0.0",
+    "@types/rimraf": "^3.0.0",
+    "@types/wait-on": "^5.0.0",
+    "@types/yargs": "^16.0.0",
     "jest": "29.7.0",
     "minimist": "1.2.8",
     "puppeteer": "19.11.1",
@@ -79,18 +85,17 @@
     "typescript": "5.4.3"
   },
   "dependencies": {
-    "@types/mkdirp": "^1.0.0",
-    "@types/node": "^18.0.0",
-    "@types/rimraf": "^3.0.0",
-    "@types/wait-on": "^5.0.0",
-    "@types/yargs": "^16.0.0",
     "mkdirp": "^2.0.0",
     "nanomatch": "^1.2.13",
     "puppeteer-core": "^9.0.0",
     "rimraf": "^5.0.0",
     "sanitize-filename": "^1.6.3",
-    "storycrawler": "^4.3.1",
+    "storycrawler": "^5.0.0-alpha.0",
     "yargs": "^16.0.0"
+  },
+  "peerDependencies": {
+    "@storybook/manager-api": "^7.0.0 || ^8.0.0",
+    "@storybook/preview-api": "^7.0.0 || ^8.0.0"
   },
   "jest": {
     "moduleFileExtensions": [

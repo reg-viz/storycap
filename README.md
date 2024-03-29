@@ -39,10 +39,7 @@ It is primarily responsible for image generation necessary for Visual Testing su
 - [Storybook compatibility](#storybook-compatibility)
   - [Storybook versions](#storybook-versions)
   - [UI frameworks](#ui-frameworks)
-- [Migration](#migration)
 - [How it works](#how-it-works)
-- [Examples](#examples)
-- [TODO](#todo)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -50,7 +47,7 @@ It is primarily responsible for image generation necessary for Visual Testing su
 
 ## Features
 
-- :camera: Take screenshots of each stories. via [Puppeteer][puppeteer].
+- :camera: Take screenshots of each stories via [Puppeteer][puppeteer].
 - :zap: Extremely fast.
 - :package: Zero configuration.
 - :rocket: Provide flexible screenshot shooting options.
@@ -139,39 +136,12 @@ export const parameters = {
 };
 ```
 
-**Note:** You can set configuration of screenshot with `addParameters` and `screenshot` key.
-
-**Note:** Storycap also supports notation of legacy Storybook decorator such as `addDecorator(withScreenshot({/* some options */})`. But using decorator as function is deprecated and not recommended. See [Storybook's migration guide](https://github.com/storybookjs/storybook/blob/next/MIGRATION.md#options-addon-deprecated) if you want more details.
+> [!NOTE]
+> You can set configuration of screenshot with `addParameters` and `screenshot` key.
 
 #### Setup your stories(optional)
 
 And you can overwrite the global screenshot options in specific stories file via `parameters`.
-
-```js
-import React from 'react';
-import MyComponent from './MyComponent';
-
-export default {
-  title: 'MyComponent',
-  parameters: {
-    screenshot: {
-      delay: 200,
-    },
-  },
-};
-
-export const normal = () => <MyComponent />;
-export const small = () => <MyComponent text="small" />;
-small.story = {
-  parameters: {
-    screenshot: {
-      viewport: 'iPhone 5',
-    },
-  },
-};
-```
-
-Of course Storycap works well with CSF 3.0 notation.
 
 ```js
 import React from 'react';
@@ -218,13 +188,7 @@ $ npx storycap http://localhost:9009 --serverCmd "start-storybook -p 9009"
 
 ### `withScreenshot`
 
-```typescript
-withScreenshot(opt?: ScreenshotOptions): Function;
-```
-
 A Storybook decorator to notify Storycap to captures stories.
-
-**Note:** Using `withScreenshot` as function is deprecated. Use `addParameters` if you give screenshot options.
 
 ### type `ScreenshotOptions`
 
@@ -309,7 +273,8 @@ type Viewport =
     };
 ```
 
-**Note:** You should choose a valid [device name](https://github.com/puppeteer/puppeteer/blob/main/packages/puppeteer-core/src/common/Device.ts) if set string.
+> [!NOTE]
+> You should choose a valid [device name](https://github.com/puppeteer/puppeteer/blob/main/packages/puppeteer-core/src/common/Device.ts) if set string.
 
 `Viewport` values are available in `viewports` field such as:
 
@@ -404,14 +369,14 @@ For example:
 
 ```js
 import React from 'react';
-import MyComponent from './MyButton';
+import MyButton from './MyButton';
 
 export default {
   title: 'MyButton',
+  component: MyButton,
 };
 
-export const normal = () => <MyButton />;
-normal.story = {
+export const Normal = {
   parameters: {
     screenshot: {
       variants: {
@@ -438,7 +403,7 @@ The variant key, `hovered` in the above example, is used as suffix of the genera
 You can composite multiple variants via `extends` field.
 
 ```js
-normal.story = {
+export const Normal = {
   parameters: {
     screenshot: {
       variants: {
@@ -462,7 +427,8 @@ The above example generates the following:
 - `MyButton/normal_hovered.png` (derived from the `hovered` variant
 - `MyButton/normal_small_hovered.png` (derived from the `hovered` and `small` variant
 
-**Note:** You can extend some viewports with keys of `viewports` option because the `viewports` field is expanded to variants internally.
+> [!NOTE]
+> You can extend some viewports with keys of `viewports` option because the `viewports` field is expanded to variants internally.
 
 ### Parallelisation across multiple computers
 
@@ -483,14 +449,48 @@ Use [regviz/node-xcb](https://cloud.docker.com/u/regviz/repository/docker/regviz
 Or create your Docker base image such as:
 
 ```Dockerfile
-FROM node:12
+FROM node:18
 
-RUN apt-get update -y
-RUN apt-get install -yq gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 \
-    libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 \
-    libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 \
-    libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 \
-    ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
+RUN apt-get update -y \
+    && apt-get install -yq \
+    ca-certificates \
+    fonts-liberation \
+    git \
+    libayatana-appindicator3-1 \
+    libasound2 \
+    libatk-bridge2.0-0 \
+    libatk1.0-0 \
+    libc6 \
+    libcairo2 \
+    libcups2 \
+    libdbus-1-3 \
+    libexpat1 \
+    libfontconfig1 \
+    libgbm1 \
+    libgcc1 \
+    libglib2.0-0 \
+    libgtk-3-0 \
+    libnspr4 \
+    libnss3 \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libstdc++6 \
+    libx11-6 \
+    libx11-xcb1 \
+    libxcb1 \
+    libxcomposite1 \
+    libxcursor1 \
+    libxdamage1 \
+    libxext6 \
+    libxfixes3 \
+    libxi6 \
+    libxrandr2 \
+    libxrender1 \
+    libxss1 \
+    libxtst6 \
+    lsb-release \
+    wget \
+    xdg-utils
 ```
 
 ### Full control the screenshot timing
@@ -519,16 +519,17 @@ For example, the following setting tells storycap to wait for resolving of `font
 ```
 
 ```js
-/* .storybook/config.js */
-import { addParameters, addDecorator } from '@storybook/react';
+/* .storybook/preview.js */
+
 import { withScreenshot } from 'storycap';
 
-addDecorator(withScreenshot);
-addParameters({
+export const decorators = [withScreenshot];
+
+export const parameters = {
   screenshot: {
     waitFor: 'fontLoading',
   },
-});
+};
 ```
 
 ## Chromium version
@@ -548,11 +549,9 @@ You can change search channel with `--chromiumChannel` option or set executable 
 Storycap is tested with the followings versions:
 
 - Simple mode:
-  - [x] Storybook v5.x
-  - [x] Storybook v6.x
+  - [x] Storybook v7.x
+  - [x] Storybook v8.x
 - Managed mode:
-  - [x] Storybook v5.x
-  - [x] Storybook v6.x
   - [x] Storybook v7.x
   - [x] Storybook v8.x
 
@@ -562,30 +561,9 @@ See also packages in `examples` directory.
 
 Storycap (with both simple and managed mode) is agnostic for specific UI frameworks(e.g. React, Angular, Vue.js, etc...). So you can use it with Storybook with your own favorite framework :smile: .
 
-## Migration
-
-See [migration guide](./MIGRATION.md) if you already use [storybook-chrome-screenshot](https://www.npmjs.com/package/storybook-chrome-screenshot) or [zisui](https://www.npmjs.com/package/zisui).
-
 ## How it works
 
 Storycap accesses the launched page using [Puppeteer][puppeteer].
-
-<!--
-## Examples
-
-- [tsuyoshiwada/scs-with-reg-viz](https://github.com/tsuyoshiwada/scs-with-reg-viz) : A example repository of visual regression test using storycap and reg-suit.
-- [Quramy/angular-sss-demo](https://github.com/Quramy/angular-sss-demo) : Storybook, Screenshot, and Snapshot testing for Angular
-- [viswiz-io/viswiz-tutorial-storybook](https://github.com/viswiz-io/viswiz-tutorial-storybook) : A tutorial repository for setting up visual regression testing with VisWiz.io
--->
-
-## TODO
-
-The following tasks remain. Contributes are welcome :smiley:
-
-- [x] Upgrade v2
-- [x] Extract crawler as a NPM package.
-- [ ] More unit testing.
-- [ ] Capture with JS/CSS coverages.
 
 ## Contributing
 
