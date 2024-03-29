@@ -76,7 +76,7 @@
     "@types/node": "^18.0.0",
     "@types/rimraf": "^3.0.0",
     "@types/wait-on": "^5.0.0",
-    "@types/yargs": "^16.0.0",
+    "@types/yargs": "^17.0.0",
     "jest": "29.7.0",
     "minimist": "1.2.8",
     "puppeteer": "19.11.1",
@@ -91,7 +91,7 @@
     "rimraf": "^5.0.0",
     "sanitize-filename": "^1.6.3",
     "storycrawler": "^5.0.0",
-    "yargs": "^16.0.0"
+    "yargs": "^17.0.0"
   },
   "peerDependencies": {
     "@storybook/manager-api": "^7.0.0 || ^8.0.0",
