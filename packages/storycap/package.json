@@ -72,7 +72,7 @@
   ],
   "devDependencies": {
     "@types/jest": "29.5.12",
-    "@types/mkdirp": "^1.0.0",
+    "@types/mkdirp": "^2.0.0",
     "@types/node": "^18.0.0",
     "@types/rimraf": "^3.0.0",
     "@types/wait-on": "^5.0.0",
