@@ -54,9 +54,9 @@
     "prettier": "3.2.5",
     "pretty-quick": "4.0.0",
     "reg-keygen-git-hash-plugin": "0.14.3",
-    "reg-notify-github-plugin": "0.14.3",
-    "reg-publish-s3-plugin": "0.14.3",
-    "reg-suit": "0.14.3",
+    "reg-notify-github-plugin": "0.14.4",
+    "reg-publish-s3-plugin": "0.14.4",
+    "reg-suit": "0.14.4",
     "typescript": "5.4.5",
     "typescript-eslint-language-service": "5.0.5"
   },
