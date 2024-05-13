@@ -354,7 +354,7 @@ Examples:
   storycap http://localhost:9009 -i "some-kind/a-story"
   storycap http://example.com/your-storybook -e "**/default" -V iPad
   storycap --serverCmd "start-storybook -p 3000" http://localhost:3000
-
+  storycap --serverCmd "start dev -p 3000" http://localhost:3000 # For storybook v7
 ```
 
 <!-- endinject -->

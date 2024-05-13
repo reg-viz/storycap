@@ -101,7 +101,8 @@ function createOptions(): MainOptions {
     .example('storycap http://localhost:9009 -V 1024x768 -V 320x568', '')
     .example('storycap http://localhost:9009 -i "some-kind/a-story"', '')
     .example('storycap http://example.com/your-storybook -e "**/default" -V iPad', '')
-    .example('storycap --serverCmd "start-storybook -p 3000" http://localhost:3000', '');
+    .example('storycap --serverCmd "start-storybook -p 3000" http://localhost:3000', '')
+    .example(`storycap --serverCmd "start dev -p 3000" http://localhost:3000 # For storybook v7`, '');
   let storybookUrl;
 
   if (!setting.argv._.length) {
