@@ -22,6 +22,11 @@ function createOptions(): MainOptions {
     .option('flat', { boolean: true, alias: 'f', default: false, description: 'Flatten output filename.' })
     .option('include', { array: true, alias: 'i', default: [], description: 'Including stories name rule.' })
     .option('exclude', { array: true, alias: 'e', default: [], description: 'Excluding stories name rule.' })
+    .option('matchNocase', {
+      boolean: true,
+      default: false,
+      description: "'include' and 'exclude' comparisons to be non case sensitive.",
+    })
     .option('delay', { number: true, default: 0, description: 'Waiting time [msec] before screenshot for each story.' })
     .option('viewport', { array: true, alias: 'V', default: ['800x600'], description: 'Viewport.' })
     .option('disableCssAnimation', {
@@ -115,6 +120,7 @@ function createOptions(): MainOptions {
     flat,
     include,
     exclude,
+    matchNocase,
     delay,
     viewport,
     parallel,
@@ -175,6 +181,7 @@ function createOptions(): MainOptions {
     flat,
     include,
     exclude,
+    matchNocase,
     delay,
     viewports: viewport,
     parallel,
