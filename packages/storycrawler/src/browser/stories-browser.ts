@@ -67,7 +67,7 @@ export class StoriesBrowser extends BaseBrowser {
       this.connection.url + '/iframe.html?selectedKind=story-crawler-kind&selectedStory=story-crawler-story',
       {
         timeout: 60_000,
-        waitUntil: 'domcontentloaded',
+        waitUntil: 'networkidle2',
       },
     );
     await this.page.waitForFunction(
