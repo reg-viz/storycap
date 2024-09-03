@@ -63,13 +63,14 @@ export class StoriesBrowser extends BaseBrowser {
     this.logger.debug('Wait for stories definition.');
     await this.page.goto(this.connection.url);
     let stories: Story[] | null = null;
-    await this.page.goto(
-      this.connection.url + '/iframe.html?selectedKind=story-crawler-kind&selectedStory=story-crawler-story',
-      {
+    await this.page
+      .goto(this.connection.url + '/iframe.html?selectedKind=story-crawler-kind&selectedStory=story-crawler-story', {
         timeout: 60_000,
         waitUntil: 'domcontentloaded',
-      },
-    );
+      })
+      .catch(() => {
+        this.logger.warn('Timeout to open Storybook preview iframe.');
+      });
     await this.page.waitForFunction(
       () =>
         (window as ExposedWindow).__STORYBOOK_CLIENT_API__ ||
