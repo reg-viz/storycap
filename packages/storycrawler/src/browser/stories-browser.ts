@@ -1,3 +1,4 @@
+import { setTimeout as nodeSetTimeout } from 'node:timers/promises';
 import { BaseBrowser, BaseBrowserOptions } from './base-browser';
 import { Logger } from '../logger';
 import { NoStoriesError, StoriesTimeoutError } from '../errors';
@@ -77,7 +78,7 @@ export class StoriesBrowser extends BaseBrowser {
         timeout: 60_000,
       },
     );
-    await this.page.waitForTimeout(500);
+    await nodeSetTimeout(500);
     await this.page.evaluate(() => {
       const api = (window as ExposedWindow).__STORYBOOK_CLIENT_API__ || (window as ExposedWindow).__STORYBOOK_PREVIEW__;
       function isPreviewApi(api: API | PreviewAPI): api is PreviewAPI {

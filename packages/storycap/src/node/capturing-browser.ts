@@ -372,7 +372,8 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     let emittedScreenshotOptions: ScreenshotOptions | undefined;
     this.resourceWatcher.clear();
 
-    function onConsoleLog(msg: ConsoleMessage) {
+    function onConsoleLog(_msg: any) {
+      const msg = _msg as ConsoleMessage;
       const niceMessage = `From ${requestId} (${msg.type()}): ${msg.text()}`;
 
       if (forwardConsoleLogs) {
@@ -468,6 +469,8 @@ export class CapturingBrowser extends StoryPreviewBrowser {
       let buffer: Buffer | null = null;
       if (Buffer.isBuffer(rawBuffer)) {
         buffer = rawBuffer;
+      } else if (rawBuffer instanceof Uint8Array) {
+        buffer = Buffer.from(rawBuffer);
       }
 
       // We should reset elements state(e.g. focusing, hovering, clicking) for future screenshot for this story.
@@ -490,7 +493,9 @@ export class CapturingBrowser extends StoryPreviewBrowser {
 
         // Calculate the suffix and save the trace to the file.
         const suffix = variantKey.isDefault && defaultVariantSuffix ? [defaultVariantSuffix] : variantKey.keys;
-        await fileSystem.saveTrace(story.kind, story.story, suffix, traceBuffer);
+        if (traceBuffer) {
+          await fileSystem.saveTrace(story.kind, story.story, suffix, Buffer.from(traceBuffer));
+        }
       }
     }
   }

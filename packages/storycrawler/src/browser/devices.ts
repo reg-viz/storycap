@@ -6,6 +6,7 @@ import type { Viewport } from 'puppeteer-core';
  *
  */
 export function getDeviceDescriptors() {
-  const dd = require('puppeteer-core').devices as Record<string, { name: string; viewport: Viewport }>;
+  const pc = require('puppeteer-core');
+  const dd = (pc.KnownDevices || pc.devices) as Record<string, { name: string; viewport: Viewport }>;
   return Object.values(dd);
 }
