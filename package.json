@@ -23,8 +23,7 @@
     "deploy:manual": "lerna run clean && yarn build && lerna publish",
     "deploy:pages": "gh-pages -d dist-pages -m \"[ci skip]\"",
     "linkall": "lerna exec --parallel yarn link",
-    "unlinkall": "lerna exec --parallel --bail=false yarn unlink",
-    "postinstall": "husky install"
+    "unlinkall": "lerna exec --parallel --bail=false yarn unlink"
   },
   "repository": {
     "type": "git",
