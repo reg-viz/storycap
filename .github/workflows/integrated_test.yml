@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [20.x]
         example_dir:
           - examples/v7-managed-react
           - examples/v7-simple-react
