@@ -16,7 +16,7 @@
     "storybook": "storybook dev -p 9009",
     "build-storybook": "storybook build",
     "prestorybook": "../../scripts/e2e-prestorybook.js .",
-    "storycap:all": "yarn prestorybook && CI=true yarn test && storycap --verbose --server-timeout 100000 --server-cmd \"storybook dev -p 9009\" \"http://localhost:9009\""
+    "storycap:all": "yarn prestorybook && storycap --verbose --server-timeout 100000 --server-cmd \"storybook dev -p 9009\" \"http://localhost:9009\""
   },
   "eslintConfig": {
     "extends": "react-app",
@@ -31,17 +31,17 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@storybook/addon-actions": "^8.0.0",
-    "@storybook/addon-essentials": "^8.0.0",
-    "@storybook/addon-links": "^8.0.0",
-    "@storybook/cli": "^8.0.0",
-    "@storybook/manager-api": "^8.0.0",
-    "@storybook/preset-create-react-app": "^8.0.0",
-    "@storybook/preview-api": "^8.0.0",
-    "@storybook/react": "^8.0.0",
-    "@storybook/react-webpack5": "^8.0.0",
+    "@storybook/addon-actions": "^8.2.9",
+    "@storybook/addon-essentials": "^8.2.9",
+    "@storybook/addon-links": "^8.2.9",
+    "@storybook/cli": "^8.2.9",
+    "@storybook/manager-api": "^8.2.9",
+    "@storybook/preset-create-react-app": "^8.2.9",
+    "@storybook/preview-api": "^8.2.9",
+    "@storybook/react": "^8.2.9",
+    "@storybook/react-webpack5": "^8.2.9",
     "@testing-library/react": "^14.0.0",
     "rimraf": "^2.6.3",
-    "storybook": "^8.0.0"
+    "storybook": "^8.2.9"
   }
 }
