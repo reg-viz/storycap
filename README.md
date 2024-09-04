@@ -35,6 +35,8 @@ It is primarily responsible for image generation necessary for Visual Testing su
 - [Tips](#tips)
   - [Run with Docker](#run-with-docker)
   - [Full control the screenshot timing](#full-control-the-screenshot-timing)
+    - [Example 1](#example-1)
+    - [Example 2](#example-2)
 - [Chromium version](#chromium-version)
 - [Storybook compatibility](#storybook-compatibility)
   - [Storybook versions](#storybook-versions)
@@ -496,9 +498,29 @@ RUN apt-get update -y \
 ### Full control the screenshot timing
 
 Sometimes you may want to full-manage the timing of performing screenshot.
-Use the `waitFor` option if you think so. This string parameter should points a global function to return `Promise`.
+Use the `waitFor` option if you think so. This parameter accepts function returning `Promise` or name of function should points a global function to return `Promise`.
 
-For example, the following setting tells storycap to wait for resolving of `fontLoading`:
+#### Example 1
+
+For example, you can wait for specific HTML elements appearance with `screen` function provided `@storybook/test` package. It's useful when the elements are rendered lazy.
+
+```js
+/* MyComponent.stories.js */
+
+import { screen } from '@storybook/test';
+
+export const MyStory = {
+  screenshot: {
+    waitFor: async () => {
+      await screen.findByRole('link');
+    },
+  },
+};
+```
+
+#### Example 2
+
+Another example, the following setting tells storycap to wait for resolving of `fontLoading`:
 
 ```html
 <!-- ./storybook/preview-head.html -->
