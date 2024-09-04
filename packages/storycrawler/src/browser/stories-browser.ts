@@ -62,13 +62,14 @@ export class StoriesBrowser extends BaseBrowser {
     this.logger.debug('Wait for stories definition.');
     await this.page.goto(this.connection.url);
     let stories: Story[] | null = null;
-    await this.page.goto(
+
+    // Note:
+    // Don't wait fo this `goto` promise. Sometimes Chromimue emits timeout error and this navigation and causes whole screenshot process abortion.
+    // For detail, see https://github.com/reg-viz/storycap/issues/896#issuecomment-2317248668
+    this.page.goto(
       this.connection.url + '/iframe.html?selectedKind=story-crawler-kind&selectedStory=story-crawler-story',
-      {
-        timeout: 60_000,
-        waitUntil: 'domcontentloaded',
-      },
     );
+
     await this.page.waitForFunction(
       () =>
         (window as ExposedWindow).__STORYBOOK_CLIENT_API__ ||
