@@ -45,7 +45,7 @@
     "@types/wait-on": "^5.0.0",
     "jest": "29.7.0",
     "ts-jest": "29.2.5",
-    "typedoc": "0.25.13",
+    "typedoc": "0.26.6",
     "typescript": "5.4.5"
   },
   "dependencies": {
