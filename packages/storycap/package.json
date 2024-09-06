@@ -81,7 +81,7 @@
     "puppeteer": "23.3.0",
     "ts-jest": "29.2.5",
     "typedoc": "0.26.6",
-    "typescript": "5.4.5"
+    "typescript": "5.5.4"
   },
   "dependencies": {
     "mkdirp": "^3.0.0",
