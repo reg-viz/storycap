@@ -80,7 +80,7 @@
     "minimist": "1.2.8",
     "puppeteer": "23.3.0",
     "ts-jest": "29.2.5",
-    "typedoc": "0.26.6",
+    "typedoc": "0.26.7",
     "typescript": "5.5.4"
   },
   "dependencies": {
