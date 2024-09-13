@@ -71,7 +71,7 @@
     "test"
   ],
   "devDependencies": {
-    "@types/jest": "29.5.12",
+    "@types/jest": "29.5.13",
     "@types/mkdirp": "^2.0.0",
     "@types/node": "^20.0.0",
     "@types/wait-on": "^5.0.0",
