@@ -36,7 +36,7 @@ export function expandViewportsOption(options: ScreenshotOptions) {
 
   const getVp = (vpName: string) => (Array.isArray(viewports) ? vpName : viewports[vpName]);
 
-  const variants = { ...options.variants } || {};
+  const variants = { ...options.variants };
   viewportNames.slice(1).forEach(vpName => (variants[vpName] = { viewport: getVp(vpName) }));
   ret.viewport = getVp(viewportNames[0]);
   ret.variants = variants;
