@@ -8494,10 +8494,10 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.3.1.tgz#027422e2faec0b25e1549c3e1bd8309b9133b6e5"
   integrity sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==
 
-puppeteer-core@23.7.0:
-  version "23.7.0"
-  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-23.7.0.tgz#b737476f8f5e2a36a6683d91595eaa5c0e231a37"
-  integrity sha512-0kC81k3K6n6Upg/k04xv+Mi8yy62bNAJiK7LCA71zfq2XKEo9WAzas1t6UQiLgaNHtGNKM0d1KbR56p/+mgEiQ==
+puppeteer-core@23.7.1:
+  version "23.7.1"
+  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-23.7.1.tgz#b1c313f1d3572ed772d82178b012f7c046cb53bb"
+  integrity sha512-Om/qCZhd+HLoAr7GltrRAZpS3uOXwHu7tXAoDbNcJADHjG2zeAlDArgyIPXYGG4QB/EQUHk13Q6RklNxGM73Pg==
   dependencies:
     "@puppeteer/browsers" "2.4.1"
     chromium-bidi "0.8.0"
@@ -8524,16 +8524,16 @@ puppeteer-core@^9.0.0:
     unbzip2-stream "^1.3.3"
     ws "^7.2.3"
 
-puppeteer@23.7.0:
-  version "23.7.0"
-  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-23.7.0.tgz#193dcc78bdcc5d3023cc172e9231771c350484bd"
-  integrity sha512-YTgo0KFe8NtBcI9hCu/xsjPFumEhu8kA7QqLr6Uh79JcEsUcUt+go966NgKYXJ+P3Fuefrzn2SXwV3cyOe/UcQ==
+puppeteer@23.7.1:
+  version "23.7.1"
+  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-23.7.1.tgz#4394ead5075d48146151abca3b569d5622c63002"
+  integrity sha512-jS6XehagMvxQ12etwY/4EOYZ0Sm8GAsrtGhdQn4AqpJAyHc3RYl7tGd4QYh/MmShDw8sF9FWYQqGidhoXaqokQ==
   dependencies:
     "@puppeteer/browsers" "2.4.1"
     chromium-bidi "0.8.0"
     cosmiconfig "^9.0.0"
     devtools-protocol "0.0.1354347"
-    puppeteer-core "23.7.0"
+    puppeteer-core "23.7.1"
     typed-query-selector "^2.12.0"
 
 pure-rand@^6.0.0:
