@@ -46,7 +46,7 @@
     "jest": "29.7.0",
     "ts-jest": "29.2.5",
     "typedoc": "0.26.11",
-    "typescript": "5.6.3"
+    "typescript": "5.7.2"
   },
   "dependencies": {
     "chalk": "^2.4.1",
