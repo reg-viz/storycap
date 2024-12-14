@@ -10032,10 +10032,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==
 
-typedoc@0.27.4:
-  version "0.27.4"
-  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.27.4.tgz#45be59ccf9383d3c52f4a96636d823345c6ff0e6"
-  integrity sha512-wXPQs1AYC2Crk+1XFpNuutLIkNWleokZf1UNf/X8w9KsMnirkvT+LzxTXDvfF6ug3TSLf3Xu5ZXRKGfoXPX7IA==
+typedoc@0.27.5:
+  version "0.27.5"
+  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.27.5.tgz#a86c89589213d7b36301eeafb4ddf6ad9dfd1ab3"
+  integrity sha512-x+fhKJtTg4ozXwKayh/ek4wxZQI/+2hmZUdO2i2NGDBRUflDble70z+ewHod3d4gRpXSO6fnlnjbDTnJk7HlkQ==
   dependencies:
     "@gerrit0/mini-shiki" "^1.24.0"
     lunr "^2.3.9"
