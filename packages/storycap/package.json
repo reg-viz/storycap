@@ -74,6 +74,7 @@
     "@types/jest": "29.5.14",
     "@types/mkdirp": "^2.0.0",
     "@types/node": "^20.0.0",
+    "@types/picomatch": "^3.0.2",
     "@types/wait-on": "^5.0.0",
     "@types/yargs": "^17.0.0",
     "jest": "29.7.0",
@@ -85,7 +86,7 @@
   },
   "dependencies": {
     "mkdirp": "^3.0.0",
-    "nanomatch": "^1.2.13",
+    "picomatch": "^4.0.2",
     "puppeteer-core": "^9.0.0",
     "rimraf": "^6.0.0",
     "sanitize-filename": "^1.6.3",
