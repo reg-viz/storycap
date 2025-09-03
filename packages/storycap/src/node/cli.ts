@@ -75,6 +75,11 @@ async function createOptions(): Promise<MainOptions> {
         default: '{ "args": ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"] }',
         description: 'JSON string of launch config for Puppeteer.',
       },
+      restartBrowserPerStories: {
+        boolean: true,
+        default: false,
+        description: 'Restart browser process per stories file to prevent memory leaks and instability.',
+      },
     })
     .example('storycap http://localhost:9009', '')
     .example('storycap http://localhost:9009 -V 1024x768 -V 320x568', '')
@@ -118,6 +123,7 @@ async function createOptions(): Promise<MainOptions> {
     chromiumChannel,
     chromiumPath,
     puppeteerLaunchConfig: puppeteerLaunchConfigString,
+    restartBrowserPerStories,
   } = argv;
 
   const logger = new Logger(verbose ? 'verbose' : silent ? 'silent' : 'normal');
@@ -173,6 +179,7 @@ async function createOptions(): Promise<MainOptions> {
     chromiumChannel: chromiumChannel as ChromeChannel,
     chromiumPath,
     launchOptions: puppeteerLaunchConfig,
+    restartBrowserPerStories,
     logger,
   } as MainOptions;
   return opt;

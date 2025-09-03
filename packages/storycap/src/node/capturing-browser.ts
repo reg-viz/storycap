@@ -57,6 +57,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
   private currentVariantKey: VariantKey = { isDefault: true, keys: [] };
   private touched = false;
   private resourceWatcher!: ResourceWatcher;
+  private lastStoryKind?: string;
 
   /**
    *
@@ -366,6 +367,31 @@ export class CapturingBrowser extends StoryPreviewBrowser {
     trace: boolean,
     fileSystem: FileSystem,
   ): Promise<ScreenshotResult> {
+    // Restart browser per stories file if the option is enabled
+    if (this.opt.restartBrowserPerStories && this.lastStoryKind !== story.kind) {
+      logger.log(`Restarting browser for stories file: ${story.kind}`);
+      const currentViewport = this.viewport;
+      try {
+        await this.close();
+        await this.boot();
+        this.resourceWatcher = new ResourceWatcher(this.page).init();
+
+        // Restore viewport if it was set
+        if (currentViewport) {
+          await this.page.setViewport(currentViewport);
+          this.viewport = currentViewport;
+        }
+
+        // Reset processed stories to allow re-processing after restart
+        this.processedStories.clear();
+
+        this.lastStoryKind = story.kind;
+      } catch (error: any) {
+        logger.warn(`Failed to restart browser for stories file: ${story.kind}. Error: ${error.message}`);
+        // Continue with the existing browser instance
+      }
+    }
+
     this.currentRequestId = requestId;
     this.currentVariantKey = variantKey;
     this.currentStoryRetryCount = retryCount;

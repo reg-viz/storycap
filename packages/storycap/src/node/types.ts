@@ -48,5 +48,6 @@ export interface MainOptions extends BaseBrowserOptions {
   chromiumChannel: ChromeChannel;
   chromiumPath: string;
   launchOptions: LaunchOptions;
+  restartBrowserPerStories: boolean;
   logger: Logger;
 }

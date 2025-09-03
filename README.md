@@ -349,6 +349,8 @@ Options:
       --chromiumPath               Executable Chromium path.                                      [string] [default: ""]
       --puppeteerLaunchConfig      JSON string of launch config for Puppeteer.
                [string] [default: "{ "args": ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"] }"]
+      --restartBrowserPerStories   Restart browser process per stories file to prevent memory leaks and instability.
+                                                                                              [boolean] [default: false]
 
 Examples:
   storycap http://localhost:9009
