@@ -48,6 +48,7 @@ export abstract class BaseBrowser {
   private _executablePath = '';
   private debugInputResolver = () => {};
   private debugInputPromise: Promise<void> = Promise.resolve();
+  private nextStep = process.env['STORYCAP_NEXTSTEP'] !== 'disabled';
 
   /**
    *
@@ -140,7 +141,7 @@ export abstract class BaseBrowser {
    *
    **/
   protected async waitForDebugInput() {
-    if (this.opt.launchOptions && this.opt.launchOptions.headless === false) {
+    if (this.opt.launchOptions && this.opt.launchOptions.headless === false && this.nextStep) {
       // eslint-disable-next-line no-console
       console.log(
         'story-crawler waits for your input. Open Puppeteer devtool console and exec "nextStep()" to go to the next step.',
@@ -150,7 +151,7 @@ export abstract class BaseBrowser {
   }
 
   private async setupDebugInput() {
-    if (this.opt.launchOptions && this.opt.launchOptions.headless === false) {
+    if (this.opt.launchOptions && this.opt.launchOptions.headless === false && this.nextStep) {
       const resetInput: () => void = () =>
         (this.debugInputPromise = new Promise<void>(res => (this.debugInputResolver = res)).then(() => {
           setTimeout(() => resetInput(), 10);

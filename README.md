@@ -28,6 +28,7 @@ It is primarily responsible for image generation necessary for Visual Testing su
   - [type `Viewport`](#type-viewport)
   - [function `isScreenshot`](#function-isscreenshot)
 - [Command Line Options](#command-line-options)
+- [Environment Variables](#environment-variables)
 - [Multiple PNGs from 1 story](#multiple-pngs-from-1-story)
   - [Basic usage](#basic-usage)
   - [Variants composition](#variants-composition)
@@ -360,6 +361,13 @@ Examples:
 ```
 
 <!-- endinject -->
+
+## Environment Variables
+
+| Name              | Description |
+|:------------------|:------------|
+| STORYCAP_SHOW     | Set to `enabled` to start the browser in the headful mode instead of in the headless one. When using the headful mode, you'll have to execute `nextStep()` on the console to advance from one screenshot to another one. |
+| STORYCAP_NEXTSTEP | Set to `disabled`, if you want to make all screenshots in the headful mode in an unattended way, without advancing by the `nextStep()` execution. |
 
 ## Multiple PNGs from 1 story
 
