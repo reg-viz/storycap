@@ -33,7 +33,6 @@ Clone this repository and execute the following:
 
 ```sh
 $ yarn --frozen-lockfile
-$ yarn bootstrap
 ```
 
 ## Lint and format

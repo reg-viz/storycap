@@ -11,7 +11,6 @@ build:
       name: test
       code: |
         yarn --frozen-lockfile
-        yarn bootstrap
         yarn build
         yarn format:check
         yarn lint
@@ -28,7 +27,6 @@ deploy:
       name: build
       code: |
         yarn install --frozen-lockfile
-        yarn bootstrap
         yarn build
     - script:
       name: Login npm

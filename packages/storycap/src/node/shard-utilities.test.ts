@@ -1,3 +1,4 @@
+import { describe, it, expect } from '@jest/globals';
 import { Story } from 'storycrawler';
 import { parseShardOptions, sortStories, shardStories } from './shard-utilities';
 
@@ -22,17 +23,17 @@ describe(parseShardOptions, () => {
     expect(parseShardOptions(' 1 / 2 ')).toMatchObject({ shardNumber: 1, totalShards: 2 });
   });
   it('errors for incorrect arguments', () => {
-    expect(() => parseShardOptions('0')).toThrowError();
-    expect(() => parseShardOptions('1')).toThrowError();
-    expect(() => parseShardOptions('text')).toThrowError();
-    expect(() => parseShardOptions('0/1')).toThrowError();
-    expect(() => parseShardOptions('-1/1')).toThrowError();
-    expect(() => parseShardOptions('2/1')).toThrowError();
-    expect(() => parseShardOptions('0/3')).toThrowError();
-    expect(() => parseShardOptions('/3')).toThrowError();
-    expect(() => parseShardOptions('4/')).toThrowError();
-    expect(() => parseShardOptions('4/3')).toThrowError();
-    expect(() => parseShardOptions('ab/c')).toThrowError();
+    expect(() => parseShardOptions('0')).toThrow();
+    expect(() => parseShardOptions('1')).toThrow();
+    expect(() => parseShardOptions('text')).toThrow();
+    expect(() => parseShardOptions('0/1')).toThrow();
+    expect(() => parseShardOptions('-1/1')).toThrow();
+    expect(() => parseShardOptions('2/1')).toThrow();
+    expect(() => parseShardOptions('0/3')).toThrow();
+    expect(() => parseShardOptions('/3')).toThrow();
+    expect(() => parseShardOptions('4/')).toThrow();
+    expect(() => parseShardOptions('4/3')).toThrow();
+    expect(() => parseShardOptions('ab/c')).toThrow();
   });
 });
 

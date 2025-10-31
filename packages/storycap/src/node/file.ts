@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { MainOptions } from './types';
+import { MainOptions } from './types.js';
 import sanitize from 'sanitize-filename';
 
 export class FileSystem {

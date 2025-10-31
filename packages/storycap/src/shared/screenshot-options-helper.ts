@@ -1,4 +1,4 @@
-import { VariantKey, StrictScreenshotOptions, ScreenshotOptions, ScreenshotOptionFragments } from '../shared/types';
+import { VariantKey, StrictScreenshotOptions, ScreenshotOptions, ScreenshotOptionFragments } from '../shared/types.js';
 
 const defaultScreenshotOptions = {
   waitAssets: true,
@@ -102,6 +102,7 @@ export function mergeScreenshotOptions<T extends ScreenshotOptions>(base: T, fra
     }
   } else {
     if (!fragment.viewport) {
+      // nothing to do
     } else if (typeof fragment.viewport === 'object') {
       ret.viewport = {
         ...base.viewport,

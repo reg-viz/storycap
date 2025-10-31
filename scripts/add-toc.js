@@ -1,14 +1,13 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
-
-const toc = require('markdown-toc');
+import fs from 'fs';
+import path from 'path';
+import markdownToc from 'markdown-toc';
 
 function addToc(markdownFilename) {
-  const content = fs.readFileSync(path.join(__dirname, '..', markdownFilename), 'utf8');
-  const contentWithToc = toc.insert(content);
-  fs.writeFileSync(path.join(__dirname, '..', markdownFilename), contentWithToc, 'utf8');
+  const content = fs.readFileSync(path.join(import.meta.dirname, '..', markdownFilename), 'utf8');
+  const contentWithToc = markdownToc.insert(content);
+  fs.writeFileSync(path.join(import.meta.dirname, '..', markdownFilename), contentWithToc, 'utf8');
 }
 
 ['README.md', 'MIGRATION.md', 'CONTRIBUTING.md', 'packages/storycrawler/README.md'].forEach(addToc);

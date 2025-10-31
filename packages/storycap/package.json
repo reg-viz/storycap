@@ -3,8 +3,9 @@
   "version": "5.0.1",
   "description": "A Storybook addon, Save the screenshot image of your stories! via puppeteer.",
   "engines": {
-    "node": ">=18"
+    "node": ">=20.11"
   },
+  "type": "module",
   "main": "lib/index.js",
   "module": "lib-esm/index.js",
   "exports": {
@@ -71,30 +72,29 @@
     "test"
   ],
   "devDependencies": {
-    "@types/jest": "29.5.14",
-    "@types/mkdirp": "^2.0.0",
-    "@types/node": "^20.0.0",
-    "@types/wait-on": "^5.0.0",
-    "@types/yargs": "^17.0.0",
-    "jest": "29.7.0",
+    "@types/jest": "30.0.0",
+    "@types/node": "^24.9.2",
+    "@types/picomatch": "^4.0.2",
+    "@types/wait-on": "^5.3.4",
+    "@types/yargs": "^17.0.34",
+    "cpy-cli": "^6.0.0",
+    "jest": "30.2.0",
     "minimist": "1.2.8",
-    "puppeteer": "23.11.1",
-    "ts-jest": "29.2.5",
-    "typedoc": "0.27.6",
-    "typescript": "5.7.3"
+    "puppeteer": "24.27.0",
+    "ts-jest": "29.4.5",
+    "typedoc": "0.28.14",
+    "typescript": "5.9.3"
   },
   "dependencies": {
-    "mkdirp": "^3.0.0",
-    "nanomatch": "^1.2.13",
-    "puppeteer-core": "^9.0.0",
-    "rimraf": "^6.0.0",
+    "picomatch": "^4.0.3",
+    "puppeteer-core": "^24.27.0",
+    "rimraf": "^6.1.0",
     "sanitize-filename": "^1.6.3",
     "storycrawler": "^5.0.1",
-    "yargs": "^17.0.0"
+    "yargs": "^18.0.0"
   },
   "peerDependencies": {
-    "@storybook/manager-api": "^7.0.0 || ^8.0.0",
-    "@storybook/preview-api": "^7.0.0 || ^8.0.0"
+    "storybook": "^9.0.0 || ^10.0.0"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -103,13 +103,25 @@
       "js"
     ],
     "transform": {
-      "^.+\\.tsx?$": [
+      "^.+\\.[tj]sx?$": [
         "ts-jest",
         {
           "diagnostics": false
         }
       ]
     },
+    "preset": "ts-jest/presets/default-esm",
+    "globals": {
+      "ts-jest": {
+        "useESM": true
+      }
+    },
+    "moduleNameMapper": {
+      "(.+)\\.js$": "$1"
+    },
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ],
     "testMatch": [
       "**/__tests__/*.(ts|tsx)",
       "**/*.test.(ts|tsx)"

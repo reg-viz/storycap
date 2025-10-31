@@ -15,6 +15,7 @@ export interface ScreenshotOptionFragments {
   delay?: number;
   waitAssets?: boolean;
   waitImages?: boolean; // deprecated. Use `waitAssets`
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   waitFor?: string | (() => Promise<any>);
   viewport?: Viewport | string;
   fullPage?: boolean;

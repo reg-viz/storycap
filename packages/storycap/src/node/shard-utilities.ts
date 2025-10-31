@@ -1,5 +1,5 @@
 import { Story } from 'storycrawler';
-import { ShardOptions } from './types';
+import { ShardOptions } from './types.js';
 
 export const parseShardOptions = (arg: string): ShardOptions => {
   const split = arg.split('/');

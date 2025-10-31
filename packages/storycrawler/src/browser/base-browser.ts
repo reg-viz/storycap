@@ -1,11 +1,11 @@
-import type { Browser as PuppeteerBrowser, Page, LaunchOptions, BrowserLaunchArgumentOptions } from 'puppeteer-core';
-import { sleep } from '../async-utils';
-import { findChrome } from '../find-chrome';
-import { ChromiumNotFoundError } from '../errors';
-import { ChromeChannel } from '../types';
+import type { Browser as PuppeteerBrowser, Page, LaunchOptions } from 'puppeteer-core';
+import { sleep } from '../async-utils.js';
+import { findChrome } from '../find-chrome.js';
+import { ChromiumNotFoundError } from '../errors.js';
+import { ChromeChannel } from '../types.js';
 
-function getPuppeteer() {
-  const pc = require('puppeteer-core') as typeof import('puppeteer-core');
+async function getPuppeteer() {
+  const { default: pc } = await import('puppeteer-core');
   return pc;
 }
 
@@ -20,7 +20,7 @@ export interface BaseBrowserOptions {
    * Options to launch Puppeteer Browser instance.
    *
    **/
-  launchOptions?: LaunchOptions & BrowserLaunchArgumentOptions;
+  launchOptions?: LaunchOptions;
 
   /**
    *
@@ -83,7 +83,7 @@ export abstract class BaseBrowser {
       throw new ChromiumNotFoundError();
     }
     this._executablePath = executablePath;
-    const puppeteer = getPuppeteer();
+    const puppeteer = await getPuppeteer();
     this.browser = await puppeteer.launch({
       ...(this.opt.launchOptions || {
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -106,7 +106,7 @@ export abstract class BaseBrowser {
       await this._page.close();
       await sleep(50);
       await this.browser.close();
-    } catch (e) {
+    } catch {
       // nothing to do
     }
   }

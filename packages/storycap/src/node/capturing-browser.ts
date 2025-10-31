@@ -11,18 +11,18 @@ import {
   getDeviceDescriptors,
 } from 'storycrawler';
 
-import { MainOptions, RunMode } from './types';
-import { VariantKey, ScreenshotOptions, StrictScreenshotOptions, Exposed } from '../shared/types';
-import { ScreenshotTimeoutError, InvalidCurrentStoryStateError } from './errors';
+import { MainOptions, RunMode } from './types.js';
+import { VariantKey, ScreenshotOptions, StrictScreenshotOptions, Exposed } from '../shared/types.js';
+import { ScreenshotTimeoutError, InvalidCurrentStoryStateError } from './errors.js';
 import {
   createBaseScreenshotOptions,
   mergeScreenshotOptions,
   extractVariantKeys,
   pickupWithVariantKey,
   InvalidVariantKeysReason,
-} from '../shared/screenshot-options-helper';
-import { Logger } from './logger';
-import { FileSystem } from './file';
+} from '../shared/screenshot-options-helper.js';
+import { Logger } from './logger.js';
+import { FileSystem } from './file.js';
 
 /**
  *
@@ -96,7 +96,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
 
   private async addStyles() {
     if (this.opt.disableCssAnimation) {
-      await this.page.addStyleTag({ path: path.resolve(__dirname, '../../assets/disable-animation.css') });
+      await this.page.addStyleTag({ path: path.resolve(import.meta.dirname, '../../assets/disable-animation.css') });
     }
   }
 
@@ -234,7 +234,8 @@ export class CapturingBrowser extends StoryPreviewBrowser {
         nextViewport = { width: +w, height: +h };
       } else {
         // Handle as Puppeteer device descriptor.
-        const hit = getDeviceDescriptors().find(d => d.name === opt.viewport);
+        const devices = await getDeviceDescriptors();
+        const hit = devices.find(d => d.viewport === opt.viewport);
         if (!hit) {
           this.opt.logger.warn(
             `Skip screenshot for ${this.opt.logger.color.yellow(
@@ -377,11 +378,14 @@ export class CapturingBrowser extends StoryPreviewBrowser {
 
       if (forwardConsoleLogs) {
         switch (msg.type()) {
-          case 'warning':
+          case 'warn':
             logger.warn(niceMessage);
             break;
           case 'error':
             logger.error(niceMessage);
+            break;
+          case 'debug':
+            logger.debug(niceMessage);
             break;
           default:
             logger.log(niceMessage);
@@ -455,6 +459,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
       await this.waitForResources(mergedScreenshotOptions);
       await this.waitBrowserMetricsStable('postEmit');
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await this.page.evaluate(() => new Promise(res => (window as any).requestIdleCallback(res, { timeout: 3000 })));
 
       // Get PNG image buffer
@@ -487,10 +492,11 @@ export class CapturingBrowser extends StoryPreviewBrowser {
       if (trace) {
         // Finish CPU trace.
         const traceBuffer = await this.page.tracing.stop();
-
-        // Calculate the suffix and save the trace to the file.
-        const suffix = variantKey.isDefault && defaultVariantSuffix ? [defaultVariantSuffix] : variantKey.keys;
-        await fileSystem.saveTrace(story.kind, story.story, suffix, traceBuffer);
+        if (traceBuffer) {
+          // Calculate the suffix and save the trace to the file.
+          const suffix = variantKey.isDefault && defaultVariantSuffix ? [defaultVariantSuffix] : variantKey.keys;
+          await fileSystem.saveTrace(story.kind, story.story, suffix, Buffer.from(traceBuffer));
+        }
       }
     }
   }

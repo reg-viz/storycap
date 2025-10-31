@@ -1,7 +1,8 @@
 import fs from 'fs';
+import { homedir } from 'os';
 import path from 'path';
 import { execSync, execFileSync } from 'child_process';
-import { ChromeChannel } from './types';
+import { ChromeChannel } from './types.js';
 
 const newLineRegex = /\r?\n/;
 
@@ -11,7 +12,7 @@ function canAccess(file: string) {
   try {
     fs.accessSync(file);
     return true;
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -31,7 +32,7 @@ function findChromeExecutables(folder: string) {
     // See https://github.com/GoogleChrome/chrome-launcher/issues/46 for more context.
     try {
       execPaths = execSync(`grep -ER "${chromeExecRegex}" ${folder} | awk -F '=' '{print $2}'`);
-    } catch (e) {
+    } catch {
       execPaths = execSync(`grep -Er "${chromeExecRegex}" ${folder} | awk -F '=' '{print $2}'`);
     }
 
@@ -68,14 +69,13 @@ function uniq<T>(arr: T[]): T[] {
   return Array.from(new Set(arr));
 }
 
-function localPuppeteer() {
+async function localPuppeteer() {
   try {
-    require.resolve('puppeteer');
+    const { default: p } = await import('puppeteer');
+    return p.executablePath() as string;
   } catch {
     return;
   }
-  const p = require('puppeteer');
-  return p.executablePath() as string;
 }
 
 function darwin(canary = false): string | undefined {
@@ -84,6 +84,7 @@ function darwin(canary = false): string | undefined {
     '/Versions/A/Frameworks/LaunchServices.framework' +
     '/Versions/A/Support/lsregister';
   const grepexpr = canary ? 'google chrome canary' : 'google chrome';
+  // eslint-disable-next-line no-useless-escape
   const result = execSync(`${LSREGISTER} -dump  | grep -i \'${grepexpr}\\?.app$\' | awk \'{$1=""; print $0}\'`);
 
   const paths = result
@@ -97,7 +98,7 @@ function darwin(canary = false): string | undefined {
     const inst = path.join(p, canary ? '/Contents/MacOS/Google Chrome Canary' : '/Contents/MacOS/Google Chrome');
     if (canAccess(inst)) return inst;
   }
-  return;
+  return undefined;
 }
 
 /**
@@ -106,12 +107,13 @@ function darwin(canary = false): string | undefined {
  * 2. Look into the directories where .desktop are saved on gnome based distro's
  * 3. Look for google-chrome-stable & google-chrome executables by using the which command
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function linux(_canary = false) {
   let installations: string[] = [];
 
   // Look into the directories where .desktop are saved on gnome based distro's
   const desktopInstallationFolders = [
-    path.join(require('os').homedir(), '.local/share/applications/'),
+    path.join(homedir(), '.local/share/applications/'),
     '/usr/share/applications/',
   ];
   desktopInstallationFolders.forEach(folder => {
@@ -124,8 +126,8 @@ function linux(_canary = false) {
     try {
       const chromePath = execFileSync('which', [executable], { stdio: 'pipe' }).toString().split(newLineRegex)[0];
       if (canAccess(chromePath)) installations.push(chromePath);
-    } catch (e) {
-      // Not installed.
+    } catch {
+      // nothing to do
     }
   });
 
@@ -175,7 +177,7 @@ export async function findChrome(options: FindOptions) {
 
   let executablePath: string | undefined = undefined;
   if (config.has('puppeteer') || config.has('*')) {
-    executablePath = localPuppeteer();
+    executablePath = await localPuppeteer();
     if (executablePath) return { executablePath, type: 'puppeteer' };
   }
 

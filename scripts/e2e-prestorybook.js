@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
-const copyDir = require('copy-dir');
-const cpy = require('cpy');
-const rimraf = require('rimraf');
-const mkdirp = require('mkdirp');
-const minimist = require('minimist');
+import fs from 'fs';
+import path from 'path';
+import copyDir from 'copy-dir';
+import { rimraf } from 'rimraf';
+import minimist from 'minimist';
 
 const argv = minimist(process.argv.slice(2));
 
@@ -31,7 +29,7 @@ async function main() {
     console.log(`Usage:\n\t${process.argv[1]} directory`);
     return 0;
   }
-  const prjDir = path.resolve(__dirname, '../packages/storycap');
+  const prjDir = path.resolve(import.meta.dirname, '../packages/storycap');
   const cwd = process.cwd();
   const dist = path.resolve(cwd, target, 'node_modules/storycap');
   if (prjDir === dist) {
@@ -39,12 +37,13 @@ async function main() {
     return 1;
   }
   rimraf.sync(dist);
-  mkdirp.sync(dist);
+  fs.mkdirSync(dist, { recursive: true });
   copyDir.sync(`${path.join(prjDir, 'lib')}`, path.join(dist, 'lib'), {});
   copyDir.sync(`${path.join(prjDir, 'lib-esm')}`, path.join(dist, 'lib-esm'), {});
-  await cpy(['package.json', 'register.js'], dist, { cwd: prjDir });
+  fs.copyFileSync(path.resolve(prjDir, 'package.json'), path.resolve(dist, 'package.json'));
+  fs.copyFileSync(path.resolve(prjDir, 'register.js'), path.resolve(dist, 'register.js'));
   rimraf.sync(path.resolve(dist, '../.bin/storycap'));
-  mkdirp(path.resolve(dist, '../.bin'));
+  fs.mkdirSync(path.resolve(dist, '../.bin'), { recursive: true });
   fs.symlinkSync(path.resolve(prjDir, 'lib/node/cli.js'), path.resolve(dist, '../.bin/storycap'));
   fs.chmodSync(path.resolve(dist, '../.bin/storycap'), 0o775);
   return 0;

@@ -1,3 +1,4 @@
+import { describe, it, expect } from '@jest/globals';
 import { runParallel, sleep, createExecutionService, Queue, Task } from './async-utils';
 
 const createWorker = (workerName: string | number) => ({

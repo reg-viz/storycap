@@ -1,14 +1,15 @@
-import chalk, { Chalk } from 'chalk';
+import picocolors from 'picocolors';
 
 export type LogLevel = 'verbose' | 'silent' | 'normal';
 
 export class Logger {
-  color: Chalk;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  color: any = picocolors;
 
   constructor(public level: LogLevel = 'normal') {
-    this.color = new chalk.constructor({ level: 1 });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   debug(...msg: any[]) {
     if (this.level !== 'verbose') return;
     // eslint-disable-next-line no-console
@@ -27,12 +28,14 @@ export class Logger {
     console.error.apply(console, [this.color.yellow('warn'), ...msg]);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error(...msg: any[]) {
     if (this.level === 'silent') return;
     // eslint-disable-next-line no-console
     console.error.apply(console, [this.color.red('error'), ...msg]);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   errorStack(stack: any) {
     if (this.level === 'silent') return;
     // eslint-disable-next-line no-console

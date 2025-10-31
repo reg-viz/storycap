@@ -1,11 +1,13 @@
-import { ScreenshotOptions, Exposed } from '../shared/types';
+import { ScreenshotOptions, Exposed } from '../shared/types.js';
 import {
   mergeScreenshotOptions,
   pickupWithVariantKey,
   expandViewportsOption,
-} from '../shared/screenshot-options-helper';
+} from '../shared/screenshot-options-helper.js';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Args<T> = T extends (...args: infer A) => any ? A : never;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Return<T> = T extends (...args: any) => infer R ? R : never;
 
 type ExposedFns = {
@@ -13,11 +15,14 @@ type ExposedFns = {
 };
 
 type StorycapWindow = typeof window & {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   requestIdleCallback(cb: Function, opt?: { timeout: number }): void;
   optionStore?: { [storyKey: string]: ScreenshotOptions[] };
 } & ExposedFns;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function withExpoesdWindow(cb: (win: StorycapWindow) => any) {
+  // eslint-disable-next-line no-constant-condition
   if (typeof 'window' === 'undefined') return;
   const win = window as StorycapWindow;
   if (!win.emitCapture) return;
@@ -43,9 +48,11 @@ function waitForDelayTime(time: number = 0) {
   return new Promise(res => setTimeout(res, time));
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function waitUserFunction(waitFor: undefined | null | string | (() => Promise<any>)) {
   if (!waitFor) return Promise.resolve();
   if (typeof waitFor === 'string') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const userDefinedFn = (window as any)[waitFor] as unknown;
     if (typeof userDefinedFn !== 'function') return Promise.resolve();
     return Promise.resolve().then(() => userDefinedFn());
@@ -75,6 +82,7 @@ function consumeOptions(win: StorycapWindow, storyKey: string): ScreenshotOption
   return result;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function stock(opt: ScreenshotOptions = {}, context: any) {
   let storyKey: string | undefined = undefined;
 
@@ -150,6 +158,7 @@ function capture() {
  * @param screenshotOptions - Options for screenshot
  *
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function triggerScreenshot(screenshotOptions: ScreenshotOptions, context: any) {
   // This function can be called twice or more.
   // So we should stock all options for each calling and emit merged them to Node.js
