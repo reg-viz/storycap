@@ -1,4 +1,4 @@
-import { addons } from '@storybook/manager-api';
+import { addons } from 'storybook/manager-api';
 
 (window as any).__STORYCAP_MANAGED_MODE_REGISTERED__ = true;
 

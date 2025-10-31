@@ -15,17 +15,14 @@ jobs:
       matrix:
         node-version: [20.x]
         example_dir:
-          - examples/v7-managed-react
-          - examples/v7-simple-react
-          - examples/v7-react18
-          - examples/v8-managed-react
-          - examples/v8-simple-react
-          - examples/v8-vite5-prod
+          - examples/v9-managed-react
+          - examples/v9-simple-react
+          - examples/v9-managed-vite5-react
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'

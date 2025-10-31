@@ -93,8 +93,7 @@
     "yargs": "^17.0.0"
   },
   "peerDependencies": {
-    "@storybook/manager-api": "^7.0.0 || ^8.0.0",
-    "@storybook/preview-api": "^7.0.0 || ^8.0.0"
+    "storybook": "^9.0.0"
   },
   "jest": {
     "moduleFileExtensions": [

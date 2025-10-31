@@ -1,4 +1,4 @@
-declare module '@storybook/manager-api' {
+declare module 'storybook/manager-api' {
   import { EventEmitter } from 'events';
   export interface API {
     raw?: () => { id: string; kind: string; name: string }[];
@@ -20,7 +20,7 @@ declare module '@storybook/manager-api' {
   export const addons: Addons;
 }
 
-declare module '@storybook/preview-api' {
+declare module 'storybook/preview-api' {
   interface MakeDecorator {
     (options: {
       name: string;
