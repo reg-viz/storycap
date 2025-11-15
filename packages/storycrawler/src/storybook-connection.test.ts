@@ -1,4 +1,4 @@
-import { StorybookConnection } from './storybook-connection';
+import { StorybookConnection } from './storybook-connection.js';
 
 describe(StorybookConnection, () => {
   describe(StorybookConnection.spawnCmd, () => {

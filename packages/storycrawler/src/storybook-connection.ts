@@ -1,7 +1,7 @@
 import * as cp from 'child_process';
-import waitOn = require('wait-on');
-import { StorybookServerTimeoutError, InvalidUrlError } from './errors';
-import { Logger } from './logger';
+import waitOn from 'wait-on';
+import { StorybookServerTimeoutError, InvalidUrlError } from './errors.js';
+import { Logger } from './logger.js';
 
 function waitServer(url: string, timeout: number) {
   if (!url.startsWith('http')) {

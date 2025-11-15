@@ -1,7 +1,8 @@
 import fs from 'fs';
+import { homedir } from 'os';
 import path from 'path';
 import { execSync, execFileSync } from 'child_process';
-import { ChromeChannel } from './types';
+import { ChromeChannel } from './types.js';
 
 const newLineRegex = /\r?\n/;
 
@@ -68,14 +69,13 @@ function uniq<T>(arr: T[]): T[] {
   return Array.from(new Set(arr));
 }
 
-function localPuppeteer() {
+async function localPuppeteer() {
   try {
-    require.resolve('puppeteer');
+    const { default: p } = await import('puppeteer');
+    return p.executablePath() as string;
   } catch {
     return;
   }
-  const p = require('puppeteer');
-  return p.executablePath() as string;
 }
 
 function darwin(canary = false): string | undefined {
@@ -111,7 +111,7 @@ function linux(_canary = false) {
 
   // Look into the directories where .desktop are saved on gnome based distro's
   const desktopInstallationFolders = [
-    path.join(require('os').homedir(), '.local/share/applications/'),
+    path.join(homedir(), '.local/share/applications/'),
     '/usr/share/applications/',
   ];
   desktopInstallationFolders.forEach(folder => {
@@ -175,7 +175,7 @@ export async function findChrome(options: FindOptions) {
 
   let executablePath: string | undefined = undefined;
   if (config.has('puppeteer') || config.has('*')) {
-    executablePath = localPuppeteer();
+    executablePath = await localPuppeteer();
     if (executablePath) return { executablePath, type: 'puppeteer' };
   }
 

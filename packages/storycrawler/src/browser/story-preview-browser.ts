@@ -1,8 +1,8 @@
-import { BaseBrowser, BaseBrowserOptions } from './base-browser';
-import { Story } from '../story-types';
-import { Logger } from '../logger';
-import { sleep } from '../async-utils';
-import { StorybookConnection } from '../storybook-connection';
+import { BaseBrowser, BaseBrowserOptions } from './base-browser.js';
+import { Story } from '../story-types.js';
+import { Logger } from '../logger.js';
+import { sleep } from '../async-utils.js';
+import { StorybookConnection } from '../storybook-connection.js';
 
 const dummyStory: Story = {
   version: 'v5',

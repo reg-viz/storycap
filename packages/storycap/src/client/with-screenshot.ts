@@ -1,6 +1,6 @@
-import { makeDecorator } from '@storybook/preview-api';
+import { makeDecorator } from 'storybook/preview-api';
 
-import { triggerScreenshot } from './trigger-screenshot';
+import { triggerScreenshot } from './trigger-screenshot.js';
 
 const withScreenshotDecorator = makeDecorator({
   name: 'withScreenshot',

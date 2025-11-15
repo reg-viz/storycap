@@ -3,7 +3,6 @@
 const fs = require('fs');
 const path = require('path');
 const copyDir = require('copy-dir');
-const cpy = require('cpy');
 const rimraf = require('rimraf');
 const mkdirp = require('mkdirp');
 const minimist = require('minimist');
@@ -13,7 +12,7 @@ const argv = minimist(process.argv.slice(2));
 /**
  * This script sets up for Storybook examples.
  *
- * Because of Storybook addon channel restriction, storycap addon(client, e.g. register.js) code
+ * Because of Storybook addon channel restriction, storycap addon(client, e.g. manager.js) code
  * should be put under each Storybook project's node_modules directory.
  *
  * This script does:
@@ -42,7 +41,7 @@ async function main() {
   mkdirp.sync(dist);
   copyDir.sync(`${path.join(prjDir, 'lib')}`, path.join(dist, 'lib'), {});
   copyDir.sync(`${path.join(prjDir, 'lib-esm')}`, path.join(dist, 'lib-esm'), {});
-  await cpy(['package.json', 'register.js'], dist, { cwd: prjDir });
+  fs.copyFileSync(path.resolve(prjDir, 'package.json'), path.resolve(dist, 'package.json'));
   rimraf.sync(path.resolve(dist, '../.bin/storycap'));
   mkdirp(path.resolve(dist, '../.bin'));
   fs.symlinkSync(path.resolve(prjDir, 'lib/node/cli.js'), path.resolve(dist, '../.bin/storycap'));

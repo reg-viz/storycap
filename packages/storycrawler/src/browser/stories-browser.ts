@@ -1,8 +1,8 @@
-import { BaseBrowser, BaseBrowserOptions } from './base-browser';
-import { Logger } from '../logger';
-import { NoStoriesError, StoriesTimeoutError } from '../errors';
-import { Story } from '../story-types';
-import { StorybookConnection } from '../storybook-connection';
+import { BaseBrowser, BaseBrowserOptions } from './base-browser.js';
+import { Logger } from '../logger.js';
+import { NoStoriesError, StoriesTimeoutError } from '../errors.js';
+import { Story } from '../story-types.js';
+import { StorybookConnection } from '../storybook-connection.js';
 
 interface API {
   storyStore?: {

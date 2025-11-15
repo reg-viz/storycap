@@ -1,9 +1,9 @@
-import { ScreenshotOptions, Exposed } from '../shared/types';
+import { ScreenshotOptions, Exposed } from '../shared/types.js';
 import {
   mergeScreenshotOptions,
   pickupWithVariantKey,
   expandViewportsOption,
-} from '../shared/screenshot-options-helper';
+} from '../shared/screenshot-options-helper.js';
 
 type Args<T> = T extends (...args: infer A) => any ? A : never;
 type Return<T> = T extends (...args: any) => infer R ? R : never;
