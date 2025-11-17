@@ -3,6 +3,7 @@ import { Story } from '../story-types';
 import { Logger } from '../logger';
 import { sleep } from '../async-utils';
 import { StorybookConnection } from '../storybook-connection';
+import { completeIframeUrl } from '../url-utils';
 
 const dummyStory: Story = {
   version: 'v5',
@@ -43,7 +44,11 @@ export class StoryPreviewBrowser extends BaseBrowser {
    **/
   async boot() {
     await super.boot();
-    await this.page.goto(this.connection.url + '/iframe.html?selectedKind=scszisui&selectedStory=scszisui', {
+    const iframeUrl = completeIframeUrl(
+      this.connection.url,
+      'iframe.html?selectedKind=scszisui&selectedStory=scszisui',
+    );
+    await this.page.goto(iframeUrl, {
       timeout: 60_000,
       waitUntil: 'domcontentloaded',
     });
