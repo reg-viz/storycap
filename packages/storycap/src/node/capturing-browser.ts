@@ -36,7 +36,7 @@ import { FileSystem } from './file';
  *
  **/
 interface ScreenshotResult {
-  buffer: Buffer | null;
+  buffer: Uint8Array | null;
   succeeded: boolean;
   variantKeysToPush: VariantKey[];
   defaultVariantSuffix?: string;
@@ -377,7 +377,7 @@ export class CapturingBrowser extends StoryPreviewBrowser {
 
       if (forwardConsoleLogs) {
         switch (msg.type()) {
-          case 'warning':
+          case 'warn':
             logger.warn(niceMessage);
             break;
           case 'error':
@@ -458,17 +458,12 @@ export class CapturingBrowser extends StoryPreviewBrowser {
       await this.page.evaluate(() => new Promise(res => (window as any).requestIdleCallback(res, { timeout: 3000 })));
 
       // Get PNG image buffer
-      const rawBuffer = await this.page.screenshot({
+      const buffer = await this.page.screenshot({
         fullPage: emittedScreenshotOptions.fullPage,
         omitBackground: emittedScreenshotOptions.omitBackground,
         captureBeyondViewport: emittedScreenshotOptions.captureBeyondViewport,
         clip: emittedScreenshotOptions.clip ?? undefined,
       });
-
-      let buffer: Buffer | null = null;
-      if (Buffer.isBuffer(rawBuffer)) {
-        buffer = rawBuffer;
-      }
 
       // We should reset elements state(e.g. focusing, hovering, clicking) for future screenshot for this story.
       await this.resetIfTouched(mergedScreenshotOptions);
@@ -488,9 +483,11 @@ export class CapturingBrowser extends StoryPreviewBrowser {
         // Finish CPU trace.
         const traceBuffer = await this.page.tracing.stop();
 
-        // Calculate the suffix and save the trace to the file.
-        const suffix = variantKey.isDefault && defaultVariantSuffix ? [defaultVariantSuffix] : variantKey.keys;
-        await fileSystem.saveTrace(story.kind, story.story, suffix, traceBuffer);
+        if (traceBuffer != null) {
+          // Calculate the suffix and save the trace to the file.
+          const suffix = variantKey.isDefault && defaultVariantSuffix ? [defaultVariantSuffix] : variantKey.keys;
+          await fileSystem.saveTrace(story.kind, story.story, suffix, traceBuffer);
+        }
       }
     }
   }

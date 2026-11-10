@@ -3,7 +3,7 @@
   "version": "5.0.1",
   "description": "Utilities to build Storybook crawling tools with Puppeteer",
   "engines": {
-    "node": ">=18"
+    "node": ">=22.12.0"
   },
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "chalk": "^2.4.1",
-    "puppeteer-core": "^9.0.0",
+    "puppeteer-core": "^25.16.0",
     "wait-on": "^8.0.0"
   },
   "jest": {

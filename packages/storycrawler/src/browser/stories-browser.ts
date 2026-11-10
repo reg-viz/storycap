@@ -3,6 +3,7 @@ import { Logger } from '../logger';
 import { NoStoriesError, StoriesTimeoutError } from '../errors';
 import { Story } from '../story-types';
 import { StorybookConnection } from '../storybook-connection';
+import { sleep } from '../async-utils';
 
 interface API {
   storyStore?: {
@@ -78,7 +79,7 @@ export class StoriesBrowser extends BaseBrowser {
         timeout: 60_000,
       },
     );
-    await this.page.waitForTimeout(500);
+    await sleep(500);
     await this.page.evaluate(() => {
       const api = (window as ExposedWindow).__STORYBOOK_CLIENT_API__ || (window as ExposedWindow).__STORYBOOK_PREVIEW__;
       function isPreviewApi(api: API | PreviewAPI): api is PreviewAPI {
