@@ -31,7 +31,7 @@ export class FileSystem {
    * @returns Absolute file path
    *
    **/
-  async saveScreenshot(kind: string, story: string, suffix: string[], buffer: Buffer) {
+  async saveScreenshot(kind: string, story: string, suffix: string[], buffer: Uint8Array) {
     const filePath = this.getPath(kind, story, suffix, '.png');
 
     await fs.mkdir(path.dirname(filePath), { recursive: true });
@@ -51,7 +51,7 @@ export class FileSystem {
    * @returns Absolute file path
    *
    **/
-  async saveTrace(kind: string, story: string, suffix: string[], buffer: Buffer) {
+  async saveTrace(kind: string, story: string, suffix: string[], buffer: Uint8Array) {
     const filePath = this.getPath(kind, story, [...suffix, 'trace'], '.json');
 
     await fs.mkdir(path.dirname(filePath), { recursive: true });

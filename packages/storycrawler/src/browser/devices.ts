@@ -1,11 +1,20 @@
-import type { Viewport } from 'puppeteer-core';
+import { KnownDevices, type Viewport } from 'puppeteer-core';
 
 /**
  *
- * @returns Puppeteer device discriptors
+ * Device name and viewport information
+ *
+ **/
+export interface DeviceDescriptor {
+  name: string;
+  viewport: Viewport;
+}
+
+/**
+ *
+ * @returns Device descriptors
  *
  */
-export function getDeviceDescriptors() {
-  const dd = require('puppeteer-core').devices as Record<string, { name: string; viewport: Viewport }>;
-  return Object.values(dd);
+export function getDeviceDescriptors(): DeviceDescriptor[] {
+  return Object.entries(KnownDevices).map(([name, device]) => ({ name, viewport: device.viewport }));
 }
