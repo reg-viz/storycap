@@ -451,7 +451,7 @@ Use [regviz/node-xcb](https://cloud.docker.com/u/regviz/repository/docker/regviz
 Or create your Docker base image such as:
 
 ```Dockerfile
-FROM node:18
+FROM node:22
 
 RUN apt-get update -y \
     && apt-get install -yq \

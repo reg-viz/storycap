@@ -36,7 +36,7 @@ import { FileSystem } from './file';
  *
  **/
 interface ScreenshotResult {
-  buffer: Buffer | null;
+  buffer: Uint8Array | null;
   succeeded: boolean;
   variantKeysToPush: VariantKey[];
   defaultVariantSuffix?: string;
@@ -376,8 +376,10 @@ export class CapturingBrowser extends StoryPreviewBrowser {
       const niceMessage = `From ${requestId} (${msg.type()}): ${msg.text()}`;
 
       if (forwardConsoleLogs) {
-        switch (msg.type()) {
+        // Older Puppeteer versions use `warning` instead of `warn`.
+        switch (msg.type() as string) {
           case 'warning':
+          case 'warn':
             logger.warn(niceMessage);
             break;
           case 'error':
@@ -465,8 +467,8 @@ export class CapturingBrowser extends StoryPreviewBrowser {
         clip: emittedScreenshotOptions.clip ?? undefined,
       });
 
-      let buffer: Buffer | null = null;
-      if (Buffer.isBuffer(rawBuffer)) {
+      let buffer: Uint8Array | null = null;
+      if (rawBuffer instanceof Uint8Array) {
         buffer = rawBuffer;
       }
 
@@ -488,9 +490,11 @@ export class CapturingBrowser extends StoryPreviewBrowser {
         // Finish CPU trace.
         const traceBuffer = await this.page.tracing.stop();
 
-        // Calculate the suffix and save the trace to the file.
-        const suffix = variantKey.isDefault && defaultVariantSuffix ? [defaultVariantSuffix] : variantKey.keys;
-        await fileSystem.saveTrace(story.kind, story.story, suffix, traceBuffer);
+        if (traceBuffer != null) {
+          // Calculate the suffix and save the trace to the file.
+          const suffix = variantKey.isDefault && defaultVariantSuffix ? [defaultVariantSuffix] : variantKey.keys;
+          await fileSystem.saveTrace(story.kind, story.story, suffix, traceBuffer);
+        }
       }
     }
   }

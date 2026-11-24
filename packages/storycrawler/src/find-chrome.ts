@@ -68,14 +68,15 @@ function uniq<T>(arr: T[]): T[] {
   return Array.from(new Set(arr));
 }
 
-function localPuppeteer() {
+async function localPuppeteer() {
   try {
     require.resolve('puppeteer');
   } catch {
     return;
   }
   const p = require('puppeteer');
-  return p.executablePath() as string;
+  // Puppeteer v25 returns a Promise; older versions return the path synchronously.
+  return (await p.executablePath()) as string;
 }
 
 function darwin(canary = false): string | undefined {
@@ -175,7 +176,7 @@ export async function findChrome(options: FindOptions) {
 
   let executablePath: string | undefined = undefined;
   if (config.has('puppeteer') || config.has('*')) {
-    executablePath = localPuppeteer();
+    executablePath = await localPuppeteer();
     if (executablePath) return { executablePath, type: 'puppeteer' };
   }
 
