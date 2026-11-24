@@ -75,6 +75,7 @@ async function localPuppeteer() {
     return;
   }
   const p = require('puppeteer');
+  // Puppeteer v25 returns a Promise; older versions return the path synchronously.
   return (await p.executablePath()) as string;
 }
 

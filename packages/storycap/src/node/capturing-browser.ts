@@ -376,7 +376,9 @@ export class CapturingBrowser extends StoryPreviewBrowser {
       const niceMessage = `From ${requestId} (${msg.type()}): ${msg.text()}`;
 
       if (forwardConsoleLogs) {
-        switch (msg.type()) {
+        // Older Puppeteer versions use `warning` instead of `warn`.
+        switch (msg.type() as string) {
+          case 'warning':
           case 'warn':
             logger.warn(niceMessage);
             break;
@@ -458,12 +460,17 @@ export class CapturingBrowser extends StoryPreviewBrowser {
       await this.page.evaluate(() => new Promise(res => (window as any).requestIdleCallback(res, { timeout: 3000 })));
 
       // Get PNG image buffer
-      const buffer = await this.page.screenshot({
+      const rawBuffer = await this.page.screenshot({
         fullPage: emittedScreenshotOptions.fullPage,
         omitBackground: emittedScreenshotOptions.omitBackground,
         captureBeyondViewport: emittedScreenshotOptions.captureBeyondViewport,
         clip: emittedScreenshotOptions.clip ?? undefined,
       });
+
+      let buffer: Uint8Array | null = null;
+      if (rawBuffer instanceof Uint8Array) {
+        buffer = rawBuffer;
+      }
 
       // We should reset elements state(e.g. focusing, hovering, clicking) for future screenshot for this story.
       await this.resetIfTouched(mergedScreenshotOptions);
